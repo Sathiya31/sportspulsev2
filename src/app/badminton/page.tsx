@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import { filterIndianResults } from "../../utils/badmintonIndianResults";
 
 export default function BadmintonPage() {
   const [input, setInput] = useState("");
@@ -9,7 +10,8 @@ export default function BadmintonPage() {
   function handleExtract() {
     try {
       const data = JSON.parse(input);
-      setResult(data);
+      const filtered = filterIndianResults(data);
+      setResult(filtered);
       setError("");
     } catch (e) {
       setError("Invalid JSON format");
@@ -19,7 +21,7 @@ export default function BadmintonPage() {
 
   function handleCopy() {
     if (result) {
-      navigator.clipboard.writeText(JSON.stringify(result, null, 2));
+      navigator.clipboard.writeText(Array.isArray(result) ? result.join("\n") : JSON.stringify(result, null, 2));
     }
   }
 
@@ -41,7 +43,7 @@ export default function BadmintonPage() {
       {error && <div className="text-red-600 mt-2">{error}</div>}
       {result && (
         <div className="mt-6 bg-blue-50 text-blue-900 rounded shadow p-4 relative transition-colors duration-300">
-          <pre className="whitespace-pre-wrap break-words">{JSON.stringify(result, null, 2)}</pre>
+          <pre className="whitespace-pre-wrap break-words">{Array.isArray(result) ? result.join("\n") : JSON.stringify(result, null, 2)}</pre>
           <button
             className="absolute top-2 right-2 bg-blue-200 px-2 py-1 rounded text-xs hover:bg-blue-400 transition-colors duration-300"
             onClick={handleCopy}
