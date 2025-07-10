@@ -3,7 +3,7 @@ import { useState } from "react";
 
 export default function ArcheryPage() {
   const [input, setInput] = useState("");
-  const [result, setResult] = useState<unknown>(null);
+  const [result, setResult] = useState<any>(null);
   const [error, setError] = useState("");
 
   function handleExtract() {
@@ -41,7 +41,7 @@ export default function ArcheryPage() {
       {error && <div className="text-red-600 mt-2">{error}</div>}
       {result && typeof result === "object" && (
         <div className="mt-6 bg-blue-50 text-blue-900 rounded shadow p-4 relative transition-colors duration-300">
-          <pre className="whitespace-pre-wrap break-words">{JSON.stringify(result, null, 2)}</pre>
+          <pre className="whitespace-pre-wrap break-words">{JSON.stringify(result as any, null, 2)}</pre>
           <button
             className="absolute top-2 right-2 bg-blue-200 px-2 py-1 rounded text-xs hover:bg-blue-400 transition-colors duration-300"
             onClick={handleCopy}

@@ -4,7 +4,7 @@ import { filterIndianResults } from "../../utils/badmintonIndianResults";
 
 export default function BadmintonPage() {
   const [input, setInput] = useState("");
-  const [result, setResult] = useState<unknown>(null);
+  const [result, setResult] = useState<any>(null);
   const [error, setError] = useState("");
 
   function handleExtract() {
