@@ -9,8 +9,7 @@ export default function AthleticsPage() {
   async function handleExtract() {
     if (!file) return;
     try {
-      const pdfjsLib = await import("pdfjs-dist/build/pdf");
-      // @ts-ignore
+      const pdfjsLib = await import("pdfjs-dist");
       pdfjsLib.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.js`;
       const reader = new FileReader();
       reader.onload = async function (e) {
@@ -20,13 +19,16 @@ export default function AthleticsPage() {
         for (let i = 1; i <= pdf.numPages; i++) {
           const page = await pdf.getPage(i);
           const content = await page.getTextContent();
-          text += content.items.map((item: any) => item.str).join(" ") + "\n";
+          // Only map TextItem types
+          text += content.items
+            .map((item) => 'str' in item ? (item as { str: string }).str : "")
+            .join(" ") + "\n";
         }
         setResult(text);
         setError("");
       };
       reader.readAsArrayBuffer(file);
-    } catch (e) {
+    } catch {
       setError("Failed to extract PDF text. Please ensure the file is a valid PDF.");
       setResult("");
     }

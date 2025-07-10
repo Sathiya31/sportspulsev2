@@ -14,7 +14,7 @@ export default function ShootingPage() {
       const text = doc.body.textContent || "";
       setResult(text.trim());
       setError("");
-    } catch (e) {
+    } catch {
       setError("Invalid HTML content");
       setResult("");
     }

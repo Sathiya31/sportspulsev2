@@ -4,7 +4,7 @@ import { filterIndianResults } from "../../utils/badmintonIndianResults";
 
 export default function BadmintonPage() {
   const [input, setInput] = useState("");
-  const [result, setResult] = useState<any>(null);
+  const [result, setResult] = useState<unknown>(null);
   const [error, setError] = useState("");
 
   function handleExtract() {
@@ -13,7 +13,7 @@ export default function BadmintonPage() {
       const filtered = filterIndianResults(data);
       setResult(filtered);
       setError("");
-    } catch (e) {
+    } catch {
       setError("Invalid JSON format");
       setResult(null);
     }
@@ -41,9 +41,9 @@ export default function BadmintonPage() {
         Extract
       </button>
       {error && <div className="text-red-600 mt-2">{error}</div>}
-      {result && (
+      {result && typeof result === "string" && (
         <div className="mt-6 bg-blue-50 text-blue-900 rounded shadow p-4 relative transition-colors duration-300">
-          <pre className="whitespace-pre-wrap break-words">{Array.isArray(result) ? result.join("\n") : JSON.stringify(result, null, 2)}</pre>
+          <pre className="whitespace-pre-wrap break-words">{result}</pre>
           <button
             className="absolute top-2 right-2 bg-blue-200 px-2 py-1 rounded text-xs hover:bg-blue-400 transition-colors duration-300"
             onClick={handleCopy}
