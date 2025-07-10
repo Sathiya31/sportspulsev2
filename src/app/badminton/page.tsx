@@ -9,9 +9,11 @@ export default function BadmintonPage() {
 
   function handleExtract() {
     try {
+      console.log("Extracting badminton data...");
       const data = JSON.parse(input);
       const filtered = filterIndianResults(data);
       setResult(filtered);
+      console.log("Extraction successful:", filtered);
       setError("");
     } catch {
       setError("Invalid JSON format");
@@ -41,9 +43,17 @@ export default function BadmintonPage() {
         Extract
       </button>
       {error && <div className="text-red-600 mt-2">{error}</div>}
-      {result && typeof result === "string" && (
+      {result && (
         <div className="mt-6 bg-blue-50 text-blue-900 rounded shadow p-4 relative transition-colors duration-300">
-          <pre className="whitespace-pre-wrap break-words">{result}</pre>
+          <ul className="list-disc pl-5">
+            {Array.isArray(result) ? (
+              result.map((item: string, idx: number) => (
+                <li key={idx} className="mb-2">{item}</li>
+              ))
+            ) : (
+              <li>{String(result)}</li>
+            )}
+          </ul>
           <button
             className="absolute top-2 right-2 bg-blue-200 px-2 py-1 rounded text-xs hover:bg-blue-400 transition-colors duration-300"
             onClick={handleCopy}
