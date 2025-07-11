@@ -1,104 +1,156 @@
 "use client";
 import Image from "next/image";
+import { useEffect, useRef, useState } from "react";
+import CountdownTimer from "@/components/CountdownTimer";
+
+const carouselSlides = [
+  {
+    src: "/images/tokyo2025.jpg",
+    alt: "Tokyo Icon",
+    title: "Tokyo Athletics Championship",
+    desc: "See the latest updates from the Tokyo event!",
+    date: "2025-09-13T00:00:00Z",
+  },
+  {
+    src: "/images/dakar.jpg",
+    alt: "Dakar Icon",
+    title: "Dakar Youth Olympics",
+    desc: "Experience the thrill of the Dakar Youth Olympics.",
+    date: "2026-01-0T00:00:00Z",
+  },
+  {
+    src: "/images/la28.jpg",
+    alt: "LA28 Icon",
+    title: "LA28 Olympics",
+    desc: "The countdown to the LA28 Olympics begins!",
+    date: "2028-07-14T00:00:00Z",
+  },
+];
 
 export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+  const [active, setActive] = useState(0);
+  const [timer, setTimer] = useState(5);
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+  useEffect(() => {
+    if (intervalRef.current) clearInterval(intervalRef.current);
+    intervalRef.current = setInterval(() => {
+      setTimer((t) => {
+        if (t <= 1) {
+          setActive((prev) => (prev + 1) % carouselSlides.length);
+          return 5;
+        }
+        return t - 1;
+      });
+    }, 1000);
+    return () => {
+      if (intervalRef.current) clearInterval(intervalRef.current);
+    };
+  }, [active]);
+
+  return (
+    <main className="min-h-screen bg-gray-50 p-6">
+      {/* Carousel */}
+      <section className="mb-10">
+        <div className="relative w-full h-64 rounded-xl overflow-hidden shadow-lg">
+          <Image
+            src={carouselSlides[active].src}
+            alt={carouselSlides[active].alt}
+            fill
+            className="object-cover"
+            priority
+          />
+          <div className="absolute inset-0 bg-black bg-opacity-40 flex flex-col justify-end p-6">
+            <h2 className="text-3xl text-white font-bold mb-2">
+              {carouselSlides[active].title}
+            </h2>
+            <p className="text-white text-lg">
+              {carouselSlides[active].desc}
+            </p>
+            <CountdownTimer target={carouselSlides[active].date} />
+          </div>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
+        {/* Carousel indicators */}
+        <div className="flex justify-center mt-4 gap-2">
+          {carouselSlides.map((_, idx) => (
+            <button
+              key={idx}
+              className={`w-3 h-3 rounded-full transition-all duration-300 ${
+                active === idx ? "bg-blue-600" : "bg-gray-300"
+              }`}
+              onClick={() => setActive(idx)}
+              aria-label={`Go to slide ${idx + 1}`}
+            />
+          ))}
+        </div>
+      </section>
+
+      {/* News Cards / Feeds */}
+      <section className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="bg-white rounded-xl shadow-md overflow-hidden">
           <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
+            src="/images/news3.jpg"
+            alt="News 1"
+            width={400}
+            height={200}
+            className="w-full h-40 object-cover"
           />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
+          <div className="p-4">
+            <h3 className="font-semibold text-xl mb-2">Athletes & Performances</h3>
+            <p className="text-gray-600 mb-4">
+              Latest updates on athlete performances and highlights from recent events.
+            </p>
+            <a
+              href="#"
+              className="text-blue-600 font-medium hover:underline"
+            >
+              Read More
+            </a>
+          </div>
+        </div>
+        <div className="bg-white rounded-xl shadow-md overflow-hidden">
           <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
+            src="/images/news2.jpg"
+            alt="News 2"
+            width={400}
+            height={200}
+            className="w-full h-40 object-cover"
           />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
+          <div className="p-4">
+            <h3 className="font-semibold text-xl mb-2">Paris 2024</h3>
+            <p className="text-gray-600 mb-4">
+              Revisit Paris Olympics highlights and athlete performances.
+            </p>
+            <a
+              href="#"
+              className="text-blue-600 font-medium hover:underline"
+            >
+              Read More
+            </a>
+          </div>
+        </div>
+        <div className="bg-white rounded-xl shadow-md overflow-hidden">
           <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
+            src="/images/news1.jpg"
+            alt="News 3"
+            width={400}
+            height={200}
+            className="w-full h-40 object-cover"
           />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+          <div className="p-4">
+            <h3 className="font-semibold text-xl mb-2">Upcoming Fixtures</h3>
+            <p className="text-gray-600 mb-4">
+              Stay updated with the schedule and previews for the next big games.
+            </p>
+            <a
+              href="#"
+              className="text-blue-600 font-medium hover:underline"
+            >
+              Read More
+            </a>
+          </div>
+        </div>
+      </section>
+    </main>
   );
 }

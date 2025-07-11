@@ -1,6 +1,56 @@
 "use client";
 import { useState } from "react";
 
+function extractIndianMatches(html: string) {
+  const parser = new DOMParser();
+  const doc = parser.parseFromString(html, "text/html");
+  const matches: any[] = [];
+  // Find all match cards
+  const matchCards = doc.querySelectorAll("app-match-card");
+  matchCards.forEach((card) => {
+    // Get round/event
+    const roundElem = card.querySelector("h1");
+    const round = roundElem ? roundElem.textContent?.trim() : "";
+    // Get player names and countries
+    const playerElems = card.querySelectorAll(".match_player_name");
+    if (playerElems.length < 2) return;
+    const getPlayer = (el: Element) => {
+      const name =
+        el.querySelector("app-mask-competitor-name span")?.textContent?.trim() ||
+        "";
+      const countryFlag =
+        el.querySelector("app-country-flag span")?.getAttribute("title") || "";
+      return { name, country: countryFlag };
+    };
+    const player1 = getPlayer(playerElems[0]);
+    const player2 = getPlayer(playerElems[1]);
+    // Only include matches with Indian athletes
+    if (player1.country !== "IND" && player2.country !== "IND") return;
+    // Get overall score
+    const scoreElem = card.querySelector(".match_overall_big_score");
+    const score = scoreElem ? scoreElem.textContent?.trim() : "";
+    // Format: Player 1 Country Player 1 Score - Score Player 2 Country
+    matches.push({
+      round,
+      event: round,
+      formatted: `${player1.name} (${player1.country}) ${score} ${player2.name} (${player2.country})`,
+    });
+  });
+  // Group by round/event
+  const grouped: Record<string, string[]> = {};
+  matches.forEach((m) => {
+    if (!grouped[m.round]) grouped[m.round] = [];
+    grouped[m.round].push(m.formatted);
+  });
+  let output = "";
+  Object.entries(grouped).forEach(([round, matches]) => {
+    output += `=== ${round} ===\n`;
+    output += matches.join("\n") + "\n\n";
+  });
+  console.log("Extracted Results:", output);
+  return output.trim();
+}
+
 export default function TableTennisPage() {
   const [input, setInput] = useState("");
   const [result, setResult] = useState<string>("");
@@ -8,11 +58,7 @@ export default function TableTennisPage() {
 
   function handleExtract() {
     try {
-      // Simple HTML extraction: get text content
-      const parser = new DOMParser();
-      const doc = parser.parseFromString(input, "text/html");
-      const text = doc.body.textContent || "";
-      setResult(text.trim());
+      setResult(extractIndianMatches(input));
       setError("");
     } catch {
       setError("Invalid HTML content");
