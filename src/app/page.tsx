@@ -16,7 +16,7 @@ const carouselSlides = [
     alt: "Dakar Icon",
     title: "Dakar Youth Olympics",
     desc: "Experience the thrill of the Dakar Youth Olympics.",
-    date: "2026-01-0T00:00:00Z",
+    date: "2026-01-03T00:00:00Z",
   },
   {
     src: "/images/la28.jpg",
@@ -29,20 +29,13 @@ const carouselSlides = [
 
 export default function Home() {
   const [active, setActive] = useState(0);
-  const [timer, setTimer] = useState(5);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     if (intervalRef.current) clearInterval(intervalRef.current);
     intervalRef.current = setInterval(() => {
-      setTimer((t) => {
-        if (t <= 1) {
-          setActive((prev) => (prev + 1) % carouselSlides.length);
-          return 5;
-        }
-        return t - 1;
-      });
-    }, 1000);
+      setActive((prev) => (prev + 1) % carouselSlides.length);
+    }, 5000);
     return () => {
       if (intervalRef.current) clearInterval(intervalRef.current);
     };
