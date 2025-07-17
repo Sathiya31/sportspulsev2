@@ -12,6 +12,7 @@ export default function ShootingPage() {
     const parser = new DOMParser();
     const doc = parser.parseFromString(html, "text/html");
     const tables = doc.querySelectorAll("table.result_xml_resulttable");
+    // eslint-disable-next-line prefer-const
     let results: string[] = [];
     tables.forEach((table) => {
       const rows = table.querySelectorAll("tbody > tr");
@@ -67,7 +68,7 @@ export default function ShootingPage() {
       } else {
         setError("No HTML content returned from server");
       }
-    } catch (err: any) {
+    } catch {
       setError("Could not extract data from URL");
     } finally {
       setLoading(false);

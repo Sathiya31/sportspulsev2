@@ -12,7 +12,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
     const html = await response.text();
     res.status(200).json({ html });
-  } catch (err) {
+  } catch {
     res.status(500).json({ error: 'Error fetching URL' });
   }
 }
