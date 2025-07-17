@@ -47,7 +47,7 @@ export default function Toolbar() {
                             key={item.name}
                             href={item.href}
                             className={`px-3 py-1 w-full block font-medium text-gray-900 transition-colors duration-300 hover:bg-gray-100 focus:bg-gray-100 active:bg-gray-100 border-none shadow-none rounded-none whitespace-nowrap ${
-                                pathname.startsWith(item.href) ? "bg-gray-100" : ""
+                                pathname && pathname.startsWith(item.href) ? "bg-gray-100" : ""
                             }`}
                         >
                             {item.name}
