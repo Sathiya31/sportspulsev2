@@ -1,7 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
 import { filterIndianResults } from "../../utils/badmintonIndianResults";
-import Image from "next/image";
 
 // Helper to check if an event is live
 function isLive(start: string, end: string) {
@@ -136,7 +135,7 @@ export default function BadmintonPage() {
               className={`flex items-center gap-4 w-full text-left bg-white rounded shadow p-3 relative border border-blue-100 hover:bg-blue-50 focus:outline-none ${selectedEvent?.id === event.id ? 'ring-2 ring-blue-400' : ''}`}
               onClick={() => handleSelectEvent(event)}
             >
-              <Image src={event.logo} alt={event.name} width={56} height={56} className="h-14 w-14 object-contain rounded bg-gray-100" />
+              <img src={event.logo} alt={event.name} width={56} height={56} className="h-14 w-14 object-contain rounded bg-gray-100" />
               <div className="flex-1">
                 <div className="font-semibold text-blue-900 text-base">{event.name}</div>
                 <div className="text-xs text-gray-600">{event.location}</div>
