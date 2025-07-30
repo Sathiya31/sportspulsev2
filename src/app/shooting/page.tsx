@@ -101,7 +101,7 @@ export default function ShootingPage() {
         >
           {loading ? "Extracting..." : "Extract from URL"}
         </button>
-      </div>c:\Users\sathi\Downloads\logo.png
+      </div>
       <textarea
         className="w-full h-40 p-2 border border-blue-400 rounded mb-4 text-black focus:ring-2 focus:ring-blue-500 transition-all duration-300"
         placeholder="Paste HTML content here..."
