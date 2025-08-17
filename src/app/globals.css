@@ -1,21 +1,43 @@
 @import "tailwindcss";
 
 :root {
+  /* Base background / foreground */
   --background: #ffffff;
   --foreground: #171717;
+
+  /* Design tokens */
+  --muted: #374151; /* slate-700 */
+  --muted-2: #6b7280; /* slate-500 */
+  --primary: #0ea5e9; /* sky-500 */
+  --accent: #7c3aed; /* violet-600 */
+  --surface: #ffffff;
+  --success: #10b981;
+  --danger: #ef4444;
+  --glass: rgba(255,255,255,0.65);
+  --card-shadow: 0 10px 30px rgba(2,6,23,0.08);
+  --radius: 12px;
+  --focus-ring: 0 0 0 4px rgba(14,165,233,0.12);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+/* design tokens are defined in :root above; no @theme rule needed */
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --background: #071025; /* deep navy */
+    --foreground: #e6eef8;
+
+    /* Dark theme token overrides */
+    --muted: #e6eef8;
+    --muted-2: #94a3b8;
+    --primary: #38bdf8; /* sky-400 */
+    --accent: #a78bfa; /* violet-300 */
+    --surface: #061126;
+    --success: #34d399;
+    --danger: #fb7185;
+    --glass: rgba(255,255,255,0.03);
+    --card-shadow: 0 12px 36px rgba(2,6,23,0.45);
+    --radius: 12px;
+    --focus-ring: 0 0 0 4px rgba(56,189,248,0.08);
   }
 }
 
@@ -23,4 +45,116 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Page layout utilities */
+.page-layout {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 3rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+@media (min-width: 1024px) {
+  .page-layout { flex-direction: row; }
+}
+
+.sidebar {
+  width: 100%;
+  max-width: 320px;
+}
+
+/* Event list card */
+.event-card {
+  background: linear-gradient(180deg, rgba(255,255,255,0.85), rgba(255,255,255,0.7));
+  border-radius: 12px;
+  padding: 1rem;
+  cursor: pointer;
+  transition: transform 200ms ease, box-shadow 200ms ease, background-color 200ms ease;
+  border: 1px solid rgba(2,6,23,0.04);
+}
+.event-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 30px rgba(2,6,23,0.06);
+}
+
+.event-title { font-weight: 700; color: var(--muted); margin-bottom: 0.25rem; }
+.event-meta { font-size: 0.85rem; color: var(--muted-2); }
+
+/* Inputs & textareas */
+.input, .textarea {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border-radius: 12px;
+  border: 1px solid rgba(2,6,23,0.06);
+  background: rgba(255,255,255,0.85);
+  color: var(--muted);
+  transition: box-shadow 180ms ease, border-color 180ms ease, background-color 180ms ease;
+}
+.input:focus, .textarea:focus {
+  box-shadow: var(--focus-ring);
+  outline: none;
+}
+.textarea { min-height: 10rem; resize: vertical; }
+
+/* Tabs */
+.tabs { display: flex; gap: 0.5rem; padding: 0.25rem; background: rgba(0,0,0,0.03); border-radius: 12px; }
+.tab { flex: 1; padding: 0.75rem 1rem; border-radius: 10px; background: transparent; border: none; cursor: pointer; font-weight: 600; }
+.tab.active { background: var(--surface); box-shadow: var(--card-shadow); }
+
+/* Content card */
+.content-card { padding: 1.25rem; min-height: 300px; }
+
+/* Buttons */
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1rem;
+  border-radius: 10px;
+  background: linear-gradient(90deg, var(--primary), var(--accent));
+  color: white;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 8px 20px rgba(14,165,233,0.08);
+}
+.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 14px 32px rgba(14,165,233,0.12); }
+.btn-primary:focus { box-shadow: var(--focus-ring); outline: none; }
+
+/* Fallback helpers if Tailwind-like classes are used in JSX */
+.bg-primary {
+  background: var(--primary) !important;
+  color: white !important;
+}
+.dark .bg-accent {
+  background: var(--accent) !important;
+  color: white !important;
+}
+
+/* Disabled button */
+.btn-disabled {
+  background: #e6eef8; /* light gray-blue */
+  color: #94a3b8;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+.dark .btn-disabled {
+  background: #2a3038;
+  color: #6b7280;
+}
+
+/* Spinner */
+.spinner { width: 3rem; height: 3rem; border-radius: 999px; border: 4px solid rgba(0,0,0,0.12); border-top-color: var(--primary); animation: spin 1s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* Error and result */
+.error-box { background: rgba(255,0,0,0.06); color: var(--danger); padding: 0.75rem; border-radius: 10px; border: 1px solid rgba(255,0,0,0.08); }
+.result-card { padding: 1rem; }
+
+/* Responsive tweaks */
+@media (max-width: 768px) {
+  .sidebar { max-width: none; }
 }
