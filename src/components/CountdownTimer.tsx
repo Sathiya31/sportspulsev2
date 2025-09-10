@@ -33,11 +33,17 @@ const CountdownTimer: React.FC<CountdownTimerProps> = ({ target }) => {
     return () => clearInterval(timer);
   }, [target]);
 
-  const formatNumber = (num) => {
+  const formatNumber = (num: { toString: () => string; }) => {
     return num.toString().padStart(2, '0');
   };
 
-  const TimeUnit = ({ value, label, delay }) => {
+  interface TimeUnitProps {
+    value: number;
+    label: string;
+    delay: number;
+  }
+
+  const TimeUnit: React.FC<TimeUnitProps> = ({ value, label, delay }) => {
     return (
       <div 
         className="flex flex-col items-center transform transition-all duration-300 hover:scale-105"
