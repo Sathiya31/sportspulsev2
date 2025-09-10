@@ -91,7 +91,7 @@ export default function TableTennisPage() {
     async function fetchCalendar() {
       const res = await fetch("/data/calendars/tabletennis_2025.json");
       const data = await res.json();
-      const rows = data[0]?.rows || [];
+      const rows = data || [];
       setEvents(rows);
       // Extract unique months
       const monthSet = new Set<string>();

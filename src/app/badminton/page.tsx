@@ -2,6 +2,19 @@
 import { useEffect, useState } from "react";
 import { filterIndianResults } from "../../utils/badmintonIndianResults";
 
+interface Tournament {
+  id: number;
+  code: string;
+  name: string;
+  category: string;
+  prize_money: string;
+  start_date: string;
+  end_date: string;
+  location: string;
+  logo: string;
+  is_etihad: boolean;
+}
+
 // Helper to check if an event is live
 function isLive(start: string, end: string) {
   const now = new Date();
@@ -10,27 +23,41 @@ function isLive(start: string, end: string) {
   return now >= startDate && now <= endDate;
 }
 
+// Helper to get the month name from a date string
+function getMonth(dateStr: string) {
+  return new Date(dateStr).toLocaleString('default', { month: 'long' });
+}
+
 export default function BadmintonPage() {
-  const [calendar, setCalendar] = useState<any[]>([]);
+  const [tournaments, setTournaments] = useState<Tournament[]>([]);
   const [month, setMonth] = useState<string>("All");
   const [months, setMonths] = useState<string[]>([]);
-  const [selectedEvent, setSelectedEvent] = useState<any>(null);
+  const [selectedEvent, setSelectedEvent] = useState<Tournament | null>(null);
   const [selectedDate, setSelectedDate] = useState<string>("");
   const [fetching, setFetching] = useState(false);
   const [fetchError, setFetchError] = useState("");
-  const [indianResults, setIndianResults] = useState<any>({}); // { [roundName]: string[] }
+  const [indianResults, setIndianResults] = useState<Record<string, string[]>>({});
   const [copySuccess, setCopySuccess] = useState("");
   // Removed unused copyBlockRef
 
   useEffect(() => {
-    async function fetchCalendar() {
+    async function fetchTournaments() {
       const res = await fetch("/data/calendars/badminton_2025.json");
-      const data = await res.json();
-      setCalendar(data.results);
-      setMonths(["All", ...data.results.map((m: any) => m.month)]);
+      const data: Tournament[] = await res.json();
+      setTournaments(data);
+      
+      // Get unique months from tournament dates
+      const uniqueMonths = Array.from(new Set(
+        data.map(t => getMonth(t.start_date))
+      )).sort((a, b) => {
+        const monthOrder = ["January", "February", "March", "April", "May", "June",
+                          "July", "August", "September", "October", "November", "December"];
+        return monthOrder.indexOf(a) - monthOrder.indexOf(b);
+      });
+      setMonths(["All", ...uniqueMonths]);
+      
       // Preselect live event if present
-      const allTournaments = data.results.flatMap((m: any) => m.tournaments);
-      const live = allTournaments.find((t: any) => isLive(t.start_date, t.end_date));
+      const live = data.find(t => isLive(t.start_date, t.end_date));
       if (live) {
         setSelectedEvent(live);
         const dates = getEventDates(live.start_date, live.end_date);
@@ -38,7 +65,7 @@ export default function BadmintonPage() {
         setSelectedDate(dates.includes(today) ? today : dates[0]);
       }
     }
-    fetchCalendar();
+    fetchTournaments();
   }, []);
   // Helper to get all dates between start and end (inclusive)
   function getEventDates(start: string, end: string) {
@@ -58,12 +85,10 @@ export default function BadmintonPage() {
   }
 
   // Find live event
-  const liveEvent = calendar
-    .flatMap((m: any) => m.tournaments)
-    .find((t: any) => isLive(t.start_date, t.end_date));
+  const liveEvent = tournaments.find(t => isLive(t.start_date, t.end_date));
 
-  // When a calendar event is clicked
-  function handleSelectEvent(event: any) {
+  // When a tournament is clicked
+  function handleSelectEvent(event: Tournament) {
     setSelectedEvent(event);
     const dates = getEventDates(event.start_date, event.end_date);
     // Default to today if in range, else first date
@@ -97,7 +122,6 @@ export default function BadmintonPage() {
         const results = filterIndianResults(matches as any[]);
         if (results.length > 0) grouped[round] = results;
       });
-      console.log("Filtered Indian Results:", grouped);
       setIndianResults(grouped);
     } catch (err: any) {
       setFetchError(err.message || "Failed to fetch results");
@@ -108,8 +132,8 @@ export default function BadmintonPage() {
 
   // Filter by month
   const filtered = month === "All"
-    ? calendar.flatMap((m: any) => m.tournaments.map((t: any) => ({ ...t, month: m.month })))
-    : (calendar.find((m: any) => m.month === month)?.tournaments.map((t: any) => ({ ...t, month })) || []);
+    ? tournaments
+    : tournaments.filter(t => getMonth(t.start_date) === month);
 
   return (
     <div className="flex min-h-screen">

@@ -146,6 +146,8 @@ body {
   color: #6b7280;
 }
 
+.bg-opacity-40 { background-color: rgba(0,0,0,0.4) !important; }
+
 /* Spinner */
 .spinner { width: 3rem; height: 3rem; border-radius: 999px; border: 4px solid rgba(0,0,0,0.12); border-top-color: var(--primary); animation: spin 1s linear infinite; }
 @keyframes spin { to { transform: rotate(360deg); } }
