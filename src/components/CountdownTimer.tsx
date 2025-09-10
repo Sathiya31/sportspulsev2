@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from 'react';
 
-const CountdownTimer = ({target}) => {
+interface CountdownTimerProps {
+  target: string | Date;
+}
+
+const CountdownTimer: React.FC<CountdownTimerProps> = ({ target }) => {
   const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
   const [isExpired, setIsExpired] = useState(false);
 
