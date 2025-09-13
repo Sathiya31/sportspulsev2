@@ -2,6 +2,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
+import SignInButton from "./auth/SignInButton";
 
 const navItems = [
     { name: "Badminton", href: "/badminton" },
@@ -41,7 +42,7 @@ export default function Toolbar() {
                     </span>
                 </Link>
                 {/* Desktop Nav */}
-                <div className="hidden md:flex gap-4">
+                <div className="hidden md:flex items-center gap-4">
                     {navItems.map((item) => (
                         <Link
                             key={item.name}
@@ -53,6 +54,7 @@ export default function Toolbar() {
                             {item.name}
                         </Link>
                     ))}
+                    <SignInButton />
                 </div>
                 {/* Mobile Hamburger */}
                 <button
@@ -83,6 +85,9 @@ export default function Toolbar() {
                                 {item.name}
                             </Link>
                         ))}
+                        <div className="px-3 py-2">
+                            <SignInButton />
+                        </div>
                     </div>
                 </div>
             )}

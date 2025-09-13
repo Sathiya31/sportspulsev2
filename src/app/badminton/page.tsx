@@ -1,9 +1,11 @@
 "use client";
 import { useEffect, useState } from "react";
+import { useSession } from "next-auth/react";
 import { filterIndianResults } from "../../utils/badmintonIndianResults";
 import { getTournamentResults } from "@/services/badmintonService";
 import TournamentResults from "@/components/badminton/TournamentResults";
 import TournamentActions from "@/components/badminton/TournamentActions";
+import { isAdmin } from "@/config/auth";
 
 interface Tournament {
   id: number;
@@ -155,6 +157,9 @@ export default function BadmintonPage() {
     ? tournaments
     : tournaments.filter(t => getMonth(t.start_date) === month);
 
+  const { data: session } = useSession();
+  const userIsAdmin = isAdmin(session?.user?.email);
+
   return (
     <div className="flex min-h-screen">
       {/* Left panel calendar */}
@@ -211,18 +216,19 @@ export default function BadmintonPage() {
               <TournamentResults results={tournamentResults} isLoading={fetching} />
             </div>
 
-            {/* Indian Players Section */}
-            <div className="mt-8 border-t pt-8">
-              <h2 className="text-lg font-semibold mb-4">Indian Players Results</h2>
-              <TournamentActions
-                tournament={selectedEvent}
-                onFetchDaily={fetchBWFResults}
-                selectedDate={selectedDate}
-                onDateChange={setSelectedDate}
-                isLoading={fetching}
-              />
+            {/* Indian Players Section - Only visible to admin */}
+            {userIsAdmin && (
+              <div className="mt-8 border-t pt-8">
+                <h2 className="text-lg font-semibold mb-4">Indian Players Results</h2>
+                <TournamentActions
+                  tournament={selectedEvent}
+                  onFetchDaily={fetchBWFResults}
+                  selectedDate={selectedDate}
+                  onDateChange={setSelectedDate}
+                  isLoading={fetching}
+                />
 
-              {Object.keys(indianResults).length > 0 ? (
+                {Object.keys(indianResults).length > 0 ? (
                 <div className="space-y-4">
                   {Object.entries(indianResults).map(([round, results]) => {
                     if (!Array.isArray(results) || results.length === 0) return null;
@@ -260,6 +266,7 @@ export default function BadmintonPage() {
                 </div>
               ) : null}
             </div>
+            )}
           </div>
         ) : (
           <p className="text-gray-600">Select an event from the left panel to see more details.</p>
