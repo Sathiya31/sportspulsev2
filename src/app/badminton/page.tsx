@@ -1,6 +1,9 @@
 "use client";
 import { useEffect, useState } from "react";
 import { filterIndianResults } from "../../utils/badmintonIndianResults";
+import { getTournamentResults } from "@/services/badmintonService";
+import TournamentResults from "@/components/badminton/TournamentResults";
+import TournamentActions from "@/components/badminton/TournamentActions";
 
 interface Tournament {
   id: number;
@@ -36,6 +39,7 @@ export default function BadmintonPage() {
   const [selectedDate, setSelectedDate] = useState<string>("");
   const [fetching, setFetching] = useState(false);
   const [fetchError, setFetchError] = useState("");
+  const [tournamentResults, setTournamentResults] = useState<any>({});
   const [indianResults, setIndianResults] = useState<Record<string, string[]>>({});
   const [copySuccess, setCopySuccess] = useState("");
   // Removed unused copyBlockRef
@@ -87,28 +91,30 @@ export default function BadmintonPage() {
   // Find live event
   const liveEvent = tournaments.find(t => isLive(t.start_date, t.end_date));
 
-  // When a tournament is clicked
-  function handleSelectEvent(event: Tournament) {
-    setSelectedEvent(event);
-    const dates = getEventDates(event.start_date, event.end_date);
-    // Default to today if in range, else first date
-    const today = new Date().toISOString().slice(0, 10);
-    setSelectedDate(dates.includes(today) ? today : dates[0]);
-    setIndianResults({});
-    setFetchError("");
-  }
-
-  // Fetch matches for selected event/date
-  async function handleFetchMatches() {
-    if (!selectedEvent || !selectedDate) return;
+  // Fetch Firebase results for a tournament
+  async function fetchFirebaseResults(tournamentCode: string) {
     setFetching(true);
     setFetchError("");
-    setIndianResults({});
+    try {
+      const results = await getTournamentResults(tournamentCode);
+      setTournamentResults(results);
+    } catch (err: any) {
+      setFetchError(err.message || "Failed to fetch tournament results");
+    } finally {
+      setFetching(false);
+    }
+  }
+
+  // Fetch BWF results for a specific date
+  async function fetchBWFResults() {
+    if (!selectedEvent || !selectedDate) return;
+    
     try {
       const url = `https://extranet-lv.bwfbadminton.com/api/tournaments/day-matches?tournamentCode=${selectedEvent.code}&date=${selectedDate}`;
       const res = await fetch(url);
-      if (!res.ok) throw new Error("Failed to fetch matches");
+      if (!res.ok) throw new Error("Failed to fetch BWF results");
       const data = await res.json();
+      
       // Group matches by roundName first
       const roundGroups: { [round: string]: any[] } = {};
       (data || []).forEach((match: any) => {
@@ -116,6 +122,7 @@ export default function BadmintonPage() {
         if (!roundGroups[match.roundName]) roundGroups[match.roundName] = [];
         roundGroups[match.roundName].push(match);
       });
+      
       // For each group, filter Indian results
       const grouped: { [round: string]: string[] } = {};
       Object.entries(roundGroups).forEach(([round, matches]) => {
@@ -124,10 +131,23 @@ export default function BadmintonPage() {
       });
       setIndianResults(grouped);
     } catch (err: any) {
-      setFetchError(err.message || "Failed to fetch results");
-    } finally {
-      setFetching(false);
+      setFetchError(err.message || "Failed to fetch BWF results");
     }
+  }
+
+  // When a tournament is clicked
+  function handleSelectEvent(event: Tournament) {
+    console.log('Selected event:', event);
+    setSelectedEvent(event);
+    const dates = getEventDates(event.start_date, event.end_date);
+    // Default to today if in range, else first date
+    const today = new Date().toISOString().slice(0, 10);
+    setSelectedDate(dates.includes(today) ? today : dates[0]);
+    setIndianResults({});
+    setFetchError("");
+    
+    // Immediately fetch Firebase results when tournament is selected
+    fetchFirebaseResults(event.code);
   }
 
   // Filter by month
@@ -176,37 +196,33 @@ export default function BadmintonPage() {
       </aside>
       {/* Right panel: event details and results */}
       <main className="flex-1 p-8">
-        <h1 className="text-2xl font-bold mb-4 text-blue-800">Badminton 2025 Calendar</h1>
+        <h1 className="text-2xl font-bold mb-4 text-blue-800">Badminton 2025</h1>
         {liveEvent && (
-          <div className="mb-4 text-green-700 font-semibold">Live Event: {liveEvent.name}</div>
+          <div className="mb-4 text-green-700 font-semibold">Live: {liveEvent.name}</div>
         )}
         {selectedEvent ? (
           <div>
             <div className="mb-2 text-xl font-bold text-blue-900">{selectedEvent.name}</div>
             <div className="mb-2 text-gray-700">{formatDate(selectedEvent.start_date.slice(0,10))} to {formatDate(selectedEvent.end_date.slice(0,10))}</div>
-            {/* Date dropdown and fetch button */}
-            <div className="flex items-center gap-2 mb-4">
-              <label className="text-sm font-semibold">Select Date:</label>
-              <select
-                className="p-2 border border-blue-400 rounded text-black"
-                value={selectedDate}
-                onChange={e => setSelectedDate(e.target.value)}
-              >
-                {getEventDates(selectedEvent.start_date, selectedEvent.end_date).map(date => (
-                  <option key={date} value={date}>{formatDate(date)}</option>
-                ))}
-              </select>
-              <button
-                className="px-3 py-2 bg-blue-600 text-white rounded disabled:opacity-50"
-                onClick={handleFetchMatches}
-                disabled={fetching}
-              >Fetch</button>
+            
+            {/* Tournament Results Section */}
+            <div className="mb-8">
+              {fetchError && <div className="text-red-600 mb-4">{fetchError}</div>}
+              <TournamentResults results={tournamentResults} isLoading={fetching} />
             </div>
-            {fetching && <div className="text-blue-600">Fetching results...</div>}
-            {fetchError && <div className="text-red-600">{fetchError}</div>}
-            {Object.keys(indianResults).length > 0 ? (
-              <div className="mt-4">
-                <div className="font-semibold mb-2">Indian Player Results (grouped by round):</div>
+
+            {/* Indian Players Section */}
+            <div className="mt-8 border-t pt-8">
+              <h2 className="text-lg font-semibold mb-4">Indian Players Results</h2>
+              <TournamentActions
+                tournament={selectedEvent}
+                onFetchDaily={fetchBWFResults}
+                selectedDate={selectedDate}
+                onDateChange={setSelectedDate}
+                isLoading={fetching}
+              />
+
+              {Object.keys(indianResults).length > 0 ? (
                 <div className="space-y-4">
                   {Object.entries(indianResults).map(([round, results]) => {
                     if (!Array.isArray(results) || results.length === 0) return null;
@@ -224,7 +240,7 @@ export default function BadmintonPage() {
                         <div className="flex items-center gap-2 mb-1">
                           <span className="font-semibold text-blue-700">{round}</span>
                           <button
-                            className="px-2 py-1 bg-blue-500 text-white rounded text-xs"
+                            className="px-2 py-1 bg-blue-500 text-white rounded text-xs hover:bg-blue-600"
                             onClick={() => {
                               if (preEl) {
                                 navigator.clipboard.writeText(preEl.innerText);
@@ -242,8 +258,8 @@ export default function BadmintonPage() {
                     );
                   })}
                 </div>
-              </div>
-            ) : null}
+              ) : null}
+            </div>
           </div>
         ) : (
           <p className="text-gray-600">Select an event from the left panel to see more details.</p>

@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "date-fns": "^4.1.0",
+    "firebase": "^12.2.1",
     "next": "^15.3.5",
     "pdfjs-dist": "^5.3.93",
     "react": "^19.0.0",
