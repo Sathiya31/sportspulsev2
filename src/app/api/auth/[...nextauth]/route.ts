@@ -10,7 +10,7 @@ const handler = NextAuth({
         }),
     ],
     callbacks: {
-        async signIn({ user, account }) {
+        async signIn({ user }) {
             // Only allow admin email to sign in
             const isAllowed = isAdmin(user.email);
             if (!isAllowed) {

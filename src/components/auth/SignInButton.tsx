@@ -2,7 +2,6 @@
 
 import { signIn, signOut, useSession } from 'next-auth/react';
 import Link from 'next/link';
-import Image from 'next/image';
 import { isAdmin } from '@/config/auth';
 
 export default function SignInButton() {
