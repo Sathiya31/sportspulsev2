@@ -1,0 +1,146 @@
+[
+  {
+    "id": 28162,
+    "name": "Nimes Archery Tournament",
+    "level": "World Cup",
+    "sublevel": "Indoor World Series",
+    "location": "Nimes, France",
+    "start_date": "2025-01-17",
+    "end_date": "2025-01-19"
+  },
+  {
+    "id": 28551,
+    "name": "The Great Chicago Open",
+    "level": "World Cup",
+    "sublevel": "Indoor World Series",
+    "location": "Chicago, United States of America",
+    "start_date": "2025-02-13",
+    "end_date": "2025-02-14"
+  },
+  {
+    "id": 28163,
+    "name": "The Vegas Shoot",
+    "level": "World Cup",
+    "sublevel": "Indoor World Series",
+    "location": "Las Vegas, United States of America",
+    "start_date": "2025-03-05",
+    "end_date": "2025-03-09"
+  },
+  {
+    "id": 28164,
+    "name": "Indoor Archery World Series Finals",
+    "level": "World Cup",
+    "sublevel": "Indoor World Series",
+    "location": "Las Vegas, United States of America",
+    "start_date": "2025-03-09",
+    "end_date": "2025-03-09"
+  },
+  {
+    "id": 26293,
+    "name": "Central Florida 2025 Hyundai Archery World Cup stage 1",
+    "level": "World Cup",
+    "sublevel": "World Cup Stage",
+    "location": "Auburndale, United States of America",
+    "start_date": "2025-04-08",
+    "end_date": "2025-04-13"
+  },
+  {
+    "id": 26294,
+    "name": "Shanghai 2025 Hyundai Archery World Cup stage 2",
+    "level": "World Cup",
+    "sublevel": "World Cup Stage",
+    "location": "Shanghai, People's Republic of China",
+    "start_date": "2025-05-06",
+    "end_date": "2025-05-11"
+  },
+  {
+    "id": 26295,
+    "name": "Antalya 2025 Hyundai Archery World Cup stage 3",
+    "level": "World Cup",
+    "sublevel": "World Cup Stage",
+    "location": "Antalya, Türkiye",
+    "start_date": "2025-06-03",
+    "end_date": "2025-06-08"
+  },
+  {
+    "id": 26296,
+    "name": "Madrid 2025 Hyundai Archery World Cup stage 4",
+    "level": "World Cup",
+    "sublevel": "World Cup Stage",
+    "location": "Madrid, Spain",
+    "start_date": "2025-07-08",
+    "end_date": "2025-07-13"
+  },
+  {
+    "id": 24447,
+    "name": "Winnipeg 2025 World Archery Youth Championships",
+    "level": "World Championships",
+    "sublevel": "World Archery Youth Championships",
+    "location": "Winnipeg, Canada",
+    "start_date": "2025-08-17",
+    "end_date": "2025-08-24"
+  },
+  {
+    "id": 24448,
+    "name": "Gwangju 2025 Hyundai World Archery Championships",
+    "level": "World Championships",
+    "sublevel": "World Archery Championships",
+    "location": "Gwangju, Republic of Korea",
+    "start_date": "2025-09-05",
+    "end_date": "2025-09-12"
+  },
+  {
+    "id": 28320,
+    "name": "Gwangju 2025 World Archery Para Championships",
+    "level": "World Championships",
+    "sublevel": "World Archery Para Championships",
+    "location": "Gwangju, Republic of Korea",
+    "start_date": "2025-09-22",
+    "end_date": "2025-09-28"
+  },
+  {
+    "id": 29368,
+    "name": "Nanjing 2025 Hyundai Archery World Cup Final",
+    "level": "World Cup",
+    "sublevel": "World Cup Final",
+    "location": "Nanjing, People's Republic of China",
+    "start_date": "2025-10-17",
+    "end_date": "2025-10-19"
+  },
+  {
+    "id": 29308,
+    "name": "Swiss Open Lausanne 2025",
+    "level": "World Cup",
+    "sublevel": "Indoor World Series",
+    "location": "Lausanne, Switzerland",
+    "start_date": "2025-10-31",
+    "end_date": "2025-11-02"
+  },
+  {
+    "id": 29728,
+    "name": "GT Open",
+    "level": "World Cup",
+    "sublevel": "Indoor World Series",
+    "location": "Strassen, Luxembourg",
+    "start_date": "2025-11-14",
+    "end_date": "2025-11-16"
+  },
+  {
+    "id": 29729,
+    "name": "Taipei Archery Open",
+    "level": "World Cup",
+    "sublevel": "Indoor World Series",
+    "location": "Taoyuan City, Chinese Taipei",
+    "start_date": "2025-12-05",
+    "end_date": "2025-12-07"
+  },
+  {
+    "id": 29963,
+    "name": "Rio de Janeiro - IWS 250",
+    "level": "World Cup",
+    "sublevel": "Indoor World Series",
+    "location": "Rio de Janeiro, Brazil",
+    "start_date": "2025-12-12",
+    "end_date": "2025-12-14"
+  }
+]
