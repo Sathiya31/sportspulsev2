@@ -24,9 +24,8 @@ interface Match {
   round_name: string;
 }
 
-// Firebase service to fetch competition results
 const firebaseService = {
-  getCompetitionResults: async (competitionId: string) => {
+  getCompetitionResults: async (competitionId: string): Promise<Match[]> => {
     try {
       const q = query(
         collection(db, 'tabletennis'),
@@ -36,7 +35,7 @@ const firebaseService = {
       return querySnapshot.docs.map(doc => ({
         id: doc.id,
         ...doc.data()
-      }));
+      })) as Match[];
     } catch (error) {
       console.error('Error fetching competition results:', error);
       throw error;
@@ -182,7 +181,7 @@ const CompetitionResults = ({ selectedCompetition }: { selectedCompetition: stri
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-8">
             <h1 className="text-4xl font-bold text-gray-800 mb-2">Competition Results</h1>
-            <p className="text-gray-600">Competition ID: {selectedCompetition.competition_id}</p>
+            <p className="text-gray-600">Competition ID: {selectedCompetition}</p>
           </div>
           <LoadingSpinner />
         </div>
@@ -220,7 +219,7 @@ const CompetitionResults = ({ selectedCompetition }: { selectedCompetition: stri
           </div>
           <div className="flex items-center justify-center space-x-4 text-gray-600">
             <span className="bg-white px-4 py-2 rounded-full shadow-sm">
-              Competition ID: <span className="font-semibold">{selectedCompetition.competition_id}</span>
+              Competition ID: <span className="font-semibold">{selectedCompetition}</span>
             </span>
             <span className="bg-white px-4 py-2 rounded-full shadow-sm">
               {matches.length} {matches.length === 1 ? 'match' : 'matches'}
