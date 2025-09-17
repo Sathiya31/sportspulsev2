@@ -173,7 +173,7 @@ export default function ArcheryDashboard() {
                   Calendar 2025
                 </h2>
               </div>
-              <div className="p-4 max-h-100 overflow-y-auto">
+              <div className="p-4 overflow-y-auto">
                 {events.length === 0 ? (
                   <p className="text-gray-500 text-center py-8">Loading events...</p>
                 ) : (

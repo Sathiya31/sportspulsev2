@@ -1,4 +1,5 @@
 "use client";
+import CompetitionResults from "@/components/tabletennis/CompetitionResults";
 import { useEffect, useState } from "react";
 
 function isLive(start: string, end: string) {
@@ -71,6 +72,13 @@ export default function TableTennisPage() {
   const [input, setInput] = useState("");
   const [result, setResult] = useState<string>("");
   const [error, setError] = useState("");
+  const [selectedEvent, setSelectedEvent] = useState(null);
+
+  const handleCalendarClick = (event) => {
+    console.log("clicked event", event);
+  setSelectedEvent(event);
+};
+
   function handleExtract() {
     try {
       setResult(extractIndianMatches(input));
@@ -153,6 +161,7 @@ export default function TableTennisPage() {
               <div
                 key={key}
                 className={`flex flex-col bg-white rounded shadow p-3 relative border border-blue-100 hover:bg-blue-50`}
+                onClick={() => handleCalendarClick(event)}
               >
                 <div className="font-semibold text-blue-900 text-base">{event.EventName}</div>
                 <div className="text-xs text-gray-600">{event.City}, {event.Country}</div>
@@ -189,6 +198,13 @@ export default function TableTennisPage() {
         ) : (
           <div className="text-gray-600 mb-8">No live events at the moment.</div>
         )}
+
+{/* Display selected event Results */}
+        <div>
+      {selectedEvent && (
+        <CompetitionResults selectedCompetition={selectedEvent.EventId} />
+      )}
+    </div>
         {/* Extractor UI */}
         <div className="max-w-2xl mx-auto py-8 px-4">
           <h2 className="text-xl font-bold mb-4 text-blue-800">Indian Results Extractor</h2>
