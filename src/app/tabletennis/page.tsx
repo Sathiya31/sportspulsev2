@@ -74,9 +74,9 @@ export default function TableTennisPage() {
   const [error, setError] = useState("");
   const [selectedEvent, setSelectedEvent] = useState(null);
 
-  const handleCalendarClick = (event) => {
+  const handleCalendarClick = (event: any) => {
     console.log("clicked event", event);
-  setSelectedEvent(event);
+    setSelectedEvent(event);
 };
 
   function handleExtract() {
