@@ -24,10 +24,6 @@ interface Match {
   round_name: string;
 }
 
-interface SelectedCompetition {
-  competition_id: string;
-}
-
 // Firebase service to fetch competition results
 const firebaseService = {
   getCompetitionResults: async (competitionId: string) => {
@@ -60,7 +56,7 @@ const CompetitionResults = ({ selectedCompetition }: { selectedCompetition: stri
         setLoading(true);
         setError(null);
 
-        //@ts-ignore
+        // @ts-expect-error
         const results: Match[] = await firebaseService.getCompetitionResults(selectedCompetition);
         setMatches(results);
       } catch (err) {
