@@ -56,7 +56,6 @@ const CompetitionResults = ({ selectedCompetition }: { selectedCompetition: stri
         setLoading(true);
         setError(null);
 
-        // @ts-expect-error
         const results: Match[] = await firebaseService.getCompetitionResults(selectedCompetition);
         setMatches(results);
       } catch (err) {
