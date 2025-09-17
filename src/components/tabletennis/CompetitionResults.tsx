@@ -1,10 +1,36 @@
 import React, { useState, useEffect } from 'react';
-import {  collection, query, where, getDocs } from 'firebase/firestore';
+import { collection, query, where, getDocs } from 'firebase/firestore';
 import { db } from '@/config/firebase';
+
+interface Competitor {
+  code: string;
+  organization: string;
+  seed: number;
+  result: string;
+  win_loss: 'W' | 'L';
+  team_name: string;
+  athlete_names: string[];
+}
+
+interface Match {
+  id?: string;
+  competition_id: number;
+  match_id: string;
+  date: string;
+  time: string;
+  result: string;
+  competitors: Competitor[];
+  round_code: string;
+  round_name: string;
+}
+
+interface SelectedCompetition {
+  competition_id: string;
+}
 
 // Firebase service to fetch competition results
 const firebaseService = {
-  getCompetitionResults: async (competitionId) => {
+  getCompetitionResults: async (competitionId: string) => {
     try {
       const q = query(
         collection(db, 'tabletennis'),
@@ -22,19 +48,20 @@ const firebaseService = {
   }
 };
 
-const CompetitionResults = ({selectedCompetition }) => {
-    console.log("seelcted", selectedCompetition)
-  const [matches, setMatches] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
+const CompetitionResults = ({ selectedCompetition }: { selectedCompetition: string }) => {
+  console.log("selected", selectedCompetition)
+  const [matches, setMatches] = useState<Match[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchResults = async () => {
-     
       try {
         setLoading(true);
         setError(null);
-        const results = await firebaseService.getCompetitionResults(selectedCompetition);
+
+        //@ts-ignore
+        const results: Match[] = await firebaseService.getCompetitionResults(selectedCompetition);
         setMatches(results);
       } catch (err) {
         setError('Failed to fetch competition results');
@@ -48,7 +75,7 @@ const CompetitionResults = ({selectedCompetition }) => {
   }, [selectedCompetition]);
 
   // Group matches by round_name
-  const groupedMatches = matches.reduce((groups, match) => {
+  const groupedMatches = matches.reduce((groups: Record<string, Match[]>, match: Match) => {
     const roundName = match.round_name;
     if (!groups[roundName]) {
       groups[roundName] = [];
@@ -57,12 +84,12 @@ const CompetitionResults = ({selectedCompetition }) => {
     return groups;
   }, {});
 
-  const formatResult = (result) => {
+  const formatResult = (result: string) => {
     if (!result || result === '0') return '';
     return result;
   };
 
-  const MatchCard = ({ match }) => (
+  const MatchCard = ({ match }: { match: Match }) => (
     <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 hover:shadow-md transition-shadow duration-200">
       <div className="flex justify-between items-start mb-4">
         <div className="flex items-center space-x-4 text-gray-600">
@@ -75,7 +102,7 @@ const CompetitionResults = ({selectedCompetition }) => {
       </div>
 
       <div className="space-y-3">
-        {match.competitors.map((competitor) => (
+        {match.competitors.map((competitor: Competitor) => (
           <div
             key={competitor.code}
             className={`flex items-center justify-between p-4 rounded-lg border-2 transition-colors ${
@@ -89,8 +116,8 @@ const CompetitionResults = ({selectedCompetition }) => {
                 <span className="text-xs text-gray-500 font-medium">Seed</span>
                 <span className="text-lg font-bold text-gray-700">{competitor.seed}</span>
                 <span className="text-xs px-3 py-1 bg-blue-100 text-blue-800 rounded-full font-medium">
-                    {competitor.organization}
-                  </span>
+                  {competitor.organization}
+                </span>
               </div>
               <div className="flex flex-col">
                 <div className="flex items-center space-x-3">
@@ -160,7 +187,7 @@ const CompetitionResults = ({selectedCompetition }) => {
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-8">
             <h1 className="text-4xl font-bold text-gray-800 mb-2">Competition Results</h1>
-            <p className="text-gray-600">Competition ID: {selectedCompetition}</p>
+            <p className="text-gray-600">Competition ID: {selectedCompetition.competition_id}</p>
           </div>
           <LoadingSpinner />
         </div>
@@ -198,7 +225,7 @@ const CompetitionResults = ({selectedCompetition }) => {
           </div>
           <div className="flex items-center justify-center space-x-4 text-gray-600">
             <span className="bg-white px-4 py-2 rounded-full shadow-sm">
-              Competition ID: <span className="font-semibold">{selectedCompetition}</span>
+              Competition ID: <span className="font-semibold">{selectedCompetition.competition_id}</span>
             </span>
             <span className="bg-white px-4 py-2 rounded-full shadow-sm">
               {matches.length} {matches.length === 1 ? 'match' : 'matches'}
@@ -214,7 +241,7 @@ const CompetitionResults = ({selectedCompetition }) => {
               const order = ['Round of 32', 'Round of 16', 'Quarter Finals', 'Semi Finals', 'Final'];
               return order.indexOf(a) - order.indexOf(b);
             })
-            .map(([roundName, roundMatches]) => (
+            .map(([roundName, roundMatches]: [string, Match[]]) => (
             <div key={roundName} className="space-y-6">
               <div className="flex items-center space-x-4 mb-6">
                 <h2 className="text-3xl font-bold text-gray-800">{roundName}</h2>
@@ -225,7 +252,7 @@ const CompetitionResults = ({selectedCompetition }) => {
               </div>
               
               <div className="grid gap-6 md:grid-cols-1 lg:grid-cols-2">
-                {roundMatches.map((match) => (
+                {roundMatches.map((match: Match) => (
                   <MatchCard key={match.match_id} match={match} />
                 ))}
               </div>
