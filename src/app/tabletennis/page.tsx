@@ -182,15 +182,13 @@ export default function TableTennisPage() {
         <h1 className="text-2xl font-bold mb-4 text-blue-800">Table Tennis 2025 Calendar</h1>
         <div className="mb-4 font-semibold text-lg text-green-700">Live Events</div>
         {liveEvents.length > 0 ? (
-          <div className="space-y-4 mb-8">
+          <div className="flex space-x-2 mb-8">
             {liveEvents.map((ev, idx) => {
               const key = ev.EventId ? `${ev.EventId}_${idx}` : `live_${idx}`;
               return (
                 <div key={key} className="border border-green-300 rounded p-3 bg-white">
                   <div className="font-semibold text-blue-900">{ev.EventName}</div>
                   <div className="text-xs text-gray-600">{ev.City}, {ev.Country}</div>
-                  <div className="text-xs text-gray-500">{formatDate(ev.StartDateTime)} to {formatDate(ev.EndDateTime)}</div>
-                  <div className="text-xs text-gray-500">{ev.EventType}</div>
                 </div>
               );
             })}
@@ -202,7 +200,7 @@ export default function TableTennisPage() {
 {/* Display selected event Results */}
         <div>
       {selectedEvent && (
-        <CompetitionResults selectedCompetition={selectedEvent.EventId} />
+        <CompetitionResults {...selectedEvent} />
       )}
     </div>
         {/* Extractor UI */}

@@ -43,8 +43,8 @@ const firebaseService = {
   }
 };
 
-const CompetitionResults = ({ selectedCompetition }: { selectedCompetition: string }) => {
-  console.log("selected", selectedCompetition)
+const CompetitionResults = ({ EventId, EventName }: { EventId: string, EventName: string }) => {
+  console.log("selected", EventId, EventName);
   const [matches, setMatches] = useState<Match[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
@@ -55,7 +55,7 @@ const CompetitionResults = ({ selectedCompetition }: { selectedCompetition: stri
         setLoading(true);
         setError(null);
 
-        const results: Match[] = await firebaseService.getCompetitionResults(selectedCompetition);
+        const results: Match[] = await firebaseService.getCompetitionResults(EventId);
         setMatches(results);
       } catch (err) {
         setError('Failed to fetch competition results');
@@ -66,7 +66,7 @@ const CompetitionResults = ({ selectedCompetition }: { selectedCompetition: stri
     };
 
     fetchResults();
-  }, [selectedCompetition]);
+  }, [EventId]);
 
   // Group matches by round_name
   const groupedMatches = matches.reduce((groups: Record<string, Match[]>, match: Match) => {
@@ -84,14 +84,11 @@ const CompetitionResults = ({ selectedCompetition }: { selectedCompetition: stri
   };
 
   const MatchCard = ({ match }: { match: Match }) => (
-    <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 hover:shadow-md transition-shadow duration-200">
-      <div className="flex justify-between items-start mb-4">
+    <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-3 hover:shadow-md transition-shadow duration-200">
+      <div className="flex justify-between items-start mb-2">
         <div className="flex items-center space-x-4 text-gray-600">
           <span className="text-sm font-medium">{match.date}</span>
           <span className="text-sm">{match.time}</span>
-        </div>
-        <div className="text-xs text-gray-500 font-mono bg-gray-100 px-2 py-1 rounded">
-          {match.match_id.slice(-6)}
         </div>
       </div>
 
@@ -115,10 +112,10 @@ const CompetitionResults = ({ selectedCompetition }: { selectedCompetition: stri
               </div>
               <div className="flex flex-col">
                 <div className="flex items-center space-x-3">
-                  <span className={`text-md font-semibold ${
+                  <span className={`text-md font-semibold mr-1 ${
                     competitor.win_loss === 'W' ? 'text-green-700' : 'text-gray-700'
                   }`}>
-                    {competitor.team_name}
+                    {competitor.team_name.replaceAll('/', ' / ')}
                   </span>
                   {competitor.win_loss === 'W' && (
                     <span className="text-xs px-2 py-1 bg-green-100 text-green-800 rounded-full font-bold">
@@ -142,7 +139,7 @@ const CompetitionResults = ({ selectedCompetition }: { selectedCompetition: stri
         ))}
       </div>
 
-      <div className="mt-6 pt-4 border-t border-gray-100">
+      <div className="mt-2 pt-2 border-t border-gray-100">
         <div className="flex items-center justify-center space-x-3">
           <span className="text-sm text-gray-600 font-medium">Score:</span>
           <span className="font-mono text-sm bg-gray-100 px-3 py-2 rounded-lg font-medium">
@@ -161,7 +158,7 @@ const CompetitionResults = ({ selectedCompetition }: { selectedCompetition: stri
   );
 
   // Show placeholder when no competition is selected
-  if (!selectedCompetition) {
+  if (!EventId) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-6">
         <div className="max-w-6xl mx-auto">
@@ -180,8 +177,8 @@ const CompetitionResults = ({ selectedCompetition }: { selectedCompetition: stri
       <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-6">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-8">
-            <h1 className="text-4xl font-bold text-gray-800 mb-2">Competition Results</h1>
-            <p className="text-gray-600">Competition ID: {selectedCompetition}</p>
+            <h1 className="text-lg font-bold text-gray-800 mb-2">Competition Results</h1>
+            <p className="text-gray-600">{EventName}</p>
           </div>
           <LoadingSpinner />
         </div>
@@ -213,14 +210,9 @@ const CompetitionResults = ({ selectedCompetition }: { selectedCompetition: stri
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-6">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
-        <div className="text-center mb-12">
-          <div className="flex items-center justify-center space-x-3 mb-4">
-            <h1 className="text-4xl font-bold text-gray-800">Competition Results</h1>
-          </div>
-          <div className="flex items-center justify-center space-x-4 text-gray-600">
-            <span className="bg-white px-4 py-2 rounded-full shadow-sm">
-              Competition ID: <span className="font-semibold">{selectedCompetition}</span>
-            </span>
+        <div className="text-center mb-2">
+          <div className="flex items-center justify-center space-x-3">
+            <h1 className="text-xl font-bold text-blue-800">{EventName}</h1>
             <span className="bg-white px-4 py-2 rounded-full shadow-sm">
               {matches.length} {matches.length === 1 ? 'match' : 'matches'}
             </span>
@@ -238,7 +230,7 @@ const CompetitionResults = ({ selectedCompetition }: { selectedCompetition: stri
             .map(([roundName, roundMatches]: [string, Match[]]) => (
             <div key={roundName} className="space-y-6">
               <div className="flex items-center space-x-4 mb-6">
-                <h2 className="text-3xl font-bold text-gray-800">{roundName}</h2>
+                <h2 className="text-lg font-bold text-gray-800">{roundName}</h2>
                 <div className="flex-1 h-px bg-gray-300"></div>
                 <span className="text-sm text-gray-500 bg-white px-4 py-2 rounded-full shadow-sm">
                   {roundMatches.length} {roundMatches.length === 1 ? 'match' : 'matches'}
