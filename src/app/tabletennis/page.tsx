@@ -72,7 +72,7 @@ export default function TableTennisPage() {
   const [input, setInput] = useState("");
   const [result, setResult] = useState<string>("");
   const [error, setError] = useState("");
-  const [selectedEvent, setSelectedEvent] = useState(null);
+  const [selectedEvent, setSelectedEvent] = useState<any>(null);
 
   const handleCalendarClick = (event: any) => {
     console.log("clicked event", event);
