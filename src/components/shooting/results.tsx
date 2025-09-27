@@ -76,7 +76,6 @@ const ShootingResults = ({ selectedCompetition }: { selectedCompetition: string 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [selectedEvent, setSelectedEvent] = useState<string | null>(null);
-  console.log("Selected Competition in Results:", selectedCompetition);
 
   useEffect(() => {
     fetchResults();
@@ -111,6 +110,7 @@ const ShootingResults = ({ selectedCompetition }: { selectedCompetition: string 
         if (eventStage.toLowerCase() == 'qualification') {
           acc[eventFormat].qualification.push(result);
         } else {
+            console.log("Finals result:", result);
           acc[eventFormat].finals.push(result);
         }
 

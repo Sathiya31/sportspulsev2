@@ -22,7 +22,7 @@ export default function ShootingPage() {
   const [loading, setLoading] = useState(false);
   const [filter, setFilter] = useState("");
   const [events, setEvents] = useState<ShootingEvent[]>([]);
-  const [activeTab, setActiveTab] = useState<'Schedule' | 'Results' | 'Extractor'>('Schedule');
+  const [activeTab, setActiveTab] = useState<'Results' | 'Schedule' | 'Extractor'>('Results');
   const [selectedSchedule, setSelectedSchedule] = useState<any>(null);
   const [selectedCompetition, setSelectedCompetition] = useState<string | null>(null);
 
@@ -33,25 +33,27 @@ export default function ShootingPage() {
       .catch(() => setEvents([]));
   }, []);
 
-  // ...moved to IssfSchedule.tsx...
-
-  async function handleCardClick(item: ShootingEvent) {
-    setSelectedSchedule('Loading...');
-    console.log("Fetching schedule for:", item);
-    try {
-      setSelectedCompetition(item?.competition_code || null);
-      const url = `/api/shooting-indian-results?url=${encodeURIComponent(`https://www.issf-sports.org${item.hyperlink}/schedule`)}`;
-      const res = await fetch(url);
-      if (!res.ok) throw new Error('Failed to fetch schedule');
-      const { html } = await res.json();
-      const schedule = parseIssfScheduleHtml(html);
-      setSelectedSchedule(schedule);
-      setActiveTab('Schedule');
-    } catch {
-      setSelectedSchedule('Could not fetch schedule.');
+  async function handleTableClick(tabName: 'Results' | 'Schedule' | 'Extractor') {
+    setActiveTab(tabName);
+    if (tabName === 'Schedule' && selectedCompetition && !selectedSchedule) {
+      setSelectedSchedule('Loading...');
+      try {
+        const url = `/api/shooting-indian-results?url=${encodeURIComponent(`https://www.issf-sports.org/competitions/${selectedCompetition}/schedule`)}`;
+        const res = await fetch(url);
+        if (!res.ok) throw new Error('Failed to fetch schedule');
+        const { html } = await res.json();
+        const schedule = parseIssfScheduleHtml(html);
+        setSelectedSchedule(schedule);
+      } catch {
+        setSelectedSchedule('Could not fetch schedule.');
+      }
     }
   }
-  // ...existing code...
+
+  async function handleCardClick(item: ShootingEvent) {
+      setSelectedCompetition(item?.competition_code || null);
+      setActiveTab('Results');
+  }
 
   function extractIndianShootingResultsFromHtml(html: string): string {
     const parser = new DOMParser();
@@ -182,14 +184,14 @@ export default function ShootingPage() {
       {/* Main Content with Tabs */}
       <div className="flex-1">
         <div className="mb-2 flex gap-1 p-1 bg-gray-100 dark:bg-gray-800/50 rounded-xl">
-          {(['Schedule', 'Results', 'Extractor'] as const).map(tab => (
+          {(['Results', 'Schedule', 'Extractor'] as const).map(tab => (
             <button
               key={tab}
               className={`flex-1 px-6 py-3 rounded-lg font-semibold transition-all duration-300 
                 ${activeTab === tab 
                   ? 'bg-white dark:bg-gray-700 text-primary dark:text-accent shadow-lg transform scale-[1.02]' 
                   : 'text-gray-600 dark:text-gray-300 hover:bg-white/50 dark:hover:bg-gray-700/50'}`}
-              onClick={() => setActiveTab(tab)}
+              onClick={() => handleTableClick(tab)}
             >
               {tab}
             </button>

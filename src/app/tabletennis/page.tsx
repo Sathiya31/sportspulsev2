@@ -99,6 +99,8 @@ export default function TableTennisPage() {
     async function fetchCalendar() {
       const res = await fetch("/data/calendars/tabletennis_2025.json");
       const data = await res.json();
+      // sort by StartDateTime
+      data.sort((a: any, b: any) => new Date(a.StartDateTime).getTime() - new Date(b.StartDateTime).getTime());
       const rows = data || [];
       setEvents(rows);
       // Extract unique months
@@ -107,7 +109,7 @@ export default function TableTennisPage() {
       rows.forEach((ev: any) => {
         const m = new Date(ev.StartDateTime).toLocaleString('default', { month: 'long' });
         monthSet.add(m);
-        if (ev.EventType) catSet.add(ev.EventType);
+        if (ev.Event_Tier_Name) catSet.add(ev.Event_Tier_Name);
       });
       setMonths(["All", ...Array.from(monthSet)]);
       setCategories(["All", ...Array.from(catSet)]);
@@ -119,7 +121,7 @@ export default function TableTennisPage() {
   const filtered = events.filter(ev => {
     const eventMonth = new Date(ev.StartDateTime).toLocaleString('default', { month: 'long' });
     const monthMatch = month === "All" || eventMonth === month;
-    const catMatch = category === "All" || ev.EventType === category;
+    const catMatch = category === "All" || ev.Event_Tier_Name === category;
     return monthMatch && catMatch;
   });
 
@@ -179,7 +181,7 @@ export default function TableTennisPage() {
       </aside>
       {/* Right panel: live events */}
       <main className="flex-1 p-8">
-        <h1 className="text-2xl font-bold mb-4 text-blue-800">Table Tennis 2025 Calendar</h1>
+        <h1 className="text-2xl font-bold mb-4 text-blue-800">Table Tennis</h1>
         <div className="mb-4 font-semibold text-lg text-green-700">Live Events</div>
         {liveEvents.length > 0 ? (
           <div className="flex space-x-2 mb-8">

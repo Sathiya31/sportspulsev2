@@ -33,6 +33,7 @@ interface Competitor {
   Bye: boolean;
   Irm: string;
   WinLose: boolean;
+  Name?: string;
   Athlete?: Athlete; // For individual matches
   NOC?: string; // For team matches
 }
@@ -108,6 +109,7 @@ export default function ArcheryDashboard() {
       querySnapshot.forEach((doc) => {
         matchList.push(doc.data() as MatchData);
       });
+      console.log(matchList)
       setMatches(matchList);
 
     } catch (err) {
@@ -270,7 +272,7 @@ export default function ArcheryDashboard() {
                       </h3>
                       <div className="space-y-4">
                         {matches.map((match, index) => {
-                          const isTeamMatch = activeFilter?.includes('TEAM') || false;
+                          const isTeamMatch = activeFilter?.includes('T') || false;
                           const isComp1Indian = isIndianCompetitor(match.Competitor1, isTeamMatch);
                           const isComp2Indian = isIndianCompetitor(match.Competitor2, isTeamMatch);
 
@@ -297,6 +299,7 @@ export default function ArcheryDashboard() {
 
                               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 {/* Competitor 1 */}
+                                {match.Competitor1.QualRank != 0 &&
                                 <div className={`p-4 rounded-lg border ${
                                   isComp1Indian ? 'bg-green-50 border-green-200' : 'bg-gray-50 border-gray-200'
                                 }`}>
@@ -304,7 +307,7 @@ export default function ArcheryDashboard() {
                                     <div>
                                       <h4 className="font-semibold text-gray-900">
                                         {isTeamMatch ? (
-                                          `Team ${match.Competitor1.NOC}`
+                                          `Team ${match.Competitor1.Name}`
                                         ) : (
                                           `${match.Competitor1.Athlete?.GName} ${match.Competitor1.Athlete?.FName}`
                                         )}
@@ -318,7 +321,7 @@ export default function ArcheryDashboard() {
                                       <div className={`text-2xl font-bold ${
                                         match.Competitor1.WinLose ? 'text-green-600' : 'text-red-600'
                                       }`}>
-                                        {match.Competitor1.Score}
+                                        {match.Competitor2.QualRank == 0 ? 'Bye' : match.Competitor1.Score}
                                       </div>
                                       <div className="text-sm text-gray-500">
                                         {match.Competitor1.WinLose ? 'WIN' : 'LOSS'}
@@ -331,16 +334,18 @@ export default function ArcheryDashboard() {
                                     </div>
                                   )}
                                 </div>
-
+                                }
+                                
                                 {/* Competitor 2 */}
-                                <div className={`p-4 rounded-lg border ${
+                                {match.Competitor2.QualRank != 0 &&
+                               <div className={`p-4 rounded-lg border ${
                                   isComp2Indian ? 'bg-green-50 border-green-200' : 'bg-gray-50 border-gray-200'
                                 }`}>
                                   <div className="flex justify-between items-start mb-3">
                                     <div>
                                       <h4 className="font-semibold text-gray-900">
                                         {isTeamMatch ? (
-                                          `Team ${match.Competitor2.NOC}`
+                                          `Team ${match.Competitor2.Name}`
                                         ) : (
                                           `${match.Competitor2.Athlete?.GName} ${match.Competitor2.Athlete?.FName}`
                                         )}
@@ -354,7 +359,7 @@ export default function ArcheryDashboard() {
                                       <div className={`text-2xl font-bold ${
                                         match.Competitor2.WinLose ? 'text-green-600' : 'text-red-600'
                                       }`}>
-                                        {match.Competitor2.Score}
+                                        {match.Competitor1.Bye ? 'Bye' : match.Competitor2.Score}
                                       </div>
                                       <div className="text-sm text-gray-500">
                                         {match.Competitor2.WinLose ? 'WIN' : 'LOSS'}
@@ -367,6 +372,8 @@ export default function ArcheryDashboard() {
                                     </div>
                                   )}
                                 </div>
+                              }
+                               
                               </div>
                             </div>
                           );

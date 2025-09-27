@@ -223,9 +223,10 @@ const CompetitionResults = ({ EventId, EventName }: { EventId: string, EventName
         <div className="space-y-12">
           {Object.entries(groupedMatches)
             .sort(([a], [b]) => {
+              console.log(a, b)
               // Sort rounds in tournament order
-              const order = ['Round of 32', 'Round of 16', 'Quarter Finals', 'Semi Finals', 'Final'];
-              return order.indexOf(a) - order.indexOf(b);
+              const order = ['Round of 64', 'Round of 32', 'Round of 16', 'Quarterfinals', 'Semifinals', 'Final'];
+              return order.indexOf(b) - order.indexOf(a);
             })
             .map(([roundName, roundMatches]: [string, Match[]]) => (
             <div key={roundName} className="space-y-6">
