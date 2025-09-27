@@ -9,6 +9,7 @@ interface RoundGroupProps {
 
 const roundNames: { [key: string]: string } = {
   'F': 'Finals',
+  'Final' : 'Finals',
   'SF': 'Semi Finals',
   'QF': 'Quarter Finals',
   'R16': 'Round of 16',
@@ -19,6 +20,7 @@ const roundNames: { [key: string]: string } = {
 export default function RoundGroup({ name, matches }: RoundGroupProps) {
   const [isExpanded, setIsExpanded] = useState(true);
   const displayName = roundNames[name] || name;
+  console.log(matches);
 
   return (
     <div className="mb-6">

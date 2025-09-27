@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { IssfScheduleDisplay, parseIssfScheduleHtml } from "../../components/IssfSchedule";
+import  ShootingResults  from "../../components/shooting/results";
 
 
 interface ShootingEvent {
@@ -10,6 +11,7 @@ interface ShootingEvent {
   end_date: string;
   location: string;
   hyperlink: string;
+  competition_code?: string;
 }
 
 export default function ShootingPage() {
@@ -22,6 +24,7 @@ export default function ShootingPage() {
   const [events, setEvents] = useState<ShootingEvent[]>([]);
   const [activeTab, setActiveTab] = useState<'Schedule' | 'Results' | 'Extractor'>('Schedule');
   const [selectedSchedule, setSelectedSchedule] = useState<any>(null);
+  const [selectedCompetition, setSelectedCompetition] = useState<string | null>(null);
 
   useEffect(() => {
     fetch("/data/calendars/shooting_2025.json")
@@ -34,7 +37,9 @@ export default function ShootingPage() {
 
   async function handleCardClick(item: ShootingEvent) {
     setSelectedSchedule('Loading...');
+    console.log("Fetching schedule for:", item);
     try {
+      setSelectedCompetition(item?.competition_code || null);
       const url = `/api/shooting-indian-results?url=${encodeURIComponent(`https://www.issf-sports.org${item.hyperlink}/schedule`)}`;
       const res = await fetch(url);
       if (!res.ok) throw new Error('Failed to fetch schedule');
@@ -52,7 +57,7 @@ export default function ShootingPage() {
     const parser = new DOMParser();
     const doc = parser.parseFromString(html, "text/html");
     const tables = doc.querySelectorAll("table.result_xml_resulttable");
-  const results: string[] = [];
+    const results: string[] = [];
     tables.forEach((table) => {
       const rows = table.querySelectorAll("tbody > tr");
       rows.forEach((row) => {
@@ -176,7 +181,7 @@ export default function ShootingPage() {
       </aside>
       {/* Main Content with Tabs */}
       <div className="flex-1">
-        <div className="mb-8 flex gap-1 p-1 bg-gray-100 dark:bg-gray-800/50 rounded-xl">
+        <div className="mb-2 flex gap-1 p-1 bg-gray-100 dark:bg-gray-800/50 rounded-xl">
           {(['Schedule', 'Results', 'Extractor'] as const).map(tab => (
             <button
               key={tab}
@@ -213,10 +218,7 @@ export default function ShootingPage() {
             </div>
           )}
           {activeTab === 'Results' && (
-            <div>
-              <h2 className="text-2xl font-bold mb-6 text-gray-900 dark:text-gray-100">Results</h2>
-              <div className="text-gray-600 dark:text-gray-300">Results tab content here.</div>
-            </div>
+            <ShootingResults selectedCompetition={selectedCompetition} />
           )}
           {activeTab === 'Extractor' && (
             <div>
