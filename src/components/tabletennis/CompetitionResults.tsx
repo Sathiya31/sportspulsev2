@@ -19,6 +19,7 @@ interface Match {
   date: string;
   time: string;
   result: string;
+  event_name: string;
   competitors: Competitor[];
   round_code: string;
   round_name: string;
@@ -86,10 +87,12 @@ const CompetitionResults = ({ EventId, EventName }: { EventId: string, EventName
   const MatchCard = ({ match }: { match: Match }) => (
     <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-3 hover:shadow-md transition-shadow duration-200">
       <div className="flex justify-between items-start mb-2">
-        <div className="flex items-center space-x-4 text-gray-600">
-          <span className="text-sm font-medium">{match.date}</span>
-          <span className="text-sm">{match.time}</span>
-        </div>
+          <div>
+            <span className="text-sm font-medium">{match.event_name}</span>
+          </div>
+          <div>
+            <span className="text-sm">{match.date} {match.time}</span>
+          </div>
       </div>
 
       <div className="space-y-3">

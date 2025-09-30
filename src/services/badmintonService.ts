@@ -25,7 +25,7 @@ export async function getTournamentResults(tournamentCode: string): Promise<Tour
     });
     
     // Sort rounds in proper order
-    const roundOrder = ['F', 'SF', 'QF', 'R16', 'R32', 'R64'];
+    const roundOrder = ['Final', 'F', 'SF', 'QF', 'R16', 'R32', 'R64'];
     const sortedResults: TournamentResults = {};
     
     roundOrder.forEach(round => {
