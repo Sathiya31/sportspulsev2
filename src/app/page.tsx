@@ -2,6 +2,8 @@
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import CountdownTimer from "@/components/CountdownTimer";
+import Button from '@/components/ui/Button';
+import BlogGrid from "@/components/blog/BlogGrid";
 
 const carouselSlides = [
   {
@@ -37,6 +39,7 @@ export default function Home() {
   const [active, setActive] = useState(0);
   const [currentEvents, setCurrentEvents] = useState<Event[]>([]);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
+  const [blogs, setBlogs] = useState<any[]>([]);
 
   useEffect(() => {
     if (intervalRef.current) clearInterval(intervalRef.current);
@@ -60,6 +63,16 @@ export default function Home() {
     };
 
     fetchEvents();
+  }, []);
+
+  useEffect(() => {
+    async function fetchBlogs() {
+      const res = await fetch("/api/blogs");
+      const data = await res.json();
+      console.log("fetched logs", data);
+      setBlogs(data);
+    }
+    fetchBlogs();
   }, []);
 
   return (
@@ -101,69 +114,24 @@ export default function Home() {
           </section>
 
           {/* News Cards / Feeds */}
-          <section className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="bg-white rounded-xl shadow-md overflow-hidden">
-              <Image
-                src="/images/news3.jpg"
-                alt="News 1"
-                width={400}
-                height={200}
-                className="w-full h-40 object-cover"
-              />
-              <div className="p-4">
-                <h3 className="font-semibold text-xl mb-2">Athletes & Performances</h3>
-                <p className="text-gray-600 mb-4">
-                  Latest updates on athlete performances and highlights from recent events.
-                </p>
-                <a
-                  href="#"
-                  className="text-blue-600 font-medium hover:underline"
-                >
-                  Read More
-                </a>
+          <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+            <div className="flex items-center justify-between mb-2">
+              <div>
+                <h2 className="text-2xl font-bold text-slate-900 mb-1">
+                  Latest Articles
+                </h2>
               </div>
+              <Button href="/blog" variant="ghost" className="hidden md:flex">
+                View All →
+              </Button>
             </div>
-            <div className="bg-white rounded-xl shadow-md overflow-hidden">
-              <Image
-                src="/images/news2.jpg"
-                alt="News 2"
-                width={400}
-                height={200}
-                className="w-full h-40 object-cover"
-              />
-              <div className="p-4">
-                <h3 className="font-semibold text-xl mb-2">Paris 2024</h3>
-                <p className="text-gray-600 mb-4">
-                  Revisit Paris Olympics highlights and athlete performances.
-                </p>
-                <a
-                  href="#"
-                  className="text-blue-600 font-medium hover:underline"
-                >
-                  Read More
-                </a>
-              </div>
-            </div>
-            <div className="bg-white rounded-xl shadow-md overflow-hidden">
-              <Image
-                src="/images/news1.jpg"
-                alt="News 3"
-                width={400}
-                height={200}
-                className="w-full h-40 object-cover"
-              />
-              <div className="p-4">
-                <h3 className="font-semibold text-xl mb-2">Upcoming Fixtures</h3>
-                <p className="text-gray-600 mb-4">
-                  Stay updated with the schedule and previews for the next big games.
-                </p>
-                <a
-                  href="#"
-                  className="text-blue-600 font-medium hover:underline"
-                >
-                  Read More
-                </a>
-              </div>
+
+            <BlogGrid blogs={blogs} />
+
+            <div className="mt-12 text-center md:hidden">
+              <Button href="/blog" variant="primary">
+                View All Articles
+              </Button>
             </div>
           </section>
         </div>
@@ -188,6 +156,23 @@ export default function Home() {
           </section>
         </div>
       </div>
+
+
+      {/* CTA Section */}
+      <section className="bg-amber-50 border-y border-amber-100 py-16">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h2 className="text-3xl font-bold text-slate-900 mb-4">
+            Stay Updated
+          </h2>
+          <p className="text-slate-600 text-lg mb-8">
+            Dont miss out on the latest articles, tutorials, and insights.
+            Check out our full collection of blog posts.
+          </p>
+          <Button href="/blog" variant="primary" size="lg">
+            Browse All Articles
+          </Button>
+        </div>
+      </section>
     </main>
   );
 }
