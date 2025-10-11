@@ -35,10 +35,11 @@ a, button {
   transition: all 0.2s ease-in-out;
 }
 
-:root {
+ :root {
   /* Base background / foreground */
   --background: #ffffff;
   --foreground: #171717;
+  --toolbar-bg: #f3f6fa; /* slightly darker than --background */
 
   /* Design tokens */
   --muted: #374151; /* slate-700 */
@@ -60,6 +61,7 @@ a, button {
   :root {
     --background: #071025; /* deep navy */
     --foreground: #e6eef8;
+    --toolbar-bg: #0a1836; /* slightly lighter than --background for dark mode */
 
     /* Dark theme token overrides */
     --muted: #e6eef8;

@@ -350,7 +350,7 @@ const ShootingResults = ({ selectedCompetition }: { selectedCompetition: string 
   if (Object.keys(results).length === 0) {
     return (
       <div className="text-center py-12">
-        <div className="text-gray-600">No shooting results found</div>
+        <div className="text-gray-600">No Indian Results found</div>
       </div>
     );
   }
@@ -358,7 +358,7 @@ const ShootingResults = ({ selectedCompetition }: { selectedCompetition: string 
   return (
     <div className="max-w-7xl mx-auto p-2 space-y-8">
       <div className="text-center mb-2">
-        <h3 className="text-xl font-bold text-gray-900 my-4">Shooting Competition Results</h3>
+        <h3 className="text-xl font-bold text-gray-900 my-4">Indian Results</h3>
         
         {/* Event Format Chips */}
         <div className="flex flex-wrap justify-center gap-3 mb-8">
@@ -380,11 +380,6 @@ const ShootingResults = ({ selectedCompetition }: { selectedCompetition: string 
 
       {selectedEventData && (
         <div className="bg-gray-50 rounded-xl p-6">
-          <div className="mb-6 text-center">
-            <span className={`inline-flex items-center px-4 py-2 rounded-full text-lg font-semibold ${getEventFormatColor(selectedEvent!)}`}>
-              {selectedEvent}
-            </span>
-          </div>
 
           {selectedEventData.finals.length > 0 && (
             <div className="mb-8">

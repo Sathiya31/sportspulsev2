@@ -1,17 +1,14 @@
 "use client";
 import CompetitionResults from "@/components/tabletennis/CompetitionResults";
 import { useEffect, useState } from "react";
+import EventCard from "@/components/ui/EventCard";
+import Button from "@/components/ui/Button";
 
 function isLive(start: string, end: string) {
   const now = new Date();
   const startDate = new Date(start);
   const endDate = new Date(end);
   return now >= startDate && now <= endDate;
-}
-
-function formatDate(dateStr: string) {
-  const d = new Date(dateStr);
-  return d.toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' });
 }
 
 function extractIndianMatches(html: string) {
@@ -129,14 +126,14 @@ export default function TableTennisPage() {
   const liveEvents = events.filter(ev => isLive(ev.StartDateTime, ev.EndDateTime));
 
   return (
-    <div className="flex min-h-screen">
-      {/* Left panel calendar */}
-      <aside className="w-96 bg-gray-50 border-r border-gray-200 p-4 overflow-y-auto">
-        {/* Filters */}
+    <div className="flex min-h-screen" style={{ background: "var(--background)", color: "var(--foreground)" }}>
+      {/* Consistent Calendar Sidebar */}
+      <aside className="w-96 bg-slate-50 border-r border-slate-200 p-4 overflow-y-auto">
         <div className="mb-4">
-          <label className="block text-sm font-semibold mb-1">Filter by Month</label>
+          <label className="block text-sm font-semibold mb-1" style={{ color: "var(--muted)" }}>Filter by Month</label>
           <select
-            className="w-full p-2 border border-blue-400 rounded text-black mb-2"
+            className="w-full p-2 rounded mb-2"
+            style={{ borderColor: "var(--primary)", color: "var(--foreground)" }}
             value={month}
             onChange={e => setMonth(e.target.value)}
           >
@@ -144,9 +141,10 @@ export default function TableTennisPage() {
               <option key={m} value={m}>{m}</option>
             ))}
           </select>
-          <label className="block text-sm font-semibold mb-1">Filter by Category</label>
+          <label className="block text-sm font-semibold mb-1" style={{ color: "var(--muted)" }}>Filter by Category</label>
           <select
-            className="w-full p-2 border border-blue-400 rounded text-black"
+            className="w-full p-2 rounded"
+            style={{ borderColor: "var(--primary)", color: "var(--foreground)" }}
             value={category}
             onChange={e => setCategory(e.target.value)}
           >
@@ -157,75 +155,84 @@ export default function TableTennisPage() {
         </div>
         <div className="space-y-4">
           {filtered.map((event: any, idx: number) => {
-            // Use a unique key: EventId if present, else fallback to index
             const key = event.EventId ? `${event.EventId}_${idx}` : `event_${idx}`;
             return (
-              <div
+              <EventCard
                 key={key}
-                className={`flex flex-col bg-white rounded shadow p-3 relative border border-blue-100 hover:bg-blue-50`}
+                id={event.EventId}
+                name={event.EventName}
+                location={`${event.City}, ${event.Country}`}
+                startDate={event.StartDateTime}
+                endDate={event.EndDateTime}
+                accentColor={selectedEvent?.EventId === event.EventId ? "var(--primary)" : "var(--muted-2)"}
+                isLive={isLive(event.StartDateTime, event.EndDateTime)}
                 onClick={() => handleCalendarClick(event)}
-              >
-                <div className="font-semibold text-blue-900 text-base">{event.EventName}</div>
-                <div className="text-xs text-gray-600">{event.City}, {event.Country}</div>
-                <div className="text-xs text-gray-500">{formatDate(event.StartDateTime)} to {formatDate(event.EndDateTime)}</div>
-                <div className="text-xs text-gray-500">{event.EventType}</div>
-                {isLive(event.StartDateTime, event.EndDateTime) && (
-                  <span className="absolute top-2 right-2 flex items-center gap-1 text-xs font-bold text-green-600">
-                    <span className="inline-block w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>LIVE
-                  </span>
-                )}
-              </div>
+                className={selectedEvent?.EventId === event.EventId ? "ring-2" : ""}
+              />
             );
+// Helper to determine if event is live
+function isLive(startDate: string, endDate: string) {
+  const now = new Date();
+  const start = new Date(startDate);
+  const end = new Date(endDate);
+  return now >= start && now <= end;
+}
           })}
         </div>
       </aside>
-      {/* Right panel: live events */}
-      <main className="flex-1 p-8">
-        <h1 className="text-2xl font-bold mb-4 text-blue-800">Table Tennis</h1>
-        <div className="mb-4 font-semibold text-lg text-green-700">Live Events</div>
-        {liveEvents.length > 0 ? (
-          <div className="flex space-x-2 mb-8">
-            {liveEvents.map((ev, idx) => {
-              const key = ev.EventId ? `${ev.EventId}_${idx}` : `live_${idx}`;
-              return (
-                <div key={key} className="border border-green-300 rounded p-3 bg-white">
-                  <div className="font-semibold text-blue-900">{ev.EventName}</div>
-                  <div className="text-xs text-gray-600">{ev.City}, {ev.Country}</div>
-                </div>
-              );
-            })}
-          </div>
-        ) : (
-          <div className="text-gray-600 mb-8">No live events at the moment.</div>
-        )}
-
-{/* Display selected event Results */}
+      {/* Consistent Main Layout */}
+      <main className="flex-1 p-8 flex flex-col gap-8" style={{ background: "var(--background)" }}>
         <div>
-      {selectedEvent && (
-        <CompetitionResults {...selectedEvent} />
-      )}
-    </div>
-        {/* Extractor UI */}
+          <h1 className="text-2xl font-bold mb-4" style={{ color: "var(--primary)" }}>Table Tennis</h1>
+          <div className="mb-4 font-semibold text-lg" style={{ color: "var(--success)" }}>Live Events</div>
+          {liveEvents.length > 0 ? (
+            <div className="flex space-x-2 mb-8">
+              {liveEvents.map((ev, idx) => {
+                const key = ev.EventId ? `${ev.EventId}_${idx}` : `live_${idx}`;
+                return (
+                  <EventCard
+                    key={key}
+                    id={ev.EventId}
+                    name={ev.EventName}
+                    location={`${ev.City}, ${ev.Country}`}
+                    startDate={ev.StartDateTime}
+                    endDate={ev.EndDateTime}
+                    accentColor={"var(--primary)"}
+                    isLive={isLive(ev.StartDateTime, ev.EndDateTime)}
+                    onClick={() => handleCalendarClick(ev)}
+                  />
+                );
+              })}
+            </div>
+          ) : (
+            <div className="mb-8" style={{ color: "var(--muted-2)" }}>No live events at the moment.</div>
+          )}
+        </div>
+        <div>
+          {/* Display selected event Results */}
+          {selectedEvent && (
+            <CompetitionResults {...selectedEvent} />
+          )}
+        </div>
         <div className="max-w-2xl mx-auto py-8 px-4">
-          <h2 className="text-xl font-bold mb-4 text-blue-800">Indian Results Extractor</h2>
+          <h2 className="text-xl font-bold mb-4" style={{ color: "var(--primary)" }}>Indian Results Extractor</h2>
           <textarea
-            className="w-full h-40 p-2 border border-blue-400 rounded mb-4 text-black focus:ring-2 focus:ring-blue-500 transition-all duration-300"
+            className="w-full h-40 p-2 rounded mb-4 focus:ring-2 transition-all duration-300"
+            style={{ borderColor: "var(--primary)", color: "var(--foreground)" }}
             placeholder="Paste HTML content here..."
             value={input}
             onChange={(e) => setInput(e.target.value)}
           />
-          <button
-            className="bg-blue-700 text-white px-4 py-2 rounded mr-2 hover:bg-blue-900 transition-colors duration-300"
-            onClick={handleExtract}
-          >
+          <Button variant="primary" className="mr-2" onClick={handleExtract}>
             Extract
-          </button>
-          {error && <div className="text-red-600 mt-2">{error}</div>}
+          </Button>
+          {error && <div className="mt-2" style={{ color: "var(--danger)" }}>{error}</div>}
           {result && (
-            <div className="mt-6 bg-blue-50 text-blue-900 rounded shadow p-4 relative transition-colors duration-300">
+            <div className="mt-6 rounded shadow p-4 relative transition-colors duration-300" style={{ background: "var(--glass)", color: "var(--primary)" }}>
               <pre className="whitespace-pre-wrap break-words">{result}</pre>
               <button
-                className="absolute top-2 right-2 bg-blue-200 px-2 py-1 rounded text-xs hover:bg-blue-400 transition-colors duration-300"
+                className="absolute top-2 right-2 px-2 py-1 rounded text-xs transition-colors duration-300"
+                style={{ background: "var(--primary)", color: "var(--surface)" }}
                 onClick={handleCopy}
               >
                 Copy

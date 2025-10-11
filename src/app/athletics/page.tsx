@@ -1,5 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
+import EventCard from "@/components/ui/EventCard";
+import Button from "@/components/ui/Button";
 
 // Helper to check if an event is live
 function isLive(start: string, end: string) {
@@ -68,14 +70,15 @@ export default function AthleticsPage() {
   }
 
   return (
-    <div className="flex min-h-screen">
+  <div className="flex min-h-screen" style={{ background: "var(--background)", color: "var(--foreground)" }}>
       {/* Left panel calendar */}
-      <aside className="w-96 bg-gray-50 border-r border-gray-200 p-4 overflow-y-auto">
+      <aside className="w-96 border-r p-4 bg-slate-50 border-slate-200 overflow-y-auto">
         {/* Filter by Month */}
         <div className="mb-4">
-          <label className="block text-sm font-semibold mb-1">Filter by Month</label>
+          <label className="block text-sm font-semibold mb-1" style={{ color: "var(--muted)" }}>Filter by Month</label>
           <select
-            className="w-full p-2 border border-blue-400 rounded text-black"
+            className="w-full p-2 rounded"
+            style={{ borderColor: "var(--primary)", color: "var(--foreground)" }}
             value={month}
             onChange={e => setMonth(e.target.value)}
           >
@@ -86,71 +89,64 @@ export default function AthleticsPage() {
         </div>
         <div className="space-y-4">
           {filtered.map((event: any) => (
-            <button
-              key={event.id}
-              className={`flex items-center gap-4 w-full text-left bg-white rounded shadow p-3 relative border border-blue-100 hover:bg-blue-50 focus:outline-none ${selectedEvent?.id === event.id ? 'ring-2 ring-blue-400' : ''}`}
+            <EventCard
+              key={event.title}
+              id={event.id}
+              name={event.title}
+              location={event.location}
+              startDate={event.start_date}
+              endDate={event.end_date}
+              accentColor={selectedEvent?.id === event.id ? "var(--primary)" : "var(--muted-2)"}
+              isLive={isLive(event.start_date, event.end_date)}
               onClick={() => setSelectedEvent(event)}
-            >
-              <div className="flex-1">
-                <div className="font-semibold text-blue-900 text-base">{event.title}</div>
-                <div className="text-xs text-gray-600">{event.location}</div>
-                <div className="text-xs text-gray-500">{event.start_date}  -  {event.end_date}</div>
-              </div>
-              {isLive(event.start_date, event.end_date) && (
-                <span className="absolute top-2 right-2 flex items-center gap-1 text-xs font-bold text-green-600">
-                  <span className="inline-block w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>LIVE
-                </span>
-              )}
-            </button>
+              className={selectedEvent?.title === event.title ? "ring-2" : ""}
+            />
           ))}
         </div>
       </aside>
       {/* Right panel: event details */}
-      <main className="flex-1 p-8">
-        <h1 className="text-2xl font-bold mb-4 text-blue-800">Athletics 2025 Calendar</h1>
+  <main className="flex-1 p-8" style={{ background: "var(--background)" }}>
+  <h1 className="text-2xl font-bold mb-4" style={{ color: "var(--primary)" }}>Athletics 2025 Calendar</h1>
         {selectedEvent ? (
           <div>
-            <div className="mb-2 text-xl font-bold text-blue-900">{selectedEvent.name}</div>
-            <div className="mb-2 text-gray-700">{selectedEvent.start_date} to {selectedEvent.end_date}</div>
-            <div className="text-gray-600 mb-6">Location: {selectedEvent.location}</div>
+            <div className="mb-2 text-xl font-bold" style={{ color: "var(--primary)" }}>{selectedEvent.name}</div>
+            <div className="mb-2" style={{ color: "var(--muted)" }}>{selectedEvent.start_date} to {selectedEvent.end_date}</div>
+            <div className="mb-6" style={{ color: "var(--muted-2)" }}>Location: {selectedEvent.location}</div>
             
             {/* PDF Upload and Extract Section */}
-            <div className="mt-8 p-4 border rounded-lg bg-gray-50">
-              <h3 className="text-lg font-semibold mb-4">Extract Results from PDF</h3>
+            <div className="mt-8 p-4 border rounded-lg" style={{ background: "var(--glass)", borderColor: "var(--primary)" }}>
+              <h3 className="text-lg font-semibold mb-4" style={{ color: "var(--primary)" }}>Extract Results from PDF</h3>
               <div className="space-y-4">
                 <input
                   type="file"
                   accept=".pdf"
                   onChange={(e) => setFile(e.target.files?.[0] || null)}
-                  className="block w-full text-sm text-gray-500
-                    file:mr-4 file:py-2 file:px-4
-                    file:rounded-full file:border-0
-                    file:text-sm file:font-semibold
-                    file:bg-blue-50 file:text-blue-700
-                    hover:file:bg-blue-100"
+                  className="block w-full text-sm"
+                  style={{ color: "var(--muted-2)" }}
                 />
-                <button
+                <Button
                   onClick={handleExtract}
                   disabled={!file}
-                  className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:bg-gray-400"
+                  variant={file ? "primary" : "secondary"}
                 >
                   Extract Text
-                </button>
+                </Button>
                 
-                {error && <div className="text-red-500 text-sm">{error}</div>}
+                {error && <div className="text-sm" style={{ color: "var(--danger)" }}>{error}</div>}
                 
                 {result && (
                   <div className="mt-4">
                     <div className="flex justify-between items-center mb-2">
-                      <h4 className="font-semibold">Extracted Text:</h4>
+                      <h4 className="font-semibold" style={{ color: "var(--primary)" }}>Extracted Text:</h4>
                       <button
                         onClick={handleCopy}
-                        className="text-sm text-blue-600 hover:text-blue-800"
+                        className="text-sm"
+                        style={{ color: "var(--primary)" }}
                       >
                         Copy to Clipboard
                       </button>
                     </div>
-                    <pre className="bg-white p-4 rounded border text-sm overflow-auto max-h-96">
+                    <pre className="p-4 rounded border text-sm overflow-auto max-h-96" style={{ background: "var(--surface)", color: "var(--muted)" }}>
                       {result}
                     </pre>
                   </div>
@@ -159,7 +155,7 @@ export default function AthleticsPage() {
             </div>
           </div>
         ) : (
-          <p className="text-gray-600">Select an event from the left panel to see more details.</p>
+          <p style={{ color: "var(--muted-2)" }}>Select an event from the left panel to see more details.</p>
         )}
       </main>
     </div>

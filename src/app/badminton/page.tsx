@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
+import EventCard from "@/components/ui/EventCard";
 import { useSession } from "next-auth/react";
 import { filterIndianResults } from "../../utils/badmintonIndianResults";
 import { getTournamentResults } from "@/services/badmintonService";
@@ -161,14 +162,15 @@ export default function BadmintonPage() {
   const userIsAdmin = isAdmin(session?.user?.email);
 
   return (
-    <div className="flex min-h-screen">
+  <div className="flex min-h-screen" style={{ background: "var(--background)", color: "var(--foreground)" }}>
       {/* Left panel calendar */}
-      <aside className="w-96 bg-gray-50 border-r border-gray-200 p-4 overflow-y-auto">
+  <aside className="w-96 border-r p-4 bg-slate-50 border-slate-200 overflow-y-auto">
         {/* Filter by Month */}
-        <div className="mb-4">
-          <label className="block text-sm font-semibold mb-1">Filter by Month</label>
+        <div className="mb-2">
+          <label className="block text-sm font-semibold mb-1" style={{ color: "var(--muted)" }}>Filter by Month</label>
           <select
-            className="w-full p-2 border border-blue-400 rounded text-black"
+            className="w-full p-2 rounded"
+            style={{ borderColor: "var(--primary)", color: "var(--foreground)" }}
             value={month}
             onChange={e => setMonth(e.target.value)}
           >
@@ -179,47 +181,43 @@ export default function BadmintonPage() {
         </div>
         <div className="space-y-4">
           {filtered.map((event: any) => (
-            <button
+            <EventCard
               key={event.id}
-              className={`flex items-center gap-4 w-full text-left bg-white rounded shadow p-3 relative border border-blue-100 hover:bg-blue-50 focus:outline-none ${selectedEvent?.id === event.id ? 'ring-2 ring-blue-400' : ''}`}
+              id={event.id}
+              name={event.name}
+              location={event.location}
+              startDate={event.start_date}
+              endDate={event.end_date}
+              logo={event.logo}
+              accentColor={selectedEvent?.id === event.id ? "var(--primary)" : "var(--muted-2)"}
+              isLive={isLive(event.start_date, event.end_date)}
               onClick={() => handleSelectEvent(event)}
-            >
-              <img src={event.logo} alt={event.name} width={56} height={56} className="h-14 w-14 object-contain rounded bg-gray-100" />
-              <div className="flex-1">
-                <div className="font-semibold text-blue-900 text-base">{event.name}</div>
-                <div className="text-xs text-gray-600">{event.location}</div>
-                <div className="text-xs text-gray-500">{event.date}</div>
-              </div>
-              {isLive(event.start_date, event.end_date) && (
-                <span className="absolute top-2 right-2 flex items-center gap-1 text-xs font-bold text-green-600">
-                  <span className="inline-block w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>LIVE
-                </span>
-              )}
-            </button>
+              className={selectedEvent?.id === event.id ? "ring-2" : ""}
+            />
           ))}
         </div>
       </aside>
       {/* Right panel: event details and results */}
-      <main className="flex-1 p-8">
-        <h1 className="text-2xl font-bold mb-4 text-blue-800">Badminton 2025</h1>
+  <main className="flex-1 p-8" style={{ background: "var(--background)" }}>
+  <h1 className="text-2xl font-bold mb-4" style={{ color: "var(--primary)" }}>Badminton 2025</h1>
         {liveEvent && (
-          <div className="mb-4 text-green-700 font-semibold">Live: {liveEvent.name}</div>
+          <div className="mb-4 font-semibold" style={{ color: "var(--success)" }}>Live: {liveEvent.name}</div>
         )}
         {selectedEvent ? (
           <div>
-            <div className="mb-2 text-xl font-bold text-blue-900">{selectedEvent.name}</div>
-            <div className="mb-2 text-gray-700">{formatDate(selectedEvent.start_date.slice(0,10))} to {formatDate(selectedEvent.end_date.slice(0,10))}</div>
+            <div className="mb-2 text-xl font-bold" style={{ color: "var(--primary)" }}>{selectedEvent.name}</div>
+            <div className="mb-2" style={{ color: "var(--muted)" }}>{formatDate(selectedEvent.start_date.slice(0,10))} to {formatDate(selectedEvent.end_date.slice(0,10))}</div>
             
             {/* Tournament Results Section */}
             <div className="mb-8">
-              {fetchError && <div className="text-red-600 mb-4">{fetchError}</div>}
+              {fetchError && <div className="mb-4" style={{ color: "var(--danger)" }}>{fetchError}</div>}
               <TournamentResults results={tournamentResults} isLoading={fetching} />
             </div>
 
             {/* Indian Players Section - Only visible to admin */}
             {userIsAdmin && (
               <div className="mt-8 border-t pt-8">
-                <h2 className="text-lg font-semibold mb-4">Indian Players Results</h2>
+                <h2 className="text-lg font-semibold mb-4" style={{ color: "var(--primary)" }}>Indian Players Results</h2>
                 <TournamentActions
                   tournament={selectedEvent}
                   onFetchDaily={fetchBWFResults}
@@ -242,11 +240,12 @@ export default function BadmintonPage() {
                       return aWin ? -1 : 1;
                     });
                     return (
-                      <div key={round} className="border border-blue-200 rounded p-2 bg-white">
+                      <div key={round} className="border rounded p-2" style={{ background: "var(--surface)", borderColor: "var(--primary)" }}>
                         <div className="flex items-center gap-2 mb-1">
-                          <span className="font-semibold text-blue-700">{round}</span>
+                          <span className="font-semibold" style={{ color: "var(--primary)" }}>{round}</span>
                           <button
-                            className="px-2 py-1 bg-blue-500 text-white rounded text-xs hover:bg-blue-600"
+                            className="px-2 py-1 rounded text-xs"
+                            style={{ background: "var(--primary)", color: "var(--surface)" }}
                             onClick={() => {
                               if (preEl) {
                                 navigator.clipboard.writeText(preEl.innerText);
@@ -255,9 +254,9 @@ export default function BadmintonPage() {
                               }
                             }}
                           >Copy</button>
-                          {copySuccess === `Copied ${round}!` && <span className="text-green-600 text-xs">Copied!</span>}
+                          {copySuccess === `Copied ${round}!` && <span className="text-xs" style={{ color: "var(--success)" }}>Copied!</span>}
                         </div>
-                        <pre ref={el => { preEl = el; }} className="text-xs bg-gray-100 rounded p-2 max-h-48 overflow-auto select-all cursor-pointer whitespace-pre-wrap">
+                        <pre ref={el => { preEl = el; }} className="text-xs rounded p-2 max-h-48 overflow-auto select-all cursor-pointer whitespace-pre-wrap" style={{ background: "var(--glass)", color: "var(--muted)" }}>
 {sortedResults.join('\n')}
                         </pre>
                       </div>
@@ -269,7 +268,7 @@ export default function BadmintonPage() {
             )}
           </div>
         ) : (
-          <p className="text-gray-600">Select an event from the left panel to see more details.</p>
+          <p style={{ color: "var(--muted-2)" }}>Select an event from the left panel to see more details.</p>
         )}
       </main>
     </div>

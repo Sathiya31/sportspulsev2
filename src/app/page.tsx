@@ -77,24 +77,24 @@ export default function Home() {
   }, []);
 
   return (
-    <main className="min-h-screen bg-gray-50 p-6">
-      <div className="flex gap-6">
+  <main className="min-h-screen p-6" style={{ background: "var(--background)", color: "var(--foreground)" }}>
+  <div className="flex gap-6">
         {/* Main Content */}
         <div className="flex-1">
           {/* Carousel - Adjusted width */}
           <section className="mb-10">
-            <div className="relative w-full h-64 rounded-xl overflow-hidden shadow-lg">
+            <div className="relative w-full h-64 rounded-xl overflow-hidden shadow-lg" style={{ boxShadow: "var(--card-shadow)" }}>
               <Image
                 src={carouselSlides[active].src}
                 alt={carouselSlides[active].alt}
                 fill
                 className="object-cover rounded-xl"
               />
-              <div className="absolute inset-0 bg-black bg-opacity-40 flex flex-col justify-end p-6">
-                <h2 className="text-3xl text-white font-bold mb-2">
+              <div className="absolute inset-0 bg-opacity-40 flex flex-col justify-end p-6">
+                <h2 className="text-3xl font-bold mb-2" style={{ color: "var(--surface)" }}>
                   {carouselSlides[active].title}
                 </h2>
-                <p className="text-white text-lg">
+                <p className="text-lg" style={{ color: "var(--surface)" }}>
                   {carouselSlides[active].desc}
                 </p>
                 <CountdownTimer target={carouselSlides[active].date} />
@@ -105,8 +105,8 @@ export default function Home() {
               {carouselSlides.map((_, idx) => (
                 <button
                   key={idx}
-                  className={`w-3 h-3 rounded-full transition-all duration-300 ${active === idx ? "bg-blue-600" : "bg-gray-300"
-                    }`}
+                  className={`w-3 h-3 rounded-full transition-all duration-300`}
+                  style={{ background: active === idx ? "var(--primary)" : "#cbd5e1" }}
                   onClick={() => setActive(idx)}
                   aria-label={`Go to slide ${idx + 1}`}
                 />
@@ -118,7 +118,7 @@ export default function Home() {
           <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
             <div className="flex items-center justify-between mb-2">
               <div>
-                <h2 className="text-2xl font-bold text-slate-900 mb-1">
+                <h2 className="text-2xl font-bold mb-1" style={{ color: "var(--foreground)" }}>
                   Latest Articles
                 </h2>
               </div>
@@ -138,20 +138,20 @@ export default function Home() {
         </div>
 
         {/* Right Sidebar */}
-        <div className="w-80 space-y-6">
+  <div className="w-80 space-y-6">
           {/* Current Events */}
-          <section className="bg-white rounded-xl shadow-md p-6">
-            <h2 className="text-xl font-bold mb-4 text-gray-800">Current Events</h2>
+          <section className="rounded-xl shadow-md p-6" style={{ background: "var(--surface)", boxShadow: "var(--card-shadow)" }}>
+            <h2 className="text-xl font-bold mb-4" style={{ color: "var(--muted)" }}>Current Events</h2>
             <div className="space-y-4">
               {currentEvents.length > 0 ? (
                 currentEvents.map((event, idx) => (
-                  <div key={idx} className="border-l-4 border-blue-500 pl-4 py-2">
-                    <h5 className="text-md font-semibold text-gray-800">{event.event}</h5>
-                    <p className="text-xs text-gray-600">{event.location}</p>
+                  <div key={idx} className="border-l-4 pl-4 py-2" style={{ borderColor: "var(--primary)", borderLeftWidth: 4 }}>
+                    <h5 className="text-md font-semibold" style={{ color: "var(--muted)" }}>{event.event}</h5>
+                    <p className="text-xs" style={{ color: "var(--muted-2)" }}>{event.location}</p>
                   </div>
                 ))
               ) : (
-                <p className="text-gray-600">No current events available.</p>
+                <p style={{ color: "var(--muted-2)" }}>No current events available.</p>
               )}
             </div>
           </section>
@@ -160,58 +160,72 @@ export default function Home() {
 
 
       {/* CTA Section */}
-        <section className="bg-gradient-to-r from-red-700 via-purple-700 to-blue-700 text-white py-12 px-6 md:px-16 rounded-2xl mt-2 shadow-lg">
-      <div className="max-w-4xl mx-auto text-center space-y-6">
-        <h2 className="text-3xl md:text-4xl font-bold">
-          🏆 Stay Ahead in Indian Sports!
-        </h2>
+        <section
+            className="py-12 px-6 md:px-16 rounded-2xl mt-2 shadow-lg"
+            style={{
+                background: "var(--foreground)",
+                color: "var(--surface)",
+                boxShadow: "var(--card-shadow)"
+            }}
+        >
+            <div className="max-w-4xl mx-auto text-center space-y-6">
+                <h2 className="text-3xl md:text-4xl font-bold">
+                    🏆 Stay Ahead in Indian Sports!
+                </h2>
 
-        <p className="text-lg md:text-xl text-gray-200 leading-relaxed">
-          Get the latest <strong>Indian sports results, event updates,</strong> and
-          in-depth blogs covering everything from boxing and cricket to
-          athletics and more.
-        </p>
+                <p className="text-lg md:text-xl leading-relaxed" style={{ color: "var(--muted-2)" }}>
+                    Get the latest <strong>Indian sports results, event updates,</strong> and
+                    in-depth blogs covering everything from boxing and cricket to
+                    athletics and more.
+                </p>
 
-        <p className="text-gray-300">
-          Be part of a growing community that lives and breathes Indian sports.
-        </p>
+                <p style={{ color: "var(--muted-2)" }}>
+                    Be part of a growing community that lives and breathes Indian sports.
+                </p>
 
-        <div className="flex flex-col sm:flex-row justify-center items-center gap-4 mt-8">
-          <a
-            href="mailto:indiaatsports31@gmail.com"
-            className="flex items-center gap-2 bg-white text-indigo-700 px-5 py-3 rounded-full font-semibold hover:bg-gray-200 transition"
-          >
-            <Mail size={20} />
-            Email
-          </a>
+                <div className="flex flex-col sm:flex-row justify-center items-center gap-4 mt-8">
+                    <a
+                        href="mailto:indiaatsports31@gmail.com"
+                        className="flex items-center gap-2 px-5 py-3 border rounded-full font-semibold transition"
+                        style={{ borderColor: "var(--surface)", color: "var(--surface)" }}
+                    >
+                        <Mail size={20} />
+                        Email
+                    </a>
 
-          <a
-            href="https://instagram.com/indian_sports_pulse"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center gap-2 border border-white px-5 py-3 rounded-full hover:bg-white hover:text-indigo-700 transition"
-          >
-            <Instagram size={20} />
-            Instagram
-          </a>
+                    <a
+                        href="https://instagram.com/indian_sports_pulse"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-2 border px-5 py-3 rounded-full transition"
+                        style={{ borderColor: "var(--surface)", color: "var(--surface)" }}
+                        onMouseOver={e => { e.currentTarget.style.background = "var(--surface)"; e.currentTarget.style.color = "var(--primary)"; }}
+                        onMouseOut={e => { e.currentTarget.style.background = "transparent"; e.currentTarget.style.color = "var(--surface)"; }}
+                    >
+                        <Instagram size={20} />
+                        Instagram
+                    </a>
 
-          <a
-            href="https://twitter.com/indian_sports_pulse"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center gap-2 border border-white px-5 py-3 rounded-full hover:bg-white hover:text-indigo-700 transition"
-          >
-            <Twitter size={20} />
-            Twitter
-          </a>
-        </div>
+                    <a
+                        href="https://twitter.com/indian_sports_pulse"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-2 border px-5 py-3 rounded-full transition"
+                        style={{ borderColor: "var(--surface)", color: "var(--surface)" }}
+                        onMouseOver={e => { e.currentTarget.style.background = "var(--surface)"; e.currentTarget.style.color = "var(--primary)"; }}
+                        onMouseOut={e => { e.currentTarget.style.background = "transparent"; e.currentTarget.style.color = "var(--surface)"; }}
+                    >
+                        <Twitter size={20} />
+                        Twitter
+                    </a>
+                </div>
 
-        <p className="text-gray-300 mt-6 text-base">
-          🔔 Follow us for real-time updates, exclusive insights, and
-          behind-the-scenes stories from the world of Indian sports.
-        </p>
-      </div>
-    </section>
+                <p className="mt-6 text-base" style={{ color: "var(--muted-2)" }}>
+                    🔔 Follow us for real-time updates, exclusive insights, and
+                    behind-the-scenes stories from the world of Indian sports.
+                </p>
+            </div>
+        </section>
     </main>
   );
 }

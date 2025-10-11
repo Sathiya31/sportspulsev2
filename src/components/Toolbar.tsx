@@ -18,11 +18,12 @@ export default function Toolbar() {
     const [menuOpen, setMenuOpen] = useState(false);
 
     return (
-        <nav className="w-full bg-white text-gray-900 shadow-md sticky top-0 z-50 transition-colors duration-500">
+    <nav className="w-full sticky top-0 z-50 shadow-md transition-colors duration-500" style={{ background: "var(--toolbar-bg)", color: "var(--foreground)" }}>
             <div className="max-w-7xl mx-auto flex items-center justify-between px-4 py-3">
-                <Link href="/" className="flex items-center gap-3 select-none group">
+                <Link href="/" className="flex items-center gap-3 select-none group" style={{ color: "var(--foreground)" }}>
                     {/* Rounded SP Logo */}
-                    <span className="flex items-center justify-center w-10 h-10 rounded-full bg-gradient-to-br from-red-500 to-blue-500 shadow-lg">
+                    <span className="flex items-center justify-center w-10 h-10 rounded-full shadow-lg"
+                        style={{ background: "linear-gradient(135deg, var(--danger), var(--primary))" }}>
                         <span className="font-extrabold text-white text-lg tracking-widest">SP</span>
                     </span>
                     {/* Sports Pulse Font */}
@@ -35,7 +36,8 @@ export default function Toolbar() {
                         /> */}
                         {/* Gradient Text */}
                         <span
-                            className="px-1 py-1 rounded bg-gradient-to-r from-red-500 via-purple-500 to-blue-500 bg-clip-text text-transparent"
+                            className="px-1 py-1 rounded bg-clip-text text-transparent"
+                            style={{ background: "linear-gradient(90deg, var(--danger), var(--accent), var(--primary))", WebkitBackgroundClip: "text", color: "transparent" }}
                         >
                             Sports Pulse
                         </span>
@@ -47,9 +49,11 @@ export default function Toolbar() {
                         <Link
                             key={item.name}
                             href={item.href}
-                            className={`px-3 py-1 w-full block font-medium text-gray-900 transition-colors duration-300 hover:bg-gray-100 focus:bg-gray-100 active:bg-gray-100 border-none shadow-none rounded-none whitespace-nowrap ${
-                                pathname && pathname.startsWith(item.href) ? "bg-gray-100" : ""
-                            }`}
+                            className={`px-3 py-1 w-full block font-medium transition-colors duration-300 border-none shadow-none rounded-none whitespace-nowrap`}
+                            style={{
+                                color: "var(--foreground)",
+                                background: pathname && pathname.startsWith(item.href) ? "var(--glass)" : "transparent"
+                            }}
                         >
                             {item.name}
                         </Link>
@@ -59,6 +63,7 @@ export default function Toolbar() {
                 {/* Mobile Hamburger */}
                 <button
                     className="md:hidden flex items-center p-2"
+                    style={{ color: "var(--foreground)" }}
                     onClick={() => setMenuOpen((open) => !open)}
                     aria-label="Toggle navigation"
                 >
@@ -77,9 +82,11 @@ export default function Toolbar() {
                             <Link
                                 key={item.name}
                                 href={item.href}
-                                className={`px-3 py-2 w-full block font-medium text-gray-900 transition-colors duration-300 hover:bg-gray-100 focus:bg-gray-100 active:bg-gray-100 border-none shadow-none rounded-none whitespace-nowrap ${
-                                    pathname && pathname.startsWith(item.href) ? "bg-gray-100" : ""
-                                }`}
+                                className={`px-3 py-2 w-full block font-medium transition-colors duration-300 border-none shadow-none rounded-none whitespace-nowrap`}
+                                style={{
+                                    color: "var(--foreground)",
+                                    background: pathname && pathname.startsWith(item.href) ? "var(--glass)" : "transparent"
+                                }}
                                 onClick={() => setMenuOpen(false)}
                             >
                                 {item.name}

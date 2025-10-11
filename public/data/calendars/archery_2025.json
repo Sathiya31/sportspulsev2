@@ -1,32 +1,5 @@
 [
   {
-    "id": 28162,
-    "name": "Nimes Archery Tournament",
-    "level": "World Cup",
-    "sublevel": "Indoor World Series",
-    "location": "Nimes, France",
-    "start_date": "2025-01-17",
-    "end_date": "2025-01-19"
-  },
-  {
-    "id": 28551,
-    "name": "The Great Chicago Open",
-    "level": "World Cup",
-    "sublevel": "Indoor World Series",
-    "location": "Chicago, United States of America",
-    "start_date": "2025-02-13",
-    "end_date": "2025-02-14"
-  },
-  {
-    "id": 28163,
-    "name": "The Vegas Shoot",
-    "level": "World Cup",
-    "sublevel": "Indoor World Series",
-    "location": "Las Vegas, United States of America",
-    "start_date": "2025-03-05",
-    "end_date": "2025-03-09"
-  },
-  {
     "id": 28164,
     "name": "Indoor Archery World Series Finals",
     "level": "World Cup",
