@@ -45,6 +45,9 @@ a, button {
   --muted: #374151; /* slate-700 */
   --muted-2: #6b7280; /* slate-500 */
   --primary: #0ea5e9; /* sky-500 */
+  --primary-dark: #0284c7; /* sky-700 */
+  --primary-light: #0ea5e9; /* sky-300 */
+  --primary-lighter: #3b82f6; /* sky-50 */
   --accent: #7c3aed; /* violet-600 */
   --surface: #ffffff;
   --success: #10b981;
@@ -57,17 +60,20 @@ a, button {
 
 /* design tokens are defined in :root above; no @theme rule needed */
 
-@media (prefers-color-scheme: dark) {
+/* @media (prefers-color-scheme: dark) {
   :root {
-    --background: #071025; /* deep navy */
+    --background: #071025; // deep navy
     --foreground: #e6eef8;
-    --toolbar-bg: #0a1836; /* slightly lighter than --background for dark mode */
+    --toolbar-bg: #0a1836; // slightly lighter than --background for dark mode
 
-    /* Dark theme token overrides */
+    // Dark theme token overrides //
     --muted: #e6eef8;
     --muted-2: #94a3b8;
-    --primary: #38bdf8; /* sky-400 */
-    --accent: #a78bfa; /* violet-300 */
+    --primary: #38bdf8; // sky-400 
+    --primary-dark: #0284c7; // sky-600
+    --primary-light: #7dd3fc; // sky-300
+    --primary-lighter: #bae6fd; // sky-50 
+    --accent: #a78bfa; // violet-300 
     --surface: #061126;
     --success: #34d399;
     --danger: #fb7185;
@@ -76,7 +82,7 @@ a, button {
     --radius: 12px;
     --focus-ring: 0 0 0 4px rgba(56,189,248,0.08);
   }
-}
+} */
 
 body {
   background: var(--background);

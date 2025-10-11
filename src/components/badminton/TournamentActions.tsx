@@ -99,7 +99,7 @@ export default function TournamentActions({
       <div className="flex items-center gap-2">
         <label className="text-sm font-semibold">Select Date:</label>
         <select
-          className="p-2 border border-blue-400 rounded text-black"
+          className="p-2 border border-blue-400 rounded"
           value={selectedDate}
           onChange={e => onDateChange(e.target.value)}
         >

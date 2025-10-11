@@ -71,7 +71,7 @@ export default function MatchCard({ match }: MatchCardProps) {
         <span 
           key={index}
           className={`px-2 py-1 rounded ${
-            value > otherValue ? 'bg-blue-100' : 'bg-gray-100'
+            value > otherValue ? 'bg-blue-100 text-blue-600' : 'bg-gray-100 text-gray-500'
           }`}
         >
           {value}
@@ -95,7 +95,7 @@ export default function MatchCard({ match }: MatchCardProps) {
       {/* Match Content */}
       <div className="p-4">
         {/* Team 1 */}
-        <div className={`flex items-center justify-between mb-4 ${winner === 1 ? 'text-blue-600 font-semibold' : ''}`}>
+        <div className={`flex items-center justify-between mb-4 ${winner === 1 ? 'text-blue-600 font-semibold' : 'text-gray-600'}`}>
           <div className="flex items-center space-x-3">
             <SafeImage
               src={match?.team1?.countryFlagUrl}
@@ -111,7 +111,7 @@ export default function MatchCard({ match }: MatchCardProps) {
         </div>
 
         {/* Team 2 */}
-        <div className={`flex items-center justify-between ${winner === 2 ? 'text-blue-600 font-semibold' : ''}`}>
+        <div className={`flex items-center justify-between ${winner === 2 ? 'text-blue-600 font-semibold' : 'text-slate-600'}`}>
           <div className="flex items-center space-x-3">
             <SafeImage
               src={match?.team2?.countryFlagUrl}

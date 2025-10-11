@@ -145,7 +145,7 @@ const MatchCard = ({ match, isTeamMatch }: { match: MatchData; isTeamMatch: bool
         <div className="mt-2 pt-2 border-t border-blue-200">
           <button
             onClick={() => setShowSetPoints(!showSetPoints)}
-            className="flex items-center gap-1 text-xs border-r border-slate-200 hover:opacity-80"
+            className="flex items-center gap-1 text-xs hover:opacity-80"
             style={{ color: "var(--primary)" }}
           >
             {showSetPoints ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
@@ -331,7 +331,7 @@ export default function ArcheryDashboard() {
 
   const sortedPhases = Object.keys(groupedMatches)
     .map(Number)
-    .sort((a, b) => b - a); // Descending order
+    .sort((a, b) => a - b); // Ascending order
 
   const isTeamMatch = activeFilter?.includes('T') || false;
 
