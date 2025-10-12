@@ -1,5 +1,4 @@
 import { Match } from '@/types/badminton';
-import Image from 'next/image';
 import { format } from 'date-fns';
 
 interface MatchCardProps {
@@ -22,114 +21,141 @@ export default function MatchCard({ match }: MatchCardProps) {
   })();
 
   // Fallback flag URL for missing country flags
-  const fallbackFlag = '/default-flag.png'; // Add a default flag image to your public folder
-
-  // Safe image component that won't throw errors
-  const SafeImage = ({ src, alt, ...props }: { src?: string; alt: string; [key: string]: any }) => {
-    return (
-      <div className="relative w-6 h-6">
-        <Image
-          src={src || fallbackFlag}
-          alt={alt}
-          width={24}
-          height={24}
-          className="rounded-full"
-          onError={(e: any) => {
-            e.target.src = fallbackFlag;
-          }}
-          {...props}
-        />
-      </div>
-    );
-  };
-
-  // Safe player rendering
-  const renderPlayers = (team: any, seed?: string) => {
-    if (!team?.players?.length) {
-      return <span className="text-sm text-gray-500">Player information unavailable</span>;
-    }
-
-    return team.players.map((player: any) => (
-      <span key={player?.id || Math.random()} className="text-sm">
-        {player?.nameDisplay || 'Unknown Player'}
-        {seed && <span className="text-xs text-blue-500 ml-2">[{seed}]</span>}
-      </span>
-    ));
-  };
-
-  // Safe score rendering
-  const renderScore = (score: any[], isHome: boolean) => {
-    if (!Array.isArray(score)) return null;
-
-    return score.map((set, index) => {
-      const value = isHome ? set?.home : set?.away;
-      const otherValue = isHome ? set?.away : set?.home;
-      
-      if (typeof value === 'undefined' || typeof otherValue === 'undefined') return null;
-
-      return (
-        <span 
-          key={index}
-          className={`px-2 py-1 rounded ${
-            value > otherValue ? 'bg-blue-100 text-blue-600' : 'bg-gray-100 text-gray-500'
-          }`}
-        >
-          {value}
-        </span>
-      );
-    });
-  };
+  const fallbackFlag = '/default-flag.png';
 
   return (
-    <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
-      {/* Match Header */}
-      <div className="bg-blue-50 px-4 py-2 border-b flex justify-between items-center">
-        <div className="text-sm text-blue-800 font-medium">
-          {matchType}
-        </div>
-        <div className="text-sm text-gray-600">
-          {formattedDate}
-        </div>
+    <div className="shadow-sm overflow-hidden hover:shadow-md transition-shadow"
+      style={{ background: "var(--surface)"}}>
+      
+      {/* Compact Header */}
+      <div className="px-3 py-2 border-b flex justify-between items-center text-xs"
+        style={{ background: "var(--glass)", borderColor: "var(--primary-lighter)", color: "var(--muted)" }}>
+        <span className="font-medium">{matchType}</span>
+        <span>{formattedDate}</span>
       </div>
 
-      {/* Match Content */}
-      <div className="p-4">
-        {/* Team 1 */}
-        <div className={`flex items-center justify-between mb-4 ${winner === 1 ? 'text-blue-600 font-semibold' : 'text-gray-600'}`}>
-          <div className="flex items-center space-x-3">
-            <SafeImage
-              src={match?.team1?.countryFlagUrl}
+      {/* Match Content - More Compact */}
+      <div className="p-2.5">
+        {/* Team 1 - Horizontal Layout */}
+        <div className={`flex items-center justify-between mb-2 ${
+          winner === 1 ? 'font-semibold' : ''
+        }`} style={{ color: winner === 1 ? "var(--primary)" : "var(--foreground)" }}>
+          
+          <div className="flex items-center gap-2 flex-1 min-w-0">
+            {/* Smaller Flag */}
+            <img
+              src={match?.team1?.countryFlagUrl || fallbackFlag}
               alt={match?.team1?.countryCode || 'Country'}
+              className="w-4 h-4 rounded-full object-cover flex-shrink-0"
+              onError={(e: any) => { e.target.src = fallbackFlag; }}
             />
-            <div className="flex flex-col">
-              {renderPlayers(match?.team1, match?.team1seed)}
+            
+            {/* Players - Inline on one line */}
+            <div className="text-xs md:text-sm truncate">
+              {match?.team1?.players?.length > 0 ? (
+                <>
+                  {match.team1.players.map((p: any, i: number) => (
+                    <span key={p?.id || i}>
+                      {i > 0 && ' / '}
+                      {p?.nameDisplay || 'Unknown'}
+                    </span>
+                  ))}
+                  {match?.team1seed && (
+                    <span className="text-xs ml-1" style={{ color: "var(--muted)" }}>
+                      [{match.team1seed}]
+                    </span>
+                  )}
+                </>
+              ) : (
+                <span style={{ color: "var(--muted-2)" }}>Player unavailable</span>
+              )}
             </div>
           </div>
-          <div className="flex space-x-2">
-            {renderScore(match?.score || [], true)}
+          
+          {/* Compact Scores */}
+          <div className="flex gap-1 ml-2 flex-shrink-0">
+            {Array.isArray(match?.score) && match.score.map((set: any, i: number) => {
+              const homeScore = set?.home;
+              const awayScore = set?.away;
+              if (typeof homeScore === 'undefined' || typeof awayScore === 'undefined') return null;
+              
+              return (
+                <span 
+                  key={i}
+                  className="px-1.5 py-0.5 rounded text-xs font-medium tabular-nums"
+                  style={{ 
+                    background: homeScore > awayScore ? "var(--primary)" : "var(--glass)",
+                    color: homeScore > awayScore ? "var(--surface)" : "var(--muted)"
+                  }}
+                >
+                  {homeScore}
+                </span>
+              );
+            })}
           </div>
         </div>
 
-        {/* Team 2 */}
-        <div className={`flex items-center justify-between ${winner === 2 ? 'text-blue-600 font-semibold' : 'text-slate-600'}`}>
-          <div className="flex items-center space-x-3">
-            <SafeImage
-              src={match?.team2?.countryFlagUrl}
+        {/* Team 2 - Same compact layout */}
+        <div className={`flex items-center justify-between ${
+          winner === 2 ? 'font-semibold' : ''
+        }`} style={{ color: winner === 2 ? "var(--primary)" : "var(--foreground)" }}>
+          
+          <div className="flex items-center gap-2 flex-1 min-w-0">
+            <img
+              src={match?.team2?.countryFlagUrl || fallbackFlag}
               alt={match?.team2?.countryCode || 'Country'}
+              className="w-4 h-4 rounded-full object-cover flex-shrink-0"
+              onError={(e: any) => { e.target.src = fallbackFlag; }}
             />
-            <div className="flex flex-col">
-              {renderPlayers(match?.team2, match?.team2seed)}
+            
+            <div className="text-xs md:text-sm truncate">
+              {match?.team2?.players?.length > 0 ? (
+                <>
+                  {match.team2.players.map((p: any, i: number) => (
+                    <span key={p?.id || i}>
+                      {i > 0 && ' / '}
+                      {p?.nameDisplay || 'Unknown'}
+                    </span>
+                  ))}
+                  {match?.team2seed && (
+                    <span className="text-xs ml-1" style={{ color: "var(--muted)" }}>
+                      [{match.team2seed}]
+                    </span>
+                  )}
+                </>
+              ) : (
+                <span style={{ color: "var(--muted-2)" }}>Player unavailable</span>
+              )}
             </div>
           </div>
-          <div className="flex space-x-2">
-            {renderScore(match?.score || [], false)}
+          
+          <div className="flex gap-1 ml-2 flex-shrink-0">
+            {Array.isArray(match?.score) && match.score.map((set: any, i: number) => {
+              const homeScore = set?.home;
+              const awayScore = set?.away;
+              if (typeof homeScore === 'undefined' || typeof awayScore === 'undefined') return null;
+              
+              return (
+                <span 
+                  key={i}
+                  className="px-1.5 py-0.5 rounded text-xs font-medium tabular-nums"
+                  style={{ 
+                    background: awayScore > homeScore ? "var(--primary)" : "var(--glass)",
+                    color: awayScore > homeScore ? "var(--surface)" : "var(--muted)"
+                  }}
+                >
+                  {awayScore}
+                </span>
+              );
+            })}
           </div>
         </div>
 
-        {/* Match Footer */}
+        {/* Compact Footer */}
         {isMatchFinished && typeof match?.duration === 'number' && (
-          <div className="mt-3 pt-2 border-t text-xs text-gray-500">
-            Duration: {match.duration} minutes
+          <div className="mt-1.5 pt-1.5 border-t text-xs" 
+            style={{ borderColor: "var(--primary-lighter)", color: "var(--muted)" }}>
+            Duration: {match.duration} min
           </div>
         )}
       </div>

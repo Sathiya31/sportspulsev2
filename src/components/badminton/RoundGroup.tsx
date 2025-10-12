@@ -23,31 +23,33 @@ export default function RoundGroup({ name, matches }: RoundGroupProps) {
   console.log(matches);
 
   return (
-    <div className="mb-6">
+    <div className="mb-3">
       <button
         onClick={() => setIsExpanded(!isExpanded)}
-        className="w-full flex items-center justify-between bg-blue-50 p-3 rounded-lg mb-3 hover:bg-blue-100 transition-colors"
+        className="w-full flex items-center justify-between p-2 mb-2 
+        border-b hover:opacity-80 transition-opacity"
+        style={{ background: "var(--glass)", borderColor: "var(--primary)" }}
       >
-        <h2 className="text-lg font-semibold text-blue-900">
-          {displayName} ({matches.length})
-        </h2>
-        <svg
-          className={`w-5 h-5 transform transition-transform ${isExpanded ? 'rotate-180' : ''}`}
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M19 9l-7 7-7-7"
-          />
-        </svg>
+        <h3 className="text-sm md:text-base font-semibold flex items-center gap-2" 
+          style={{ color: "var(--primary)" }}>
+          <svg
+            className={`w-4 h-4 transform transition-transform ${isExpanded ? 'rotate-90' : ''}`}
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+          </svg>
+          {displayName}
+        </h3>
+        <span className="text-xs px-2 py-1 rounded-full" 
+          style={{ background: "var(--surface)", color: "var(--muted)" }}>
+          {matches.length} {matches.length === 1 ? 'match' : 'matches'}
+        </span>
       </button>
       
       {isExpanded && (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-3">
           {matches.map((match) => (
             <MatchCard key={match.id} match={match} />
           ))}

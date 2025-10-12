@@ -105,12 +105,12 @@ const CompetitionResults = ({ EventId, EventName }: { EventId: string, EventName
   };
 
   const CompactMatchCard = ({ match }: { match: Match }) => (
-    <div className="rounded-lg p-2.5 shadow transition-shadow" 
+    <div className="p-2.5 shadow transition-shadow" 
       style={{ background: "var(--surface)" }}>
       
       {/* Header - Event & Date */}
       <div className="flex justify-between items-center mb-2 pb-2 border-b" 
-        style={{ borderColor: "var(--primary-lighter)" }}>
+        style={{ borderColor: "var(--primary-light)" }}>
         <span className="text-xs md:text-sm font-medium truncate" style={{ color: "var(--primary)" }}>
           {match.event_name}
         </span>
@@ -240,14 +240,14 @@ const CompetitionResults = ({ EventId, EventName }: { EventId: string, EventName
             const isExpanded = expandedRounds.has(roundName);
             
             return (
-              <div key={roundName} className="shadow overflow-hidden">
+              <div key={roundName} className="overflow-hidden">
                 
                 {/* Collapsible Round Header */}
                 <button 
                   onClick={() => toggleRound(roundName)}
                   className="w-full flex items-center justify-between p-3 hover:opacity-80
                   border-b transition-opacity"
-                  style={{ background: "var(--glass)", borderColor: "var(--primary-lighter)" }}
+                  style={{ background: "var(--glass)", borderColor: "var(--primary)" }}
                 >
                   <div className="flex items-center gap-2">
                     <svg 
@@ -271,13 +271,11 @@ const CompetitionResults = ({ EventId, EventName }: { EventId: string, EventName
                 
                 {/* Collapsible Content */}
                 {isExpanded && (
-                  <div className="p-3 pt-0">
-                    <div className="grid gap-3 md:grid-cols-1 lg:grid-cols-2 mt-3">
+                  <div className="grid gap-3 md:grid-cols-1 lg:grid-cols-2 mt-3">
                       {roundMatches.map((match: Match) => (
                         <CompactMatchCard key={match.match_id} match={match} />
                       ))}
                     </div>
-                  </div>
                 )}
               </div>
             );
