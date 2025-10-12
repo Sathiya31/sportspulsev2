@@ -73,6 +73,7 @@ export default function TableTennisPage() {
   const [error, setError] = useState("");
   const [selectedEvent, setSelectedEvent] = useState<any>(null);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [showExtractor, setShowExtractor] = useState(false);
 
   const handleCalendarClick = (event: any) => {
     console.log("clicked event", event);
@@ -196,7 +197,7 @@ export default function TableTennisPage() {
       </aside>
 
       {/* Consistent Main Layout */}
-      <main className="flex-1 p-4 md:p-8 flex flex-col gap-4 md:gap-8" style={{ background: "var(--background)" }}>
+      <main className="flex-1 p-4 md:p-8 flex flex-col gap-3 md:gap-4" style={{ background: "var(--background)" }}>
         {/* Mobile menu button */}
         <button
           className="md:hidden fixed top-20 right-4 z-50 p-2 rounded-lg shadow-lg"
@@ -213,67 +214,153 @@ export default function TableTennisPage() {
         </button>
 
         <div>
-          <h1 className="text-2xl font-bold mb-4 ml-12 md:ml-0" style={{ color: "var(--primary)" }}>Table Tennis</h1>
-          <div className="mb-4 font-semibold text-lg" style={{ color: "var(--success)" }}>Live Events</div>
-          {liveEvents.length > 0 ? (
-            <div className="flex flex-wrap gap-2 mb-8">
-              {liveEvents.map((ev, idx) => {
-                const key = ev.EventId ? `${ev.EventId}_${idx}` : `live_${idx}`;
-                return (
-                  <EventCard
-                    key={key}
-                    id={ev.EventId}
-                    name={ev.EventName}
-                    location={`${ev.City}, ${ev.Country}`}
-                    startDate={ev.StartDateTime}
-                    endDate={ev.EndDateTime}
-                    accentColor={"var(--primary)"}
-                    isLive={isLive(ev.StartDateTime, ev.EndDateTime)}
-                    onClick={() => handleCalendarClick(ev)}
-                  />
-                );
-              })}
+          <h1 className="text-xl md:text-2xl font-bold mb-3" style={{ color: "var(--primary)" }}>Table Tennis</h1>
+          
+          {/* Compact Live Events Badges */}
+          {liveEvents.length > 0 && (
+            <div className="mb-4">
+              <div className="flex items-center gap-2 mb-2">
+                <span className="inline-block w-2 h-2 rounded-full animate-pulse" style={{ background: "var(--success)" }}></span>
+                <span className="font-semibold text-sm" style={{ color: "var(--success)" }}>Live Now</span>
+              </div>
+              <div className="flex flex-wrap gap-2">
+                {liveEvents.map((ev, idx) => {
+                  const key = ev.EventId ? `${ev.EventId}_${idx}` : `live_${idx}`;
+                  return (
+                    <button
+                      key={key}
+                      onClick={() => handleCalendarClick(ev)}
+                      className="px-3 py-1.5 rounded-full text-sm hover:opacity-80 transition-opacity"
+                      style={{ 
+                        background: selectedEvent?.EventId === ev.EventId ? "var(--primary)" : "var(--glass)",
+                        color: selectedEvent?.EventId === ev.EventId ? "var(--surface)" : "var(--primary)",
+                        border: `1px solid ${selectedEvent?.EventId === ev.EventId ? "var(--primary)" : "var(--muted-2)"}`
+                      }}
+                    >
+                      {ev.EventName}
+                    </button>
+                  );
+                })}
+              </div>
             </div>
-          ) : (
-            <div className="mb-8" style={{ color: "var(--muted-2)" }}>No live events at the moment.</div>
           )}
         </div>
 
+        {/* Display selected event Results or Empty State */}
         <div>
-          {/* Display selected event Results */}
-          {selectedEvent && (
+          {selectedEvent ? (
             <CompetitionResults {...selectedEvent} />
-          )}
-        </div>
-
-        {userIsAdmin && 
-        <div className="max-w-2xl w-full mx-auto py-8 px-4">
-          <h2 className="text-xl font-bold mb-4" style={{ color: "var(--primary)" }}>Indian Results Extractor</h2>
-          <textarea
-            className="w-full h-40 p-2 rounded mb-4 focus:ring-2 transition-all duration-300"
-            style={{ borderColor: "var(--primary)", color: "var(--foreground)" }}
-            placeholder="Paste HTML content here..."
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-          />
-          <Button variant="primary" className="mr-2" onClick={handleExtract}>
-            Extract
-          </Button>
-          {error && <div className="mt-2" style={{ color: "var(--danger)" }}>{error}</div>}
-          {result && (
-            <div className="mt-6 rounded shadow p-4 relative transition-colors duration-300" style={{ background: "var(--glass)", color: "var(--primary)" }}>
-              <pre className="whitespace-pre-wrap break-words">{result}</pre>
-              <button
-                className="absolute top-2 right-2 px-2 py-1 rounded text-xs transition-colors duration-300"
-                style={{ background: "var(--primary)", color: "var(--surface)" }}
-                onClick={handleCopy}
+          ) : (
+            <div className="flex flex-col items-center justify-center py-16 text-center">
+              <svg 
+                className="w-16 h-16 mb-4" 
+                style={{ color: "var(--muted-2)" }} 
+                fill="none" 
+                viewBox="0 0 24 24" 
+                stroke="currentColor"
               >
-                Copy
-              </button>
+                <path 
+                  strokeLinecap="round" 
+                  strokeLinejoin="round" 
+                  strokeWidth={1.5} 
+                  d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" 
+                />
+              </svg>
+              <p className="text-lg font-medium mb-2" style={{ color: "var(--muted)" }}>
+                No Event Selected
+              </p>
+              <p className="text-sm" style={{ color: "var(--muted-2)" }}>
+                Select an event from the calendar to view results
+              </p>
             </div>
           )}
         </div>
-      }
+
+        {/* Collapsible Extractor for Admins */}
+        {userIsAdmin && (
+          <div className="mt-4 pt-4 border-t" style={{ borderColor: "var(--muted-2)" }}>
+            <button 
+              onClick={() => setShowExtractor(!showExtractor)}
+              className="flex items-center gap-2 text-lg font-semibold mb-3 hover:opacity-80 transition-opacity"
+              style={{ color: "var(--primary)" }}
+            >
+              <svg 
+                className={`w-5 h-5 transition-transform ${showExtractor ? 'rotate-90' : ''}`}
+                fill="none" 
+                viewBox="0 0 24 24" 
+                stroke="currentColor"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              </svg>
+              Indian Results Extractor
+            </button>
+            
+            {showExtractor && (
+              <div className="grid md:grid-cols-2 gap-4">
+                {/* Input Column */}
+                <div>
+                  <label className="block text-sm font-semibold mb-2" style={{ color: "var(--muted)" }}>
+                    Input HTML
+                  </label>
+                  <textarea
+                    className="w-full h-64 p-3 rounded border focus:ring-2 transition-all duration-300 text-sm"
+                    style={{ borderColor: "var(--primary)", color: "var(--foreground)", background: "var(--surface)" }}
+                    placeholder="Paste HTML content here..."
+                    value={input}
+                    onChange={(e) => setInput(e.target.value)}
+                  />
+                  <div className="mt-3 flex gap-2">
+                    <Button variant="primary" onClick={handleExtract}>
+                      Extract
+                    </Button>
+                    <Button variant="secondary" onClick={() => { setInput(""); setResult(""); setError(""); }}>
+                      Clear
+                    </Button>
+                  </div>
+                  {error && <div className="mt-2 text-sm" style={{ color: "var(--danger)" }}>{error}</div>}
+                </div>
+
+                {/* Output Column */}
+                <div>
+                  <div className="flex items-center justify-between mb-2">
+                    <label className="block text-sm font-semibold" style={{ color: "var(--muted)" }}>
+                      Extracted Results
+                    </label>
+                    {result && (
+                      <button
+                        onClick={handleCopy}
+                        className="text-xs px-3 py-1 rounded transition-colors"
+                        style={{ 
+                          background: "var(--primary)", 
+                          color: "var(--surface)" 
+                        }}
+                      >
+                        Copy
+                      </button>
+                    )}
+                  </div>
+                  {result ? (
+                    <pre 
+                      className="w-full h-64 p-3 rounded border text-xs overflow-auto whitespace-pre-wrap break-words" 
+                      style={{ background: "var(--glass)", color: "var(--muted)", borderColor: "var(--muted-2)" }}
+                    >
+                      {result}
+                    </pre>
+                  ) : (
+                    <div 
+                      className="w-full h-64 flex items-center justify-center rounded border" 
+                      style={{ background: "var(--glass)", borderColor: "var(--muted-2)" }}
+                    >
+                      <p className="text-sm" style={{ color: "var(--muted-2)" }}>
+                        Results will appear here
+                      </p>
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+          </div>
+        )}
       </main>
     </div>
   );

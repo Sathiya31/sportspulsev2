@@ -45,9 +45,9 @@ a, button {
   --muted: #374151; /* slate-700 */
   --muted-2: #6b7280; /* slate-500 */
   --primary: #0ea5e9; /* sky-500 */
-  --primary-dark: #0284c7; /* sky-700 */
-  --primary-light: #0ea5e9; /* sky-300 */
-  --primary-lighter: #3b82f6; /* sky-50 */
+  --primary-dark: #0069a8; /* sky-700 */
+  --primary-light: #74d4ff; /* sky-300 */
+  --primary-lighter: #dff2fe; /* sky-100 */
   --accent: #7c3aed; /* violet-600 */
   --surface: #ffffff;
   --success: #10b981;
