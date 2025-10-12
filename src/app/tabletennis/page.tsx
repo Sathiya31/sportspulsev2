@@ -3,6 +3,8 @@ import CompetitionResults from "@/components/tabletennis/CompetitionResults";
 import { useEffect, useState } from "react";
 import EventCard from "@/components/ui/EventCard";
 import Button from "@/components/ui/Button";
+import { useSession } from "next-auth/react";
+import { isAdmin } from "@/config/auth";
 
 function isLive(start: string, end: string) {
   const now = new Date();
@@ -70,11 +72,13 @@ export default function TableTennisPage() {
   const [result, setResult] = useState<string>("");
   const [error, setError] = useState("");
   const [selectedEvent, setSelectedEvent] = useState<any>(null);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const handleCalendarClick = (event: any) => {
     console.log("clicked event", event);
     setSelectedEvent(event);
-};
+    setIsMobileMenuOpen(false); // Close mobile menu after selection
+  };
 
   function handleExtract() {
     try {
@@ -125,10 +129,27 @@ export default function TableTennisPage() {
   // Find all live events
   const liveEvents = events.filter(ev => isLive(ev.StartDateTime, ev.EndDateTime));
 
+  const { data: session } = useSession();
+  const userIsAdmin = isAdmin(session?.user?.email);
+
   return (
-    <div className="flex min-h-screen" style={{ background: "var(--background)", color: "var(--foreground)" }}>
+    <div className="flex flex-col md:flex-row min-h-screen" style={{ background: "var(--background)", color: "var(--foreground)" }}>
+      {/* Mobile Overlay */}
+      {isMobileMenuOpen && (
+        <div
+          className="md:hidden fixed inset-0 bg-black bg-opacity-50 z-30"
+          onClick={() => setIsMobileMenuOpen(false)}
+        />
+      )}
+
       {/* Consistent Calendar Sidebar */}
-      <aside className="w-96 bg-slate-50 border-r border-slate-200 p-4 overflow-y-auto">
+      <aside className={`
+        fixed md:static inset-y-0 left-0 z-40
+        w-80 md:w-96 
+        transform transition-transform duration-300 ease-in-out
+        ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}
+        bg-slate-50 border-r border-slate-200 p-4 overflow-y-auto
+      `}>
         <div className="mb-4">
           <label className="block text-sm font-semibold mb-1" style={{ color: "var(--muted)" }}>Filter by Month</label>
           <select
@@ -170,23 +191,32 @@ export default function TableTennisPage() {
                 className={selectedEvent?.EventId === event.EventId ? "ring-2" : ""}
               />
             );
-// Helper to determine if event is live
-function isLive(startDate: string, endDate: string) {
-  const now = new Date();
-  const start = new Date(startDate);
-  const end = new Date(endDate);
-  return now >= start && now <= end;
-}
           })}
         </div>
       </aside>
+
       {/* Consistent Main Layout */}
-      <main className="flex-1 p-8 flex flex-col gap-8" style={{ background: "var(--background)" }}>
+      <main className="flex-1 p-4 md:p-8 flex flex-col gap-4 md:gap-8" style={{ background: "var(--background)" }}>
+        {/* Mobile menu button */}
+        <button
+          className="md:hidden fixed top-20 right-4 z-50 p-2 rounded-lg shadow-lg"
+          style={{ background: "var(--surface)", color: "var(--foreground)" }}
+          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+        >
+          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            {isMobileMenuOpen ? (
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            ) : (
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+            )}
+          </svg>
+        </button>
+
         <div>
-          <h1 className="text-2xl font-bold mb-4" style={{ color: "var(--primary)" }}>Table Tennis</h1>
+          <h1 className="text-2xl font-bold mb-4 ml-12 md:ml-0" style={{ color: "var(--primary)" }}>Table Tennis</h1>
           <div className="mb-4 font-semibold text-lg" style={{ color: "var(--success)" }}>Live Events</div>
           {liveEvents.length > 0 ? (
-            <div className="flex space-x-2 mb-8">
+            <div className="flex flex-wrap gap-2 mb-8">
               {liveEvents.map((ev, idx) => {
                 const key = ev.EventId ? `${ev.EventId}_${idx}` : `live_${idx}`;
                 return (
@@ -208,13 +238,16 @@ function isLive(startDate: string, endDate: string) {
             <div className="mb-8" style={{ color: "var(--muted-2)" }}>No live events at the moment.</div>
           )}
         </div>
+
         <div>
           {/* Display selected event Results */}
           {selectedEvent && (
             <CompetitionResults {...selectedEvent} />
           )}
         </div>
-        <div className="max-w-2xl mx-auto py-8 px-4">
+
+        {userIsAdmin && 
+        <div className="max-w-2xl w-full mx-auto py-8 px-4">
           <h2 className="text-xl font-bold mb-4" style={{ color: "var(--primary)" }}>Indian Results Extractor</h2>
           <textarea
             className="w-full h-40 p-2 rounded mb-4 focus:ring-2 transition-all duration-300"
@@ -240,6 +273,7 @@ function isLive(startDate: string, endDate: string) {
             </div>
           )}
         </div>
+      }
       </main>
     </div>
   );

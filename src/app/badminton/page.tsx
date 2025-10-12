@@ -2,11 +2,11 @@
 import { useEffect, useState } from "react";
 import EventCard from "@/components/ui/EventCard";
 import { useSession } from "next-auth/react";
+import { isAdmin } from "@/config/auth";
 import { filterIndianResults } from "../../utils/badmintonIndianResults";
 import { getTournamentResults } from "@/services/badmintonService";
 import TournamentResults from "@/components/badminton/TournamentResults";
 import TournamentActions from "@/components/badminton/TournamentActions";
-import { isAdmin } from "@/config/auth";
 
 interface Tournament {
   id: number;
@@ -45,7 +45,7 @@ export default function BadmintonPage() {
   const [tournamentResults, setTournamentResults] = useState<any>({});
   const [indianResults, setIndianResults] = useState<Record<string, string[]>>({});
   const [copySuccess, setCopySuccess] = useState("");
-  // Removed unused copyBlockRef
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     async function fetchTournaments() {
@@ -74,6 +74,7 @@ export default function BadmintonPage() {
     }
     fetchTournaments();
   }, []);
+  
   // Helper to get all dates between start and end (inclusive)
   function getEventDates(start: string, end: string) {
     const dates = [];
@@ -148,6 +149,7 @@ export default function BadmintonPage() {
     setSelectedDate(dates.includes(today) ? today : dates[0]);
     setIndianResults({});
     setFetchError("");
+    setIsMobileMenuOpen(false); // Close mobile menu after selection
     
     // Immediately fetch Firebase results when tournament is selected
     fetchFirebaseResults(event.code);
@@ -162,9 +164,23 @@ export default function BadmintonPage() {
   const userIsAdmin = isAdmin(session?.user?.email);
 
   return (
-  <div className="flex min-h-screen" style={{ background: "var(--background)", color: "var(--foreground)" }}>
+    <div className="flex flex-col md:flex-row min-h-screen" style={{ background: "var(--background)", color: "var(--foreground)" }}>
+      {/* Mobile Overlay */}
+      {isMobileMenuOpen && (
+        <div
+          className="md:hidden fixed inset-0 bg-black bg-opacity-50 z-30"
+          onClick={() => setIsMobileMenuOpen(false)}
+        />
+      )}
+
       {/* Left panel calendar */}
-  <aside className="w-96 border-r p-4 bg-slate-50 border-slate-200 overflow-y-auto">
+      <aside className={`
+        fixed md:static inset-y-0 left-0 z-40
+        w-80 md:w-96 
+        transform transition-transform duration-300 ease-in-out
+        ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}
+        border-r p-4 bg-slate-50 border-slate-200 overflow-y-auto
+      `}>
         {/* Filter by Month */}
         <div className="mb-2">
           <label className="block text-sm font-semibold mb-1" style={{ color: "var(--muted)" }}>Filter by Month</label>
@@ -197,9 +213,25 @@ export default function BadmintonPage() {
           ))}
         </div>
       </aside>
+
       {/* Right panel: event details and results */}
-  <main className="flex-1 p-8" style={{ background: "var(--background)" }}>
-  <h1 className="text-2xl font-bold mb-4" style={{ color: "var(--primary)" }}>Badminton 2025</h1>
+      <main className="flex-1 p-4 md:p-8" style={{ background: "var(--background)" }}>
+        {/* Mobile menu button */}
+        <button
+          className="md:hidden fixed top-20 right-4 z-50 p-2 rounded-lg shadow-lg"
+          style={{ background: "var(--surface)", color: "var(--foreground)" }}
+          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+        >
+          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            {isMobileMenuOpen ? (
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            ) : (
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+            )}
+          </svg>
+        </button>
+
+        <h1 className="text-2xl font-bold mb-4 ml-12 md:ml-0" style={{ color: "var(--primary)" }}>Badminton 2025</h1>
         {liveEvent && (
           <div className="mb-4 font-semibold" style={{ color: "var(--success)" }}>Live: {liveEvent.name}</div>
         )}
@@ -227,48 +259,48 @@ export default function BadmintonPage() {
                 />
 
                 {Object.keys(indianResults).length > 0 ? (
-                <div className="space-y-4">
-                  {Object.entries(indianResults).map(([round, results]) => {
-                    if (!Array.isArray(results) || results.length === 0) return null;
-                    let preEl: HTMLPreElement | null = null;
-                    // Sort: victories first, then losses
-                    const sortedResults = [...results].sort((a, b) => {
-                      const isWin = (s: string) => /\bwin\b|\bdef\b|\bdefeated\b|\bbeat\b|\bwon\b/i.test(s);
-                      const aWin = isWin(a);
-                      const bWin = isWin(b);
-                      if (aWin === bWin) return 0;
-                      return aWin ? -1 : 1;
-                    });
-                    return (
-                      <div key={round} className="border rounded p-2" style={{ background: "var(--surface)", borderColor: "var(--primary)" }}>
-                        <div className="flex items-center gap-2 mb-1">
-                          <span className="font-semibold" style={{ color: "var(--primary)" }}>{round}</span>
-                          <button
-                            className="px-2 py-1 rounded text-xs"
-                            style={{ background: "var(--primary)", color: "var(--surface)" }}
-                            onClick={() => {
-                              if (preEl) {
-                                navigator.clipboard.writeText(preEl.innerText);
-                                setCopySuccess(`Copied ${round}!`);
-                                setTimeout(() => setCopySuccess("") , 1500);
-                              }
-                            }}
-                          >Copy</button>
-                          {copySuccess === `Copied ${round}!` && <span className="text-xs" style={{ color: "var(--success)" }}>Copied!</span>}
-                        </div>
-                        <pre ref={el => { preEl = el; }} className="text-xs rounded p-2 max-h-48 overflow-auto select-all cursor-pointer whitespace-pre-wrap" style={{ background: "var(--glass)", color: "var(--muted)" }}>
+                  <div className="space-y-4">
+                    {Object.entries(indianResults).map(([round, results]) => {
+                      if (!Array.isArray(results) || results.length === 0) return null;
+                      let preEl: HTMLPreElement | null = null;
+                      // Sort: victories first, then losses
+                      const sortedResults = [...results].sort((a, b) => {
+                        const isWin = (s: string) => /\bwin\b|\bdef\b|\bdefeated\b|\bbeat\b|\bwon\b/i.test(s);
+                        const aWin = isWin(a);
+                        const bWin = isWin(b);
+                        if (aWin === bWin) return 0;
+                        return aWin ? -1 : 1;
+                      });
+                      return (
+                        <div key={round} className="border rounded p-2" style={{ background: "var(--surface)", borderColor: "var(--primary)" }}>
+                          <div className="flex items-center gap-2 mb-1">
+                            <span className="font-semibold" style={{ color: "var(--primary)" }}>{round}</span>
+                            <button
+                              className="px-2 py-1 rounded text-xs"
+                              style={{ background: "var(--primary)", color: "var(--surface)" }}
+                              onClick={() => {
+                                if (preEl) {
+                                  navigator.clipboard.writeText(preEl.innerText);
+                                  setCopySuccess(`Copied ${round}!`);
+                                  setTimeout(() => setCopySuccess(""), 1500);
+                                }
+                              }}
+                            >Copy</button>
+                            {copySuccess === `Copied ${round}!` && <span className="text-xs" style={{ color: "var(--success)" }}>Copied!</span>}
+                          </div>
+                          <pre ref={el => { preEl = el; }} className="text-xs rounded p-2 max-h-48 overflow-auto select-all cursor-pointer whitespace-pre-wrap" style={{ background: "var(--glass)", color: "var(--muted)" }}>
 {sortedResults.join('\n')}
-                        </pre>
-                      </div>
-                    );
-                  })}
-                </div>
-              ) : null}
-            </div>
+                          </pre>
+                        </div>
+                      );
+                    })}
+                  </div>
+                ) : null}
+              </div>
             )}
           </div>
         ) : (
-          <p style={{ color: "var(--muted-2)" }}>Select an event from the left panel to see more details.</p>
+          <p style={{ color: "var(--muted-2)" }}>Select an event from the calendar to see results.</p>
         )}
       </main>
     </div>

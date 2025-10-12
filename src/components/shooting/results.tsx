@@ -127,7 +127,7 @@ const ShootingResults = ({ selectedCompetition }: { selectedCompetition: string 
       
       // Set the first event as selected by default
       const eventFormats = Object.keys(grouped);
-      if (eventFormats.length > 0 && !selectedEvent) {
+      if (eventFormats.length > 0) {
         setSelectedEvent(eventFormats[0]);
       }
     } catch (err) {
@@ -359,7 +359,6 @@ const ShootingResults = ({ selectedCompetition }: { selectedCompetition: string 
     <div className="max-w-7xl mx-auto p-2 space-y-8">
       <div className="text-center mb-2">
         <h3 className="text-xl font-bold text-gray-900 my-4">Indian Results</h3>
-        
         {/* Event Format Chips */}
         <div className="flex flex-wrap justify-center gap-3 mb-8">
           {availableEvents.map((eventFormat) => (
@@ -380,7 +379,6 @@ const ShootingResults = ({ selectedCompetition }: { selectedCompetition: string 
 
       {selectedEventData && (
         <div className="bg-gray-50 rounded-xl p-6">
-
           {selectedEventData.finals.length > 0 && (
             <div className="mb-8">
               <h3 className="text-md font-semibold text-sky-900 mb-4 flex items-center justify-center">
@@ -410,7 +408,6 @@ const ShootingResults = ({ selectedCompetition }: { selectedCompetition: string 
               </div>
             </div>
           )}
-
         </div>
       )}
 
