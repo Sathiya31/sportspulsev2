@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { collection, query, where, getDocs } from 'firebase/firestore';
 import { db } from '@/config/firebase';
+import Button from '@/components/ui/Button';
 
 interface SeriesScores {
   series_1: string;
@@ -60,22 +61,12 @@ interface GroupedResults {
   };
 }
 
-const eventFormatColors: { [key: string]: string } = {
-  '10m Air Rifle': 'bg-blue-100 text-blue-800',
-  '10m Air Pistol': 'bg-green-100 text-green-800',
-  '50m Rifle': 'bg-purple-100 text-purple-800',
-  '25m Pistol': 'bg-orange-100 text-orange-800',
-  '50m Pistol': 'bg-red-100 text-red-800',
-  'Trap': 'bg-yellow-100 text-yellow-800',
-  'Skeet': 'bg-indigo-100 text-indigo-800',
-  'default': 'bg-gray-100 text-gray-800'
-};
-
 const ShootingResults = ({ selectedCompetition }: { selectedCompetition: string | null }) => {
   const [results, setResults] = useState<GroupedResults>({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [selectedEvent, setSelectedEvent] = useState<string | null>(null);
+  const [expandedTeams, setExpandedTeams] = useState<Set<string>>(new Set());
 
   useEffect(() => {
     fetchResults();
@@ -110,7 +101,6 @@ const ShootingResults = ({ selectedCompetition }: { selectedCompetition: string 
         if (eventStage.toLowerCase() == 'qualification') {
           acc[eventFormat].qualification.push(result);
         } else {
-            console.log("Finals result:", result);
           acc[eventFormat].finals.push(result);
         }
 
@@ -138,8 +128,23 @@ const ShootingResults = ({ selectedCompetition }: { selectedCompetition: string 
     }
   };
 
-  const getEventFormatColor = (eventFormat: string) => {
-    return eventFormatColors[eventFormat] || eventFormatColors.default;
+  const getMedalStyle = (rank: number) => {
+    if (rank === 1) return { background: "#FFD700", color: "#854D0E" }; // Gold
+    if (rank === 2) return { background: "#C0C0C0", color: "#1F2937" }; // Silver
+    if (rank === 3) return { background: "#CD7F32", color: "#1C1917" }; // Bronze
+    return { background: "var(--muted)", color: "var(--surface)" };
+  };
+
+  const toggleTeam = (teamId: string) => {
+    setExpandedTeams(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(teamId)) {
+        newSet.delete(teamId);
+      } else {
+        newSet.add(teamId);
+      }
+      return newSet;
+    });
   };
 
   const handleEventClick = (eventFormat: string) => {
@@ -149,136 +154,179 @@ const ShootingResults = ({ selectedCompetition }: { selectedCompetition: string 
   const availableEvents = Object.keys(results);
   const selectedEventData = selectedEvent ? results[selectedEvent] : null;
 
-  const renderTeamResult = (result: ShootingResult, index: number, isQualification: boolean = true) => (
-    <div key={`${result.athlete_result.team_name}-${index}`} 
-         className={`rounded-lg shadow-sm border p-6 hover:shadow-md transition-shadow ${
-           isQualification 
-             ? 'bg-white border-gray-200' 
-             : 'bg-gradient-to-r from-yellow-50 to-orange-50 border-yellow-200'
-         }`}>
-      
-      {/* Team Header */}
-      <div className="flex justify-between items-start mb-4">
-        <div className="flex items-center space-x-4">
-          <div className={`flex items-center justify-center w-10 h-10 rounded-full font-bold text-sm ${
-            !isQualification && result.athlete_result.rank === 1 ? 'bg-yellow-400 text-yellow-900' :
-            !isQualification && result.athlete_result.rank === 2 ? 'bg-gray-300 text-gray-800' :
-            !isQualification && result.athlete_result.rank === 3 ? 'bg-orange-400 text-orange-900' :
-            'bg-blue-100 text-blue-800'
-          }`}>
-            {result.athlete_result.rank}
-          </div>
-          <div>
-            <h3 className="font-bold text-lg text-gray-900">{result.athlete_result.team_name}</h3>
-            <p className="text-sm font-medium text-gray-600">{result.athlete_result.noc_code}</p>
-          </div>
-        </div>
-        <div className="text-right">
-          <div className="text-xl font-bold text-gray-900">{result.athlete_result.total_score}</div>
-          <div className={`text-xs font-medium ${isQualification ? 'text-blue-600' : 'text-orange-600'}`}>
-            {isQualification ? 'TEAM SCORE' : 'FINAL SCORE'}
-          </div>
-        </div>
-      </div>
-
-      {/* Team Series Scores (only for qualification) */}
-      {isQualification && result.athlete_result.team_series_scores && (
-        <div className="mb-4 bg-gray-50 rounded-lg p-3">
-          <h4 className="text-xs font-medium text-gray-600 mb-2">TEAM SERIES SCORES</h4>
-          <div className="grid grid-cols-3 gap-3">
-            {Object.entries(result.athlete_result.team_series_scores).map(([series, score]) => (
-              <div key={series} className="text-center">
-                <div className="text-xs text-gray-500 mb-1">
-                  {series.replace('series_', 'Series ')}
-                </div>
-                <div className="bg-white rounded px-3 py-1 text-sm font-semibold border">
-                  {score}
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-
-      {/* Team Members */}
-      <div className="space-y-3">
-        <h4 className="text-sm font-semibold text-gray-700 border-b border-gray-200 pb-1">
-          TEAM MEMBERS
-        </h4>
-        <div className="space-y-3">
-          {result.athlete_result.team_members?.map((member) => (
-            <div key={member.athlete_id} className="bg-gray-50 rounded-lg p-3">
-              <div className="flex justify-between items-start mb-2">
-                <div>
-                  <h5 className="font-medium text-gray-900">{member.athlete_name}</h5>
-                </div>
-                {member.total_score && (
-                  <div className="text-right">
-                    <div className="font-semibold text-gray-900">{member.total_score}</div>
-                  </div>
-                )}
-              </div>
-              
-              {/* Individual Series Scores (only for qualification) */}
-              {isQualification && member.series_scores && (
-                <div className="grid grid-cols-3 gap-2 mt-2">
-                  {Object.entries(member.series_scores).map(([series, score]) => (
-                    <div key={series} className="text-center">
-                      <div className="text-xs text-gray-500 mb-1">
-                        {series.replace('series_', 'S')}
-                      </div>
-                      <div className="bg-white rounded px-2 py-1 text-xs font-medium border">
-                        {score}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
+  const renderTeamResult = (result: ShootingResult, index: number, isQualification: boolean = true) => {
+    const teamId = `${result.athlete_result.team_name}-${index}`;
+    const isExpanded = expandedTeams.has(teamId);
+    
+    return (
+      <div key={teamId} 
+           className="rounded-lg shadow-sm border p-3 hover:shadow-md transition-shadow"
+           style={{ 
+             background: isQualification ? "var(--surface)" : "rgba(34, 197, 94, 0.05)",
+             borderColor: isQualification ? "var(--primary-light)" : "rgba(34, 197, 94, 0.3)"
+           }}>
+        
+        {/* Team Header */}
+        <div className="flex justify-between items-start mb-3">
+          <div className="flex items-center gap-3">
+            <div className="flex items-center justify-center w-8 h-8 rounded-full font-bold text-xs"
+              style={getMedalStyle(result.athlete_result.rank)}>
+              {result.athlete_result.rank}
             </div>
-          ))}
+            <div>
+              <h3 className="font-bold text-sm md:text-base" style={{ color: "var(--foreground)" }}>
+                {result.athlete_result.team_name}
+              </h3>
+            </div>
+          </div>
+          <div className="text-right">
+            <div className="text-base md:text-lg font-bold" style={{ color: "var(--foreground)" }}>
+              {result.athlete_result.total_score}
+            </div>
+            <div className="text-xs font-medium" 
+              style={{ color: isQualification ? "var(--primary)" : "rgb(34, 197, 94)" }}>
+              {isQualification ? 'TEAM' : 'FINAL'}
+            </div>
+          </div>
         </div>
-      </div>
 
-      {/* Qualification Status */}
-      {result.athlete_result.remarks && (
-        <div className="flex justify-end mt-4">
-          <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
-            {result.athlete_result.remarks}
-          </span>
+        {/* Team Series Scores (only for qualification) */}
+        {isQualification && result.athlete_result.team_series_scores && (
+          <div className="mb-3 rounded-lg p-2" style={{ background: "var(--glass)" }}>
+            <h4 className="text-xs font-medium mb-2" style={{ color: "var(--muted)" }}>
+              TEAM SERIES
+            </h4>
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2">
+              {Object.entries(result.athlete_result.team_series_scores).map(([series, score]) => (
+                <div key={series} className="text-center">
+                  <div className="text-xs mb-1" style={{ color: "var(--muted)" }}>
+                    {series.replace('series_', 'S')}
+                  </div>
+                  <div className="rounded px-2 py-1 text-xs font-semibold border" 
+                    style={{ background: "var(--surface)", borderColor: "var(--muted-2)" }}>
+                    {score}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Collapsible Team Members */}
+        <div>
+          <button
+            onClick={() => toggleTeam(teamId)}
+            className="w-full flex items-center justify-between py-2 border-t hover:opacity-80 transition-opacity"
+            style={{ borderColor: "var(--muted-2)" }}
+          >
+            <h4 className="text-xs font-semibold flex items-center gap-2" style={{ color: "var(--primary)" }}>
+              <svg
+                className={`w-3 h-3 transition-transform ${isExpanded ? 'rotate-90' : ''}`}
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              </svg>
+              TEAM MEMBERS
+            </h4>
+            <span className="text-xs px-2 py-0.5 rounded-full" 
+              style={{ background: "var(--glass)", color: "var(--muted)" }}>
+              {result.athlete_result.team_members?.length || 0}
+            </span>
+          </button>
+          
+          {isExpanded && (
+            <div className="space-y-2 mt-2">
+              {result.athlete_result.team_members?.map((member) => (
+                <div key={member.athlete_id} className="rounded-lg p-2" 
+                  style={{ background: "var(--glass)" }}>
+                  <div className="flex justify-between items-start mb-2">
+                    <h5 className="font-medium text-xs md:text-sm" style={{ color: "var(--foreground)" }}>
+                      {member.athlete_name}
+                    </h5>
+                    {member.total_score && (
+                      <div className="font-semibold text-sm" style={{ color: "var(--foreground)" }}>
+                        {member.total_score}
+                      </div>
+                    )}
+                  </div>
+                  
+                  {/* Individual Series Scores (only for qualification) */}
+                  {isQualification && member.series_scores && (
+                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-1.5 mt-2">
+                      {Object.entries(member.series_scores).map(([series, score]) => (
+                        <div key={series} className="text-center">
+                          <div className="text-xs mb-0.5" style={{ color: "var(--muted)" }}>
+                            {series.replace('series_', 'S')}
+                          </div>
+                          <div className="rounded px-1.5 py-0.5 text-xs font-medium border" 
+                            style={{ background: "var(--surface)", borderColor: "var(--muted-2)" }}>
+                            {score}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          )}
         </div>
-      )}
-    </div>
-  );
+
+        {/* Qualification Status */}
+        {result.athlete_result.remarks && (
+          <div className="flex justify-end mt-3">
+            <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium"
+              style={{ background: "rgba(34, 197, 94, 0.1)", color: "rgb(34, 197, 94)" }}>
+              {result.athlete_result.remarks}
+            </span>
+          </div>
+        )}
+      </div>
+    );
+  };
 
   const renderQualificationResult = (result: ShootingResult, index: number) => (
     <div key={`${result.athlete_result.athlete_id}-${index}`} 
-         className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 hover:shadow-md transition-shadow">
-      <div className="flex justify-between items-start mb-3">
-        <div className="flex items-center space-x-3">
-          <div className="flex items-center justify-center w-8 h-8 bg-blue-100 text-blue-800 rounded-full font-semibold text-sm">
+         className="rounded-lg shadow-sm border p-3 hover:shadow-md transition-shadow"
+         style={{ background: "var(--surface)", borderColor: "var(--primary-light)" }}>
+      <div className="flex justify-between items-start mb-2">
+        <div className="flex items-center gap-2">
+          <div className="flex items-center justify-center w-7 h-7 rounded-full font-semibold text-xs"
+            style={{ background: "var(--muted)", color: "var(--surface)" }}>
             {result.athlete_result.rank}
           </div>
           <div>
-            <h3 className="font-semibold text-gray-900">{result.athlete_result.athlete_name}</h3>
-            <p className="text-sm text-gray-600">{result.athlete_result.noc_code}</p>
+            <h3 className="font-semibold text-sm" style={{ color: "var(--foreground)" }}>
+              {result.athlete_result.athlete_name}
+            </h3>
+            <p className="text-xs" style={{ color: "var(--muted)" }}>
+              {result.athlete_result.noc_code}
+            </p>
           </div>
         </div>
         <div className="text-right">
-          <div className="text-lg font-bold text-gray-900">{result.athlete_result.total_score}</div>
+          <div className="text-base font-bold" style={{ color: "var(--foreground)" }}>
+            {result.athlete_result.total_score}
+          </div>
           {result.athlete_result.bib_number && (
-            <div className="text-xs text-gray-500">Bib #{result.athlete_result.bib_number}</div>
+            <div className="text-xs" style={{ color: "var(--muted)" }}>
+              #{result.athlete_result.bib_number}
+            </div>
           )}
         </div>
       </div>
 
       {result.athlete_result.series_scores && (
-        <div className="grid grid-cols-6 gap-2 mb-3">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-1.5 mb-2">
           {Object.entries(result.athlete_result.series_scores).map(([series, score]) => (
             <div key={series} className="text-center">
-              <div className="text-xs text-gray-500 mb-1">
+              <div className="text-xs mb-0.5" style={{ color: "var(--muted)" }}>
                 {series.replace('series_', 'S')}
               </div>
-              <div className="bg-gray-50 rounded px-2 py-1 text-sm font-medium">
+              <div className="rounded px-2 py-0.5 text-xs font-medium" 
+                style={{ background: "var(--glass)" }}>
                 {score}
               </div>
             </div>
@@ -288,7 +336,8 @@ const ShootingResults = ({ selectedCompetition }: { selectedCompetition: string 
 
       {result.athlete_result.remarks && (
         <div className="flex justify-end">
-          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+          <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium"
+            style={{ background: "rgba(34, 197, 94, 0.1)", color: "rgb(34, 197, 94)" }}>
             {result.athlete_result.remarks}
           </span>
         </div>
@@ -298,36 +347,41 @@ const ShootingResults = ({ selectedCompetition }: { selectedCompetition: string 
 
   const renderFinalsResult = (result: ShootingResult, index: number) => (
     <div key={`${result.athlete_result.athlete_id}-${index}`} 
-         className="bg-gradient-to-r from-yellow-50 to-orange-50 rounded-lg shadow-sm border border-yellow-200 p-4 hover:shadow-md transition-shadow">
+         className="rounded-lg shadow-sm border p-3 hover:shadow-md transition-shadow"
+         style={{ background: "rgba(34, 197, 94, 0.05)", borderColor: "rgba(34, 197, 94, 0.3)" }}>
       <div className="flex justify-between items-center">
-        <div className="flex items-center space-x-3">
-          <div className={`flex items-center justify-center w-10 h-10 rounded-full font-bold text-sm ${
-            result.athlete_result.rank === 1 ? 'bg-yellow-400 text-yellow-900' :
-            result.athlete_result.rank === 2 ? 'bg-gray-300 text-gray-800' :
-            result.athlete_result.rank === 3 ? 'bg-orange-400 text-orange-900' :
-            'bg-blue-100 text-blue-800'
-          }`}>
+        <div className="flex items-center gap-3">
+          <div className="flex items-center justify-center w-9 h-9 rounded-full font-bold text-sm"
+            style={getMedalStyle(result.athlete_result.rank)}>
             {result.athlete_result.rank}
           </div>
           <div>
-            <h3 className="font-bold text-gray-900">{result.athlete_result.athlete_name}</h3>
-            <p className="text-sm text-gray-600 font-medium">{result.athlete_result.noc_code}</p>
+            <h3 className="font-bold text-sm md:text-base" style={{ color: "var(--foreground)" }}>
+              {result.athlete_result.athlete_name}
+            </h3>
+            <p className="text-xs font-medium" style={{ color: "var(--muted)" }}>
+              {result.athlete_result.noc_code}
+            </p>
           </div>
         </div>
         <div className="text-right">
-          <div className="text-xl font-bold text-gray-900">{result.athlete_result.total_score}</div>
-          <div className="text-xs text-orange-600 font-medium">FINAL SCORE</div>
+          <div className="text-lg font-bold" style={{ color: "var(--foreground)" }}>
+            {result.athlete_result.total_score}
+          </div>
+          <div className="text-xs font-medium" style={{ color: "rgb(34, 197, 94)" }}>
+            FINAL
+          </div>
         </div>
       </div>
     </div>
   );
 
-  
-
   if (loading) {
     return (
-      <div className="flex justify-center items-center min-h-64">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+      <div className="flex justify-center items-center py-12">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2" 
+          style={{ borderColor: "var(--primary)" }}></div>
+        <span className="ml-3 text-sm" style={{ color: "var(--muted)" }}>Loading results...</span>
       </div>
     );
   }
@@ -335,14 +389,12 @@ const ShootingResults = ({ selectedCompetition }: { selectedCompetition: string 
   if (error) {
     return (
       <div className="text-center py-12">
-        <div className="text-red-600 font-medium mb-2">Error loading results</div>
-        <p className="text-gray-600">{error}</p>
-        <button 
-          onClick={fetchResults}
-          className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-        >
+        <div className="text-3xl mb-3">⚠️</div>
+        <div className="font-medium mb-2" style={{ color: "var(--danger)" }}>Error loading results</div>
+        <p className="text-sm mb-3" style={{ color: "var(--muted)" }}>{error}</p>
+        <Button variant="primary" onClick={fetchResults}>
           Retry
-        </button>
+        </Button>
       </div>
     );
   }
@@ -350,41 +402,49 @@ const ShootingResults = ({ selectedCompetition }: { selectedCompetition: string 
   if (Object.keys(results).length === 0) {
     return (
       <div className="text-center py-12">
-        <div className="text-gray-600">No Indian Results found</div>
+        <div className="text-4xl mb-3">🎯</div>
+        <h3 className="text-lg font-semibold mb-2" style={{ color: "var(--muted)" }}>
+          No Results Found
+        </h3>
+        <p className="text-sm" style={{ color: "var(--muted-2)" }}>
+          No Indian shooters participated in this competition
+        </p>
       </div>
     );
   }
 
   return (
-    <div className="max-w-7xl mx-auto p-2 space-y-8">
-      <div className="text-center mb-2">
-        <h3 className="text-xl font-bold text-gray-900 my-4">Indian Results</h3>
-        {/* Event Format Chips */}
-        <div className="flex flex-wrap justify-center gap-3 mb-8">
+    <div className="space-y-4">
+      {/* Header with Event Chips */}
+      <div className="border-b pb-3" style={{ borderColor: "var(--muted-2)" }}>
+        <h3 className="text-base md:text-lg font-bold mb-3" style={{ color: "var(--primary)" }}>
+          Indian Results
+        </h3>
+        
+        {/* Event Format Chips - Using Button Component */}
+        <div className="flex flex-wrap gap-2">
           {availableEvents.map((eventFormat) => (
-            <button
+            <Button
               key={eventFormat}
+              variant={selectedEvent === eventFormat ? "primary" : "secondary"}
+              className="text-xs font-medium px-3 py-2"
               onClick={() => handleEventClick(eventFormat)}
-              className={`inline-flex items-center px-4 py-2 rounded-full text-xs font-small transition-all duration-200 hover:shadow-md transform hover:-translate-y-0.5 ${
-                selectedEvent === eventFormat
-                  ? `${getEventFormatColor(eventFormat)} ring-2 ring-offset-2 ring-blue-500 shadow-lg`
-                  : `${getEventFormatColor(eventFormat)} hover:shadow-md opacity-70 hover:opacity-100`
-              }`}
             >
               {eventFormat}
-            </button>
+            </Button>
           ))}
         </div>
       </div>
 
+      {/* Results Display */}
       {selectedEventData && (
-        <div className="bg-gray-50 rounded-xl p-6">
+        <div className="space-y-4">
           {selectedEventData.finals.length > 0 && (
-            <div className="mb-8">
-              <h3 className="text-md font-semibold text-sky-900 mb-4 flex items-center justify-center">
+            <div>
+              <h3 className="text-sm md:text-base font-semibold mb-3" style={{ color: "var(--primary)" }}>
                 Finals Results
               </h3>
-              <div className="grid gap-4">
+              <div className="grid gap-3">
                 {selectedEventData.finals.map((result, index) => 
                   result.athlete_result.result_type == 'team'
                     ? renderTeamResult(result, index, false)
@@ -395,11 +455,11 @@ const ShootingResults = ({ selectedCompetition }: { selectedCompetition: string 
           )}
 
           {selectedEventData.qualification.length > 0 && (
-            <div className="mb-8">
-              <h3 className="text-md font-semibold text-sky-900 mb-4 flex items-center justify-center">
+            <div>
+              <h3 className="text-sm md:text-base font-semibold mb-3" style={{ color: "var(--primary)" }}>
                 Qualification Results
               </h3>
-              <div className="grid gap-4 md:grid-cols-1 lg:grid-cols-2">
+              <div className="grid gap-3 md:grid-cols-1 lg:grid-cols-2">
                 {selectedEventData.qualification.map((result, index) => 
                   result.athlete_result.result_type === 'team' 
                     ? renderTeamResult(result, index, true)
@@ -413,7 +473,9 @@ const ShootingResults = ({ selectedCompetition }: { selectedCompetition: string 
 
       {!selectedEvent && availableEvents.length > 0 && (
         <div className="text-center py-12">
-          <div className="text-gray-600">Select an event format above to view results</div>
+          <p className="text-sm" style={{ color: "var(--muted)" }}>
+            Select an event format above to view results
+          </p>
         </div>
       )}
     </div>
