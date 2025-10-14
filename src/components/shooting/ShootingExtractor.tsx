@@ -1,6 +1,9 @@
 import React, { useState } from "react";
+import Button from "../ui/Button";
 
-const ShootingExtractor: React.FC = () => {
+type ShootingExtractorProps = { selectedCompetition: string | null };
+
+const ShootingExtractor: React.FC<ShootingExtractorProps> = ({ selectedCompetition }) => {
   const [input, setInput] = useState("");
   const [result, setResult] = useState("");
   const [error, setError] = useState("");
@@ -48,6 +51,24 @@ const ShootingExtractor: React.FC = () => {
     }
   }
 
+  
+  function handleLoadData() {
+    fetch("/api/shooting-extract", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ event_id: selectedCompetition }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log("API Response:", data);
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+  }
+
   // Add API call for server-side fetch
   async function handleExtractFromUrl() {
     setLoading(true);
@@ -79,6 +100,19 @@ const ShootingExtractor: React.FC = () => {
   return (
     <div className="mt-8 p-4 border rounded-lg" style={{ background: "var(--glass)", borderColor: "var(--primary)" }}>
       <h3 className="text-lg font-semibold mb-4" style={{ color: "var(--primary)" }}>Shooting Data Extractor</h3>
+      <div className="flex p-2 space-2">
+        <p className="bold p-2">
+          <label className="text-md font-semibold">Selected Event:</label> {selectedCompetition}
+        </p>
+        <Button
+          variant="primary"
+          onClick={handleLoadData}
+          disabled={!selectedCompetition}
+          className="text-xs px-3 py-1 rounded transition-colors"
+        >
+          Load Data
+        </Button>
+      </div>
       <div className="space-y-6">
         <div className="relative">
           <input

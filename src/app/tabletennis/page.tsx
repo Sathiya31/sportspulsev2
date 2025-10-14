@@ -314,8 +314,9 @@ export default function TableTennisPage() {
             
             {showExtractor && (
               <div>
-              <div className="p-2 space-y-4">
-                <p className="bold">Selected Event: {selectedEvent?.EventName} ({selectedEvent?.EventId})</p>
+              <div className="flex p-2 space-y-4">
+                <p className="bold">
+                  <label className="text-sm font-semibold">Selected Event:</label> {selectedEvent?.EventName} ({selectedEvent?.EventId})</p>
                 <Button
                   variant="primary"
                   onClick={handleLoadData}

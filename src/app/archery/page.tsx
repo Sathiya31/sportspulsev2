@@ -5,6 +5,8 @@ import EventCard from "@/components/ui/EventCard";
 import Button from "@/components/ui/Button";
 import { collection, query, where, getDocs } from 'firebase/firestore';
 import { db } from '@/config/firebase';
+import { useSession } from 'next-auth/react';
+import { isAdmin } from "@/config/auth";
 
 // Types
 interface Event {
@@ -224,6 +226,9 @@ export default function ArcheryDashboard() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  const { data: session } = useSession(); 
+  const userIsAdmin = isAdmin(session?.user?.email);
+
   // Filter chips configuration
   const filterChips = [
     { key: 'RM', label: 'Recurve Men', category: 'RM', type: 'matchind' },
@@ -319,6 +324,23 @@ export default function ArcheryDashboard() {
       year: 'numeric'
     });
   };
+
+  function handleLoadData() {
+    fetch("/api/archery-extract", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ event_id: selectedEvent?.id.toString() })
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log("API Response:", data);
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+  }
 
   // Group matches by phase (descending order)
   const groupedMatches = matches.reduce((acc, match) => {
@@ -447,6 +469,24 @@ export default function ArcheryDashboard() {
               </div>
             </div>
           )}
+
+          {/* Extractor for admins only */}
+        {userIsAdmin && (
+          <div className="mt-8 pt-8 border-t" style={{ borderColor: "var(--muted-2)" }}>
+              <div className="flex p-2 space-4">
+                <p className="p-2 bold">
+                  <label className="text-md font-semibold">Selected Event:</label> {selectedEvent?.name} ({selectedEvent?.id})</p>
+                <Button
+                  variant="primary"
+                  onClick={handleLoadData}
+                  disabled={!selectedEvent}
+                  className="text-xs px-3 py-1 rounded transition-colors"
+                >
+                  Load Data
+                </Button>
+              </div>
+            </div>
+        )}
         </div>
       </div>
     </div>

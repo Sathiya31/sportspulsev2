@@ -3,8 +3,8 @@
 import { useState, useEffect } from "react";
 import EventCard from "@/components/ui/EventCard";
 import ShootingResults from "../../components/shooting/results";
-import { useSession } from 'next-auth/react';
 import ShootingExtractor from '../../components/shooting/ShootingExtractor';
+import { useSession } from 'next-auth/react';
 import { isAdmin } from "@/config/auth";
 
 interface ShootingEvent {
@@ -152,7 +152,7 @@ export default function ShootingPage() {
         {/* Extractor for admins only */}
         {userIsAdmin && (
           <div className="mt-8 pt-8 border-t" style={{ borderColor: "var(--muted-2)" }}>
-            <ShootingExtractor />
+            <ShootingExtractor selectedCompetition={selectedCompetition}/>
           </div>
         )}
       </main>
