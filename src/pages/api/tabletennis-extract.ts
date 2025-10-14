@@ -24,6 +24,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const data = await response.json();
     res.status(response.status).json(data);
   } catch (error) {
+    console.log(error);
     res.status(500).json({ error: 'Failed to fetch data' });
   }
 }
