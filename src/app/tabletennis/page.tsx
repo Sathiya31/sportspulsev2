@@ -97,6 +97,23 @@ export default function TableTennisPage() {
     }
   }
 
+  function handleLoadData() {
+    fetch("/api/tabletennis-extract", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ event_id: selectedEvent?.EventId })
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log("API Response:", data);
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+  }
+
   useEffect(() => {
     async function fetchCalendar() {
       const res = await fetch("/data/calendars/tabletennis_2025.json");
@@ -296,6 +313,18 @@ export default function TableTennisPage() {
             </button>
             
             {showExtractor && (
+              <div>
+              <div className="p-2 space-y-4">
+                <p className="bold">Selected Event: {selectedEvent?.EventName} ({selectedEvent?.EventId})</p>
+                <Button
+                  variant="primary"
+                  onClick={handleLoadData}
+                  disabled={!selectedEvent}
+                  className="text-xs px-3 py-1 rounded transition-colors"
+                  >
+                    Load Data
+                  </Button>
+              </div>
               <div className="grid md:grid-cols-2 gap-4">
                 {/* Input Column */}
                 <div>
@@ -357,6 +386,7 @@ export default function TableTennisPage() {
                     </div>
                   )}
                 </div>
+              </div>
               </div>
             )}
           </div>
