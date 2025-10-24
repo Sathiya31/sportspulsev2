@@ -68,7 +68,7 @@ export default function ShootingPage() {
       {/* Calendar Sidebar */}
       <aside className={`
         fixed md:static inset-y-0 left-0 z-40
-        w-80 md:w-96 
+        w-80 md:w-96  max-h-screen
         transform transition-transform duration-300 ease-in-out
         ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}
         p-4 border-r border-slate-200 bg-slate-50 overflow-y-auto

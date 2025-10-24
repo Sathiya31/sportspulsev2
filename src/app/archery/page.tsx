@@ -7,6 +7,7 @@ import { collection, query, where, getDocs } from 'firebase/firestore';
 import { db } from '@/config/firebase';
 import { useSession } from 'next-auth/react';
 import { isAdmin } from "@/config/auth";
+import {archeryCategoryMap} from '../../utils/archeryCategoryMap';
 
 // Types
 interface Event {
@@ -68,7 +69,7 @@ function isLive(startDate: string, endDate: string) {
 function getPhaseName(phase: number): string {
   const matchCount = 2 * phase;
 
-   if (matchCount >= 65 && matchCount <= 128) {
+  if (matchCount >= 65 && matchCount <= 128) {
     return 'Round of 128';
   } else if (matchCount >= 33 && matchCount <= 64) {
     return 'Round of 64';
@@ -89,7 +90,22 @@ function getPhaseName(phase: number): string {
   return `Phase ${phase}`;
 }
 
-type FilterType = 'RM' | 'RMT' | 'RW' | 'RWT' | 'CM' | 'CMT' | 'CW' | 'CWT' | 'RXT' | 'CXT';
+// Category Code to Label Converter
+function getCategoryLabel(categoryCode: string): string {
+  return archeryCategoryMap[categoryCode] || `${categoryCode} Category`;
+}
+
+// Category ordering function
+function sortCategoryCode(a: string, b: string): number {
+  const order = ['RM', 'RMT', 'RW', 'RWT', 'RXT', 'CM', 'CMT', 'CW', 'CWT', 'CXT'];
+  const indexA = order.indexOf(a);
+  const indexB = order.indexOf(b);
+  
+  if (indexA === -1 && indexB === -1) return a.localeCompare(b);
+  if (indexA === -1) return 1;
+  if (indexB === -1) return -1;
+  return indexA - indexB;
+}
 
 // Match Card Component
 const MatchCard = ({ match, isTeamMatch }: { match: MatchData; isTeamMatch: boolean }) => {
@@ -221,27 +237,14 @@ const PhaseAccordion = ({
 export default function ArcheryDashboard() {
   const [events, setEvents] = useState<Event[]>([]);
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
-  const [activeFilter, setActiveFilter] = useState<FilterType | null>(null);
-  const [matches, setMatches] = useState<MatchData[]>([]);
+  const [activeFilter, setActiveFilter] = useState<string | null>(null);
+  const [groupedMatches, setGroupedMatches] = useState<{ [key: string]: MatchData[] }>({});
+  const [availableCategories, setAvailableCategories] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const { data: session } = useSession(); 
   const userIsAdmin = isAdmin(session?.user?.email);
-
-  // Filter chips configuration
-  const filterChips = [
-    { key: 'RM', label: 'Recurve Men', category: 'RM', type: 'matchind' },
-    { key: 'RMT', label: 'Recurve Men Team', category: 'RM', type: 'matchteam' },
-    { key: 'RW', label: 'Recurve Women', category: 'RW', type: 'matchind' },
-    { key: 'RWT', label: 'Recurve Women Team', category: 'RW', type: 'matchteam' },
-    { key: 'CM', label: 'Compound Men', category: 'CM', type: 'matchind' },
-    { key: 'CMT', label: 'Compound Men Team', category: 'CM', type: 'matchteam' },
-    { key: 'CW', label: 'Compound Women', category: 'CW', type: 'matchind' },
-    { key: 'CWT', label: 'Compound Women Team', category: 'CW', type: 'matchteam' },
-    { key: 'RXT', label: 'Recurve Mixed', category: 'RX', type: 'matchteam' },
-    { key: 'CXT', label: 'Compound Mixed', category: 'CX', type: 'matchteam' },
-  ];
 
   // Load events from JSON file
   useEffect(() => {
@@ -259,16 +262,14 @@ export default function ArcheryDashboard() {
     loadEvents();
   }, []);
 
-  // Fetch matches from Firebase
-  const fetchMatches = async (compId: string, categoryCode: string) => {
+  // Fetch ALL matches for an event
+  const fetchAllMatches = async (compId: string) => {
     setLoading(true);
     setError(null);
 
     try {
       const matchesRef = collection(db, 'archery');
-      const q = query(matchesRef, 
-        where('competition_id', '==', compId), 
-        where('CategoryCode', '==', categoryCode));
+      const q = query(matchesRef, where('competition_id', '==', compId));
       const querySnapshot = await getDocs(q);
 
       console.log('Fetched matches:', querySnapshot.size);
@@ -276,8 +277,28 @@ export default function ArcheryDashboard() {
       querySnapshot.forEach((doc) => {
         matchList.push(doc.data() as MatchData);
       });
-      console.log(matchList);
-      setMatches(matchList);
+
+      // Group by CategoryCode
+      const grouped: { [key: string]: MatchData[] } = {};
+      matchList.forEach((match) => {
+        const catCode = match.CategoryCode || 'UNKNOWN';
+        if (!grouped[catCode]) {
+          grouped[catCode] = [];
+        }
+        grouped[catCode].push(match);
+      });
+
+      setGroupedMatches(grouped);
+
+      // Get sorted available categories
+      const categories = Object.keys(grouped).sort(sortCategoryCode);
+      console.log("Available Categories", categories)
+      setAvailableCategories(categories);
+
+      // Auto-select first category
+      if (categories.length > 0) {
+        setActiveFilter(categories[0]);
+      }
 
     } catch (err) {
       console.error('Error fetching matches:', err);
@@ -287,32 +308,25 @@ export default function ArcheryDashboard() {
     }
   };
 
-  // Handle event selection with auto-filter
+  // Handle event selection
   const handleEventSelect = (event: Event) => {
     setSelectedEvent(event);
-    setMatches([]);
+    setGroupedMatches({});
+    setAvailableCategories([]);
+    setActiveFilter(null);
     
-    // Auto-select first filter (Recurve Men)
-    const firstFilter = filterChips[0];
-    setActiveFilter(firstFilter.key as FilterType);
-    fetchMatches(event.id.toString(), firstFilter.key);
+    // Fetch all matches for this event
+    fetchAllMatches(event.id.toString());
   };
 
   // Handle filter chip click
-  const handleFilterClick = (filterKey: FilterType) => {
-    if (!selectedEvent) return;
-
-    const chip = filterChips.find(c => c.key === filterKey);
-    if (!chip) return;
-
-    if (activeFilter === filterKey) {
+  const handleFilterClick = (categoryCode: string) => {
+    if (activeFilter === categoryCode) {
       // Deselect current filter
       setActiveFilter(null);
-      setMatches([]);
     } else {
       // Select new filter
-      setActiveFilter(filterKey);
-      fetchMatches(selectedEvent.id.toString(), chip.key);
+      setActiveFilter(categoryCode);
     }
   };
 
@@ -342,8 +356,11 @@ export default function ArcheryDashboard() {
       });
   }
 
-  // Group matches by phase (descending order)
-  const groupedMatches = matches.reduce((acc, match) => {
+  // Get matches for active filter
+  const displayMatches = activeFilter ? (groupedMatches[activeFilter] || []) : [];
+
+  // Group display matches by phase (ascending order)
+  const phaseGroupedMatches = displayMatches.reduce((acc, match) => {
     if (!acc[match.Phase]) {
       acc[match.Phase] = [];
     }
@@ -351,9 +368,9 @@ export default function ArcheryDashboard() {
     return acc;
   }, {} as { [key: number]: MatchData[] });
 
-  const sortedPhases = Object.keys(groupedMatches)
+  const sortedPhases = Object.keys(phaseGroupedMatches)
     .map(Number)
-    .sort((a, b) => a - b); // Ascending order
+    .sort((a, b) => a - b);
 
   const isTeamMatch = activeFilter?.includes('T') || false;
 
@@ -407,21 +424,23 @@ export default function ArcheryDashboard() {
                 </p>
               </div>
 
-              {/* Filter Chips */}
-              <div className="px-6 py-4 border-b" style={{ background: "var(--glass)", borderColor: "var(--muted-2)" }}>
-                <div className="flex flex-wrap gap-2">
-                  {filterChips.map((chip) => (
-                    <Button
-                      key={chip.key}
-                      variant={activeFilter === chip.key ? "primary" : "secondary"}
-                      className="rounded-full text-xs font-medium px-4 py-2"
-                      onClick={() => handleFilterClick(chip.key as FilterType)}
-                    >
-                      {chip.label}
-                    </Button>
-                  ))}
+              {/* Dynamic Filter Chips */}
+              {availableCategories.length > 0 && (
+                <div className="px-6 py-4 border-b" style={{ background: "var(--glass)", borderColor: "var(--muted-2)" }}>
+                  <div className="flex flex-wrap gap-2">
+                    {availableCategories.map((categoryCode) => (
+                      <Button
+                        key={categoryCode}
+                        variant={activeFilter === categoryCode ? "primary" : "secondary"}
+                        className="rounded-full text-xs font-medium px-4 py-2"
+                        onClick={() => handleFilterClick(categoryCode)}
+                      >
+                        {getCategoryLabel(categoryCode)}
+                      </Button>
+                    ))}
+                  </div>
                 </div>
-              </div>
+              )}
 
               {/* Results */}
               <div className="p-6">
@@ -434,21 +453,29 @@ export default function ArcheryDashboard() {
                   <div className="text-center py-12">
                     <p style={{ color: "var(--danger)" }}>{error}</p>
                   </div>
-                ) : matches.length === 0 ? (
+                ) : availableCategories.length === 0 ? (
                   <div className="text-center py-12">
-                    <p style={{ color: "var(--muted-2)" }}>No Indian results found for this category</p>
+                    <p style={{ color: "var(--muted-2)" }}>No Indian results found for this event</p>
+                  </div>
+                ) : !activeFilter ? (
+                  <div className="text-center py-12">
+                    <p style={{ color: "var(--muted-2)" }}>Select a category to view results</p>
+                  </div>
+                ) : displayMatches.length === 0 ? (
+                  <div className="text-center py-12">
+                    <p style={{ color: "var(--muted-2)" }}>No matches found for this category</p>
                   </div>
                 ) : (
                   <div>
                     <h3 className="text-lg font-medium mb-4" style={{ color: "var(--primary)" }}>
-                      Indian Results ({matches.length} matches)
+                      {getCategoryLabel(activeFilter)} ({displayMatches.length} matches)
                     </h3>
                     <div className="space-y-4">
                       {sortedPhases.map((phase) => (
                         <PhaseAccordion
                           key={phase}
                           phase={phase}
-                          matches={groupedMatches[phase]}
+                          matches={phaseGroupedMatches[phase]}
                           isTeamMatch={isTeamMatch}
                         />
                       ))}
@@ -471,22 +498,22 @@ export default function ArcheryDashboard() {
           )}
 
           {/* Extractor for admins only */}
-        {userIsAdmin && (
-          <div className="mt-8 pt-8 border-t" style={{ borderColor: "var(--muted-2)" }}>
+          {userIsAdmin && selectedEvent && (
+            <div className="mt-8 pt-8 border-t" style={{ borderColor: "var(--muted-2)" }}>
               <div className="flex p-2 space-4">
                 <p className="p-2 bold">
-                  <label className="text-md font-semibold">Selected Event:</label> {selectedEvent?.name} ({selectedEvent?.id})</p>
+                  <label className="text-md font-semibold">Selected Event:</label> {selectedEvent?.name} ({selectedEvent?.id})
+                </p>
                 <Button
                   variant="primary"
                   onClick={handleLoadData}
-                  disabled={!selectedEvent}
                   className="text-xs px-3 py-1 rounded transition-colors"
                 >
                   Load Data
                 </Button>
               </div>
             </div>
-        )}
+          )}
         </div>
       </div>
     </div>
