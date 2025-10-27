@@ -1,5 +1,6 @@
 [
   {
+    "id": "cross-country-championship-2025",
     "title": "59th National Cross-Country Championships 2025",
     "start_date": "12 Jan, 2025",
     "end_date": "12 Jan, 2025",
@@ -7,6 +8,7 @@
     "month": "January"
   },
   {
+    "id": "mumbai-marathon-2025",
     "title": "Mumbai Marathon",
     "start_date": "19 Jan, 2025",
     "end_date": "19 Jan, 2025",
@@ -14,6 +16,7 @@
     "month": "January"
   },
   {
+    "id": "national-inter-district-junior-athletics-meet-2025",
     "title": "20th National Inter District Junior Athletics Meet 2025",
     "start_date": "Feb 2025",
     "end_date": "Feb 2025",
@@ -21,6 +24,7 @@
     "month": "February"
   },
   {
+    "id": "national-games-2024-uttarakhand",
     "title": "38th National Games 2024 Uttarakhand",
     "start_date": "8 Feb, 2025",
     "end_date": "12 Feb, 2025",
@@ -28,6 +32,7 @@
     "month": "February"
   },
   {
+    "id": "national-marathon-2025",
     "title": "National Marathon",
     "start_date": "23 Feb, 2025",
     "end_date": "23 Feb, 2025",
@@ -35,6 +40,7 @@
     "month": "February"
   },
   {
+    "id": "national-youth-athletics-championships-2025",
     "title": "20th National Youth Athletics Championships 2025",
     "start_date": "10 Mar, 2025",
     "end_date": "12 Mar, 2025",
@@ -42,6 +48,7 @@
     "month": "March"
   },
   {
+    "id": "indian-open-throws-2025",
     "title": "4th Indian Open Throws Competition 2025",
     "start_date": "20 Mar, 2025",
     "end_date": "21 Mar, 2025",
@@ -49,6 +56,7 @@
     "month": "March"
   },
   {
+    "id": "indian-open-jumps-2025",
     "title": "4th Indian Open Jumps Competition 2025",
     "start_date": "22 Mar, 2025",
     "end_date": "22 Mar, 2025",
@@ -56,6 +64,7 @@
     "month": "March"
   },
   {
+    "id": "indian-open-400m-2025",
     "title": "6th Indian Open 400m competition 2025",
     "start_date": "24 Mar, 2025",
     "end_date": "24 Mar, 2025",
@@ -63,6 +72,7 @@
     "month": "March"
   },
   {
+    "id": "indian-grand-prix-1-2025",
     "title": "Indian Grand Prix 1 2025",
     "start_date": "28 Mar, 2025",
     "end_date": "28 Mar, 2025",
@@ -70,6 +80,7 @@
     "month": "March"
   },
   {
+    "id": "indian-open-athletics-meetings-sangrur-2025",
     "title": "Indian Open Athletics Meetings",
     "start_date": "1 Apr, 2025",
     "end_date": "1 Apr, 2025",
@@ -77,6 +88,7 @@
     "month": "April"
   },
   {
+    "id": "indian-open-athletics-meetings-nadiad-2025",
     "title": "Indian Open Athletics Meetings",
     "start_date": "5 Apr, 2025",
     "end_date": "5 Apr, 2025",
@@ -84,6 +96,7 @@
     "month": "April"
   },
   {
+    "id": "indian-open-athletics-meetings-ranchi-2025",
     "title": "Indian Open Athletics Meetings",
     "start_date": "10 Apr, 2025",
     "end_date": "10 Apr, 2025",
@@ -91,6 +104,7 @@
     "month": "April"
   },
   {
+    "id": "indian-open-athletics-meetings-chennai-2025",
     "title": "Indian Open Athletics Meetings",
     "start_date": "15 Apr, 2025",
     "end_date": "15 Apr, 2025",
@@ -98,6 +112,7 @@
     "month": "April"
   },
   {
+    "id": "indian-open-race-walking-competition-2025",
     "title": "12th Indian Open Race Walking Competition 2025",
     "start_date": "19 Apr, 2025",
     "end_date": "19 Apr, 2025",
@@ -105,6 +120,7 @@
     "month": "April"
   },
   {
+    "id": "28th-national-federation-senior-2025",
     "title": "28th National Federation Senior Athletics Championships 2025",
     "start_date": "21 Apr, 2025",
     "end_date": "24 Apr, 2025",
@@ -112,6 +128,7 @@
     "month": "April"
   },
   {
+    "id": "tcs-world-10k-run-2025",
     "title": "TCS World 10K Run",
     "start_date": "27 Apr, 2025",
     "end_date": "27 Apr, 2025",
@@ -119,6 +136,7 @@
     "month": "April"
   },
   {
+    "id": "national-open-relay-carnival-2025",
     "title": "2nd National Open Relay Carnival 2025",
     "start_date": "30 Apr, 2025",
     "end_date": "30 Apr, 2025",
@@ -126,6 +144,7 @@
     "month": "April"
   },
   {
+    "id": "world-athletics-relays-2025",
     "title": "World Athletics Relays 2025",
     "start_date": "10 May, 2025",
     "end_date": "11 May, 2025",
@@ -133,6 +152,7 @@
     "month": "May"
   },
   {
+    "id": "khelo-india-youth-games-2025",
     "title": "Khelo India Youth Games 2025",
     "start_date": "12 May, 2025",
     "end_date": "14 May, 2025",
@@ -140,6 +160,7 @@
     "month": "May"
   },
   {
+    "id": "indian-grand-prix-2-2025",
     "title": "Indian Grand Prix 2 2025",
     "start_date": "17 May, 2025",
     "end_date": "17 May, 2025",
@@ -147,6 +168,7 @@
     "month": "May"
   },
   {
+    "id": "asian-athletics-championships-2025",
     "title": "26th Asian Athletics Championships 2025",
     "start_date": "27 May, 2025",
     "end_date": "31 May, 2025",
@@ -154,6 +176,7 @@
     "month": "May"
   },
   {
+    "id": "national-junior-u20-federation-athletics-championships-2025",
     "title": "23rd National Junior (U20) Federation Athletics Championships 2025",
     "start_date": "22 Jun, 2025",
     "end_date": "24 Jun, 2025",
@@ -161,6 +184,7 @@
     "month": "June"
   },
   {
+    "id": "indian-open-athletics-meetings-bengaluru-2025",
     "title": "Indian Open Athletics Meetings",
     "start_date": "28 Jun, 2025",
     "end_date": "28 Jun, 2025",
@@ -168,6 +192,7 @@
     "month": "June"
   },
   {
+    "id": "indian-open-athletics-meetings-pune-2025",
     "title": "Indian Open Athletics Meetings",
     "start_date": "12 Jul, 2025",
     "end_date": "12 Jul, 2025",
@@ -175,6 +200,7 @@
     "month": "July"
   },
   {
+    "id": "indian-open-athletics-meetings-patna-2025",
     "title": "Indian Open Athletics Meetings",
     "start_date": "19 Jul, 2025",
     "end_date": "19 Jul, 2025",
@@ -182,6 +208,7 @@
     "month": "July"
   },
   {
+    "id": "indian-open-athletics-meetings-sangrur-2025",
     "title": "Indian Open Athletics Meetings",
     "start_date": "27 Jul, 2025",
     "end_date": "28 Jul, 2025",
@@ -189,6 +216,7 @@
     "month": "July"
   },
   {
+    "id": "indian-grand-prix-3-2025",
     "title": "Indian Grand Prix 3 2025",
     "start_date": "2 Aug, 2025",
     "end_date": "2 Aug, 2025",
@@ -196,13 +224,7 @@
     "month": "August"
   },
   {
-    "title": "4th National Javelin Day Competition",
-    "start_date": "7 Aug, 2025",
-    "end_date": "7 Aug, 2025",
-    "location": "All States, India",
-    "month": "August"
-  },
-  {
+    "id": "indian-open-world-athletics-continental-tour-2025",
     "title": "1st Indian Open World Athletics Bronze Level Continental Tour",
     "start_date": "10 Aug, 2025",
     "end_date": "10 Aug, 2025",
@@ -210,6 +232,7 @@
     "month": "August"
   },
   {
+    "id": "national-inter-state-senior-athletics-championships-2025",
     "title": "64th National Inter State Senior Athletics Championships 2025",
     "start_date": "20 Aug, 2025",
     "end_date": "24 Aug, 2025",
@@ -217,6 +240,7 @@
     "month": "August"
   },
   {
+    "id": "world-athletics-championships-2025",
     "title": "World Athletics Championships 2025",
     "start_date": "13 Sep, 2025",
     "end_date": "21 Sep, 2025",
@@ -224,6 +248,7 @@
     "month": "September"
   },
   {
+    "id": "north-zone-junior-athletics-championships-2025",
     "title": "North Zone Junior Athletics Championships 2025",
     "start_date": "14 Sep, 2025",
     "end_date": "16 Sep, 2025",
@@ -231,6 +256,7 @@
     "month": "September"
   },
   {
+    "id": "west-zone-junior-athletics-championships-2025",
     "title": "West Zone Junior Athletics Championships 2025",
     "start_date": "18 Sep, 2025",
     "end_date": "20 Sep, 2025",
@@ -238,6 +264,7 @@
     "month": "September"
   },
   {
+    "id": "east-zone-junior-athletics-championships-2025",
     "title": "East Zone Junior Athletics Championships 2025",
     "start_date": "22 Sep, 2025",
     "end_date": "24 Sep, 2025",
@@ -245,6 +272,7 @@
     "month": "September"
   },
   {
+    "id": "south-zone-junior-athletics-championships-2025",
     "title": "South Zone Junior Athletics Championships 2025",
     "start_date": "23 Sep, 2025",
     "end_date": "25 Sep, 2025",
@@ -252,6 +280,7 @@
     "month": "September"
   },
   {
+    "id": "national-open-athletics-championships-2025",
     "title": "64th National Open Athletics Championships 2025",
     "start_date": "27 Sep, 2025",
     "end_date": "30 Sep, 2025",
@@ -259,6 +288,7 @@
     "month": "September"
   },
   {
+    "id": "national-junior-athletics-championships-2025",
     "title": "40th National Junior Athletics Championships 2025",
     "start_date": "10 Oct, 2025",
     "end_date": "14 Oct, 2025",
@@ -266,6 +296,7 @@
     "month": "October"
   },
   {
+    "id": "vedanta-delhi-half-marathon-2025",
     "title": "Vedanta Delhi Half marathon",
     "start_date": "12 Oct, 2025",
     "end_date": "12 Oct, 2025",
@@ -273,6 +304,7 @@
     "month": "October"
   },
   {
+    "id": "indian-open-u23-athletics-competition-2025",
     "title": "5th Indian Open U23 Athletics Competition 2025",
     "start_date": "16 Oct, 2025",
     "end_date": "18 Oct, 2025",
@@ -280,6 +312,7 @@
     "month": "October"
   },
   {
+    "id": "tata-steel-world-25k-2025",
     "title": "Tata Steel World 25K",
     "start_date": "14 Dec, 2025",
     "end_date": "14 Dec, 2025",
