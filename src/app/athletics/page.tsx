@@ -6,7 +6,7 @@ import EventCard from "@/components/ui/EventCard";
 import Button from "@/components/ui/Button";
 import VerticalTabs from "@/components/ui/VerticalTabs";
 import ResultsTable from "@/components/ui/ResultsTable";
-import { AthleticsEvent, AthleticsResult } from "@/types/athletics";
+import { AthleticsEvent } from "@/types/athletics";
 
 // Helper to check if an event is live
 function isLive(start: string, end: string) {
@@ -29,7 +29,6 @@ export default function AthleticsPage() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   
   // New states for results
-  const [results, setResults] = useState<AthleticsEvent[]>([]);
   const [groupedResults, setGroupedResults] = useState<Record<string, AthleticsEvent[]>>({});
   const [eventNames, setEventNames] = useState<string[]>([]);
   const [activeEventTab, setActiveEventTab] = useState<string>("");
@@ -60,7 +59,6 @@ export default function AthleticsPage() {
 
       setLoadingResults(true);
       setResultsError("");
-      setResults([]);
       setGroupedResults({});
       setEventNames([]);
       setActiveEventTab("");
@@ -77,8 +75,6 @@ export default function AthleticsPage() {
         });
 
         console.log("Fetched Results:", fetchedResults);
-
-        setResults(fetchedResults);
 
         if (fetchedResults.length === 0) {
           setLoadingResults(false);

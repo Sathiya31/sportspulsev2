@@ -31,14 +31,6 @@ const DEFAULT_COLUMNS: Record<string, Partial<ColumnConfig>> = {
 };
 
 export default function ResultsTable({ results, eventName, columnOrder }: ResultsTableProps) {
-  if (results.length === 0) {
-    return (
-      <div className="flex items-center justify-center h-64">
-        <p style={{ color: 'var(--muted-2)' }}>No results available for {eventName}</p>
-      </div>
-    );
-  }
-
   // Build column configuration
   const excludedFields = ['id', 'tournamentId', 'eventName', 'remarks', 'athleteNameLower', 'eventType'];
   const sampleResult = results[0];
@@ -124,6 +116,15 @@ export default function ResultsTable({ results, eventName, columnOrder }: Result
     return 'border-slate-200';
   };
 
+  if (results.length === 0) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <p style={{ color: 'var(--muted-2)' }}>No results available for {eventName}</p>
+      </div>
+    );
+  }
+
+
   return (
     <div className="w-full">
       <div className="overflow-x-auto">
@@ -161,8 +162,7 @@ export default function ResultsTable({ results, eventName, columnOrder }: Result
                   }}
                 >
                   {columns.map((col) => {
-                    let value = (result as any)[col.key];
-                    
+                    const value = (result as Record<string, any>)[col.key];
                     // Add medal icon to position column
                     if (col.key === 'position' && medalIcon) {
                       const displayValue = value !== undefined && value !== null ? String(value) : '-';
@@ -181,9 +181,7 @@ export default function ResultsTable({ results, eventName, columnOrder }: Result
                         </td>
                       );
                     }
-                    
                     const displayValue = value !== undefined && value !== null ? String(value) : '-';
-                    
                     return (
                       <td
                         key={String(col.key)}
