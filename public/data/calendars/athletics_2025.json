@@ -24,8 +24,8 @@
     "month": "February"
   },
   {
-    "id": "national-games-2024-uttarakhand",
-    "title": "38th National Games 2024 Uttarakhand",
+    "id": "38th-national-games-2025-uttarakhand",
+    "title": "38th National Games 2025 Uttarakhand",
     "start_date": "8 Feb, 2025",
     "end_date": "12 Feb, 2025",
     "location": "Uttarakhand, India",
@@ -40,7 +40,7 @@
     "month": "February"
   },
   {
-    "id": "national-youth-athletics-championships-2025",
+    "id": "20th-national-youth-athletics-championships-2025",
     "title": "20th National Youth Athletics Championships 2025",
     "start_date": "10 Mar, 2025",
     "end_date": "12 Mar, 2025",
@@ -56,7 +56,7 @@
     "month": "March"
   },
   {
-    "id": "indian-open-jumps-2025",
+    "id": "4th-indian-open-jumps-competition-2025",
     "title": "4th Indian Open Jumps Competition 2025",
     "start_date": "22 Mar, 2025",
     "end_date": "22 Mar, 2025",
@@ -64,7 +64,7 @@
     "month": "March"
   },
   {
-    "id": "indian-open-400m-2025",
+    "id": "6th-indian-open-400m-competition-2025",
     "title": "6th Indian Open 400m competition 2025",
     "start_date": "24 Mar, 2025",
     "end_date": "24 Mar, 2025",
@@ -80,7 +80,7 @@
     "month": "March"
   },
   {
-    "id": "indian-open-athletics-meetings-sangrur-2025",
+    "id": "indian-open-athletics-meet-sangrur",
     "title": "Indian Open Athletics Meetings",
     "start_date": "1 Apr, 2025",
     "end_date": "1 Apr, 2025",
@@ -88,7 +88,7 @@
     "month": "April"
   },
   {
-    "id": "indian-open-athletics-meetings-nadiad-2025",
+    "id": "indian-open-athletics-meet-gujarat-2025",
     "title": "Indian Open Athletics Meetings",
     "start_date": "5 Apr, 2025",
     "end_date": "5 Apr, 2025",
@@ -96,7 +96,7 @@
     "month": "April"
   },
   {
-    "id": "indian-open-athletics-meetings-ranchi-2025",
+    "id": "indian-open-athletics-meet-jharkhand-2025",
     "title": "Indian Open Athletics Meetings",
     "start_date": "10 Apr, 2025",
     "end_date": "10 Apr, 2025",
@@ -104,7 +104,7 @@
     "month": "April"
   },
   {
-    "id": "indian-open-athletics-meetings-chennai-2025",
+    "id": "indian-open-athletics-meet-chennai-2025",
     "title": "Indian Open Athletics Meetings",
     "start_date": "15 Apr, 2025",
     "end_date": "15 Apr, 2025",
@@ -112,7 +112,7 @@
     "month": "April"
   },
   {
-    "id": "indian-open-race-walking-competition-2025",
+    "id": "12th-indian-open-race-walking-competition-2025",
     "title": "12th Indian Open Race Walking Competition 2025",
     "start_date": "19 Apr, 2025",
     "end_date": "19 Apr, 2025",
@@ -120,7 +120,7 @@
     "month": "April"
   },
   {
-    "id": "28th-national-federation-senior-2025",
+    "id": "28th-national-federation-senior-athletics-competition",
     "title": "28th National Federation Senior Athletics Championships 2025",
     "start_date": "21 Apr, 2025",
     "end_date": "24 Apr, 2025",
@@ -160,7 +160,7 @@
     "month": "May"
   },
   {
-    "id": "indian-grand-prix-2-2025",
+    "id": "indian-grand-prix-1-2025-bangalore",
     "title": "Indian Grand Prix 2 2025",
     "start_date": "17 May, 2025",
     "end_date": "17 May, 2025",
@@ -176,7 +176,7 @@
     "month": "May"
   },
   {
-    "id": "national-junior-u20-federation-athletics-championships-2025",
+    "id": "23rd-national-jr-u20-fed-athletics-championships",
     "title": "23rd National Junior (U20) Federation Athletics Championships 2025",
     "start_date": "22 Jun, 2025",
     "end_date": "24 Jun, 2025",
@@ -208,7 +208,7 @@
     "month": "July"
   },
   {
-    "id": "indian-open-athletics-meetings-sangrur-2025",
+    "id": "indian-open-athletics-meet-sangrur",
     "title": "Indian Open Athletics Meetings",
     "start_date": "27 Jul, 2025",
     "end_date": "28 Jul, 2025",
@@ -280,7 +280,7 @@
     "month": "September"
   },
   {
-    "id": "national-open-athletics-championships-2025",
+    "id": "64th-national-open-athletics-championships-2025  ",
     "title": "64th National Open Athletics Championships 2025",
     "start_date": "27 Sep, 2025",
     "end_date": "30 Sep, 2025",

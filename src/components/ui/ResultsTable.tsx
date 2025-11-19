@@ -35,17 +35,19 @@ export default function ResultsTable({ results, eventName, columnOrder }: Result
   const excludedFields = ['id', 'tournamentId', 'eventName', 'remarks', 'athleteNameLower', 'eventType'];
   const sampleResult = results[0];
   const availableKeys = Object.keys(sampleResult).filter(key => !excludedFields.includes(key));
+
+  console.log("Total Results:", results.length);
+  console.log(results);
   
   // Determine which columns to exclude based on event type
   const getExcludedColumns = (type?: string): string[] => {
-    console.log("Determining excluded columns for event type:", type);
     const normalizedType = type?.toLowerCase() || '';
     
     // Wind is only for sprints, hurdles, and horizontal jumps
-    const excludeWind = !['100m', '200m', 'long', 'triple'].includes(normalizedType);
+    const excludeWind = !['100m', '200m', 'long', 'triple'].some(t => normalizedType.includes(t));
 
     // Attempts are only for jumps and throws
-    const excludeAttempts = !['jump', 'throw'].includes(normalizedType);
+    const excludeAttempts = !['jump', 'throw'].some(t => normalizedType.includes(t));
     
     // Performance field mapping
     const excludeFields: string[] = [];
@@ -58,8 +60,6 @@ export default function ResultsTable({ results, eventName, columnOrder }: Result
   
   const excludedColumns = getExcludedColumns(eventName);
   const filteredKeys = availableKeys.filter(key => !excludedColumns.includes(key));
-  console.log("Excluded Columns:", excludedColumns);
-  console.log("Filtered Keys:", filteredKeys);
   
   // Use custom order or default order
   const orderedKeys = columnOrder || 

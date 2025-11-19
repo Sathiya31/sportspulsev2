@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import EventCard from "@/components/ui/EventCard";
 import { useSession } from "next-auth/react";
 import { isAdmin } from "@/config/auth";
@@ -7,34 +7,20 @@ import { filterIndianResults } from "../../utils/badmintonIndianResults";
 import { getTournamentResults } from "@/services/badmintonService";
 import TournamentResults from "@/components/badminton/TournamentResults";
 import TournamentActions from "@/components/badminton/TournamentActions";
+import PlayerSearchBar from "@/components/badminton/PlayerSearchBar";
+import PlayerTournamentResults from "@/components/badminton/PlayerTournamentResults";
 
-interface Tournament {
-  id: number;
-  code: string;
-  name: string;
-  category: string;
-  prize_money: string;
-  start_date: string;
-  end_date: string;
-  location: string;
-  logo: string;
-  is_etihad: boolean;
-}
-
-// Helper to check if an event is live
-function isLive(start: string, end: string) {
-  const now = new Date();
-  const startDate = new Date(start);
-  const endDate = new Date(end);
-  return now >= startDate && now <= endDate;
-}
-
-// Helper to get the month name from a date string
-function getMonth(dateStr: string) {
-  return new Date(dateStr).toLocaleString('default', { month: 'long' });
-}
+import { getBadmintonAthleteResults, type AthleteData } from "@/services/athleteService";
+import { Match } from "@/types/badminton";
 
 export default function BadmintonPage() {
+  // Player search state
+  const [selectedPlayer, setSelectedPlayer] = useState<AthleteData | null>(null);
+  const [playerResults, setPlayerResults] = useState<Match[]>([]);
+  const [isPlayerLoading, setIsPlayerLoading] = useState(false);
+  const [playerError, setPlayerError] = useState("");
+  // Ref for Indian results copy buttons
+  const indianResultRefs = useRef<Record<string, HTMLPreElement | null>>({});
   const [tournaments, setTournaments] = useState<Tournament[]>([]);
   const [month, setMonth] = useState<string>("All");
   const [months, setMonths] = useState<string[]>([]);
@@ -47,22 +33,75 @@ export default function BadmintonPage() {
   const [copySuccess, setCopySuccess] = useState("");
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
+  // Player select handler
+  async function handlePlayerSelect(player: AthleteData) {
+    console.log("Selected player:", player);
+    setSelectedEvent(null);
+    setSelectedPlayer(player);
+    setIsPlayerLoading(true);
+    setPlayerError("");
+    try {
+      // Use flexible results fetcher for badminton
+      const results = await getBadmintonAthleteResults(player.playerId || player.name, "badminton");
+      setPlayerResults(results);
+    } catch (err: any) {
+      console.error(err)
+      setPlayerError("Failed to fetch player results");
+      setPlayerResults([]);
+    } finally {
+      setIsPlayerLoading(false);
+    }
+  }
+
+  function handlePlayerClear() {
+    setSelectedPlayer(null);
+    setPlayerResults([]);
+    setPlayerError("");
+  }
+
+
+  interface Tournament {
+    id: number;
+    code: string;
+    name: string;
+    category: string;
+    prize_money: string;
+    start_date: string;
+    end_date: string;
+    location: string;
+    logo: string;
+    is_etihad: boolean;
+  }
+
+  // Helper to check if an event is live
+  function isLive(start: string, end: string) {
+    const now = new Date();
+    const startDate = new Date(start);
+    const endDate = new Date(end);
+    return now >= startDate && now <= endDate;
+  }
+
+  // Helper to get the month name from a date string
+  function getMonth(dateStr: string) {
+    return new Date(dateStr).toLocaleString('default', { month: 'long' });
+  }
+
   useEffect(() => {
     async function fetchTournaments() {
       const res = await fetch("/data/calendars/badminton_2025.json");
       const data: Tournament[] = await res.json();
       setTournaments(data);
-      
+
       // Get unique months from tournament dates
       const uniqueMonths = Array.from(new Set(
         data.map(t => getMonth(t.start_date))
       )).sort((a, b) => {
         const monthOrder = ["January", "February", "March", "April", "May", "June",
-                          "July", "August", "September", "October", "November", "December"];
+          "July", "August", "September", "October", "November", "December"];
         return monthOrder.indexOf(a) - monthOrder.indexOf(b);
       });
       setMonths(["All", ...uniqueMonths]);
-      
+
       // Preselect live event if present
       const live = data.find(t => isLive(t.start_date, t.end_date));
       if (live) {
@@ -74,7 +113,7 @@ export default function BadmintonPage() {
     }
     fetchTournaments();
   }, []);
-  
+
   // Helper to get all dates between start and end (inclusive)
   function getEventDates(start: string, end: string) {
     const dates = [];
@@ -103,6 +142,7 @@ export default function BadmintonPage() {
       const results = await getTournamentResults(tournamentCode);
       setTournamentResults(results);
     } catch (err: any) {
+      console.error(err)
       setFetchError(err.message || "Failed to fetch tournament results");
     } finally {
       setFetching(false);
@@ -112,13 +152,13 @@ export default function BadmintonPage() {
   // Fetch BWF results for a specific date
   async function fetchBWFResults() {
     if (!selectedEvent || !selectedDate) return;
-    
+
     try {
       const url = `https://extranet-lv.bwfbadminton.com/api/tournaments/day-matches?tournamentCode=${selectedEvent.code}&date=${selectedDate}`;
       const res = await fetch(url);
       if (!res.ok) throw new Error("Failed to fetch BWF results");
       const data = await res.json();
-      
+
       // Group matches by roundName first
       const roundGroups: { [round: string]: any[] } = {};
       (data || []).forEach((match: any) => {
@@ -126,7 +166,7 @@ export default function BadmintonPage() {
         if (!roundGroups[match.roundName]) roundGroups[match.roundName] = [];
         roundGroups[match.roundName].push(match);
       });
-      
+
       // For each group, filter Indian results
       const grouped: { [round: string]: string[] } = {};
       Object.entries(roundGroups).forEach(([round, matches]) => {
@@ -143,6 +183,7 @@ export default function BadmintonPage() {
   function handleSelectEvent(event: Tournament) {
     console.log('Selected event:', event);
     setSelectedEvent(event);
+    setSelectedPlayer(null);
     const dates = getEventDates(event.start_date, event.end_date);
     // Default to today if in range, else first date
     const today = new Date().toISOString().slice(0, 10);
@@ -150,7 +191,7 @@ export default function BadmintonPage() {
     setIndianResults({});
     setFetchError("");
     setIsMobileMenuOpen(false); // Close mobile menu after selection
-    
+
     // Immediately fetch Firebase results when tournament is selected
     fetchFirebaseResults(event.code);
   }
@@ -170,7 +211,7 @@ export default function BadmintonPage() {
         <div
           className="md:hidden fixed inset-0 bg-black bg-opacity-50 z-30"
           onClick={() => setIsMobileMenuOpen(false)}
-        />
+        ></div>
       )}
 
       {/* Left panel calendar */}
@@ -231,38 +272,64 @@ export default function BadmintonPage() {
           </svg>
         </button>
 
-        <h1 className="text-2xl font-bold mb-4 ml-12 md:ml-0" style={{ color: "var(--primary)" }}>Badminton 2025</h1>
+        <div className="flex items-center justify-between mb-4 ml-12 md:ml-0">
+          <h1 className="text-2xl font-bold" style={{ color: "var(--primary)" }}>Badminton 2025</h1>
+          <div className="ml-4">
+            <PlayerSearchBar
+              sport="badminton"
+              onSelect={handlePlayerSelect}
+              onClear={handlePlayerClear}
+            />
+          </div>
+        </div>
         {liveEvent && (
-          <div className="mb-4 font-semibold" style={{ color: "var(--success)" }}>Live: {liveEvent.name}</div>
+          <div className="mb-4 flex items-center gap-2">
+            <span className="px-3 py-1 rounded-full font-bold text-xs shadow" style={{ background: "var(--success)", color: "white", letterSpacing: 1 }}>LIVE</span>
+            <span className="font-semibold" style={{ color: "var(--success)" }}>{liveEvent.name}</span>
+          </div>
         )}
-        {selectedEvent ? (
-          <div>
-            <div className="mb-2 text-xl font-bold" style={{ color: "var(--primary)" }}>{selectedEvent.name}</div>
-            <div className="mb-2" style={{ color: "var(--muted)" }}>{formatDate(selectedEvent.start_date.slice(0,10))} to {formatDate(selectedEvent.end_date.slice(0,10))}</div>
-            
-            {/* Tournament Results Section */}
+        <div>
+
+          <>
             <div className="mb-8">
               {fetchError && <div className="mb-4" style={{ color: "var(--danger)" }}>{fetchError}</div>}
-              <TournamentResults results={tournamentResults} isLoading={fetching} />
+              {selectedEvent ? (
+                <>
+                  <div className="mb-2 text-xl font-bold" style={{ color: "var(--primary)" }}>{selectedEvent.name}</div>
+                  <div className="mb-2" style={{ color: "var(--muted)" }}>{formatDate(selectedEvent.start_date.slice(0, 10))} to {formatDate(selectedEvent.end_date.slice(0, 10))}</div>
+                  <TournamentResults results={tournamentResults} isLoading={fetching} />
+                </>
+              )
+                :
+                <p style={{ color: "var(--muted-2)" }}>Select an event from the calendar or search a player to see results.</p>
+              }
             </div>
-
+            {selectedPlayer && (
+              <PlayerTournamentResults
+                player={selectedPlayer}
+                results={playerResults}
+                isLoading={isPlayerLoading}
+                error={playerError}
+                onClear={handlePlayerClear}
+              />
+            )}
             {/* Indian Players Section - Only visible to admin */}
             {userIsAdmin && (
               <div className="mt-8 border-t pt-8">
                 <h2 className="text-lg font-semibold mb-4" style={{ color: "var(--primary)" }}>Indian Players Results</h2>
-                <TournamentActions
-                  tournament={selectedEvent}
-                  onFetchDaily={fetchBWFResults}
-                  selectedDate={selectedDate}
-                  onDateChange={setSelectedDate}
-                  isLoading={fetching}
-                />
-
+                {selectedEvent && (
+                  <TournamentActions
+                    tournament={selectedEvent}
+                    onFetchDaily={fetchBWFResults}
+                    selectedDate={selectedDate}
+                    onDateChange={setSelectedDate}
+                    isLoading={fetching}
+                  />
+                )}
                 {Object.keys(indianResults).length > 0 ? (
                   <div className="space-y-4">
                     {Object.entries(indianResults).map(([round, results]) => {
                       if (!Array.isArray(results) || results.length === 0) return null;
-                      let preEl: HTMLPreElement | null = null;
                       // Sort: victories first, then losses
                       const sortedResults = [...results].sort((a, b) => {
                         const isWin = (s: string) => /\bwin\b|\bdef\b|\bdefeated\b|\bbeat\b|\bwon\b/i.test(s);
@@ -279,6 +346,7 @@ export default function BadmintonPage() {
                               className="px-2 py-1 rounded text-xs"
                               style={{ background: "var(--primary)", color: "var(--surface)" }}
                               onClick={() => {
+                                const preEl = indianResultRefs.current[round];
                                 if (preEl) {
                                   navigator.clipboard.writeText(preEl.innerText);
                                   setCopySuccess(`Copied ${round}!`);
@@ -288,8 +356,8 @@ export default function BadmintonPage() {
                             >Copy</button>
                             {copySuccess === `Copied ${round}!` && <span className="text-xs" style={{ color: "var(--success)" }}>Copied!</span>}
                           </div>
-                          <pre ref={el => { preEl = el; }} className="text-xs rounded p-2 max-h-48 overflow-auto select-all cursor-pointer whitespace-pre-wrap" style={{ background: "var(--glass)", color: "var(--muted)" }}>
-{sortedResults.join('\n')}
+                          <pre ref={el => { indianResultRefs.current[round] = el; }} className="text-xs rounded p-2 max-h-48 overflow-auto select-all cursor-pointer whitespace-pre-wrap" style={{ background: "var(--glass)", color: "var(--muted)" }}>
+                            {sortedResults.join('\n')}
                           </pre>
                         </div>
                       );
@@ -298,11 +366,9 @@ export default function BadmintonPage() {
                 ) : null}
               </div>
             )}
-          </div>
-        ) : (
-          <p style={{ color: "var(--muted-2)" }}>Select an event from the calendar to see results.</p>
-        )}
+          </>
+        </div>
       </main>
     </div>
-  );
+  )
 }

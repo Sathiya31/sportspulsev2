@@ -7,7 +7,7 @@ interface RoundGroupProps {
   matches: Match[];
 }
 
-const roundNames: { [key: string]: string } = {
+export const roundNames: { [key: string]: string } = {
   'F': 'Finals',
   'Final' : 'Finals',
   'SF': 'Semi Finals',

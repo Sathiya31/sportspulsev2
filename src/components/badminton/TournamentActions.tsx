@@ -52,17 +52,25 @@ export default function TournamentActions({
         if (!res.ok) throw new Error(`Failed to fetch matches for ${date}`);
         const data = await res.json();
 
-        // Filter matches involving Indian players
-        const indianMatches = data.filter((match: any) => {
-          const team1Players = match?.team1?.players || [];
-          const team2Players = match?.team2?.players || [];
-          
-          const hasIndianPlayer = [...team1Players, ...team2Players].some(
-            player => player?.countryCode === 'IND'
-          );
-          
-          return hasIndianPlayer;
-        });
+        // Filter matches involving Indian players and extract player IDs
+        const indianMatches = data
+          .filter((match: any) => {
+            const team1Players = match?.team1?.players || [];
+            const team2Players = match?.team2?.players || [];
+            const hasIndianPlayer = [...team1Players, ...team2Players].some(
+              player => player?.countryCode === 'IND'
+            );
+            return hasIndianPlayer;
+          })
+          .map((match: any) => {
+            const team1Players = match?.team1?.players || [];
+            const team2Players = match?.team2?.players || [];
+            return {
+              ...match,
+              team1PlayerIds: team1Players.map((p: any) => p.id),
+              team2PlayerIds: team2Players.map((p: any) => p.id)
+            };
+          });
 
         // Only save if there are Indian matches
         if (indianMatches.length > 0) {

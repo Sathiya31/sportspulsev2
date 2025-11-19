@@ -252,10 +252,14 @@ export default function AthleticsPage() {
                   
                   {/* Results Table */}
                   <div className="flex-1 overflow-x-auto">
-                    <ResultsTable
-                      results={groupedResults[activeEventTab][0].results || []}
-                      eventName={activeEventTab}
-                    />
+                    {/* iterate through grouped results */}
+                    {groupedResults[activeEventTab].map((group, index) => (
+                      <ResultsTable
+                        key={index}
+                        results={group.results || []}
+                        eventName={activeEventTab}
+                      />
+                    ))}
                   </div>
                 </div>
               ) : (
