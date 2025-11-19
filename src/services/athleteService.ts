@@ -77,7 +77,7 @@ export async function getBadmintonAthleteResults(
       results.push(doc.data() as Match);
     });
 
-    console.log(`Fetched ${results.length} results for player: ${playerIdOrName} from collection: ${collectionName}`);
+    console.log(`Fetched ${results.length} results for player: ${playerIdOrName} from collection: badminton`);
 
     return results;
   } catch (error) {
@@ -108,7 +108,7 @@ export async function getTableTennisAthleteResults(
       results.push(doc.data() as Match);
     });
 
-    console.log(`Fetched ${results.length} results for player: ${playerIdOrName} from collection: ${collectionName}`);
+    console.log(`Fetched ${results.length} results for player: ${playerIdOrName} from collection : tabletennis`);
 
     return results;
   } catch (error) {
