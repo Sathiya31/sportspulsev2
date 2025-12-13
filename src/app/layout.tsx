@@ -5,13 +5,13 @@ import Toolbar from "../components/Toolbar";
 import AuthProvider from "@/components/auth/AuthProvider";
 
 
-export const inter = Inter({
+const inter = Inter({
   subsets: ["latin"],
   variable: "--font-inter",
   display: "swap",
 });
 
-export const jetbrainsMono = JetBrains_Mono({
+const jetbrainsMono = JetBrains_Mono({
   subsets: ["latin"],
   variable: "--font-mono",
   display: "swap",

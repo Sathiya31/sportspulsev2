@@ -217,7 +217,7 @@ const getMatchScore = (match: Match) => {
     <div>
       <div className="mb-4">
         <h2 className="text-base md:text-lg font-bold" style={{ color: "var(--primary)" }}>
-          {toCapitalizedCase(player.name)}'s Tournament Results
+          {toCapitalizedCase(player.name)}&apos;s Tournament Results
         </h2>
         <p className="text-xs mt-1" style={{ color: "var(--muted)" }}>
           {groupedTournaments.length} {groupedTournaments.length === 1 ? "tournament" : "tournaments"} • {results.length} matches
