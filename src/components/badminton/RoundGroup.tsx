@@ -23,15 +23,16 @@ export default function RoundGroup({ name, matches }: RoundGroupProps) {
   console.log(matches);
 
   return (
-    <div className="mb-3">
+    <div className="p-3" 
+    style={{ background: "var(--surface)", borderColor: "var(--border)" }}>
       <button
         onClick={() => setIsExpanded(!isExpanded)}
-        className="w-full flex items-center justify-between p-2 mb-2 
+        className="w-full flex items-center justify-between pb-2 mb-2
         border-b hover:opacity-80 transition-opacity"
-        style={{ background: "var(--glass)", borderColor: "var(--primary)" }}
+        style={{ background: "var(--surface)", borderColor: "var(--border)" }}
       >
-        <h3 className="text-sm md:text-base font-semibold flex items-center gap-2" 
-          style={{ color: "var(--primary)" }}>
+        <h3 className="text-md font-medium flex items-center gap-2" 
+          style={{ color: "var(--foreground)" }}>
           <svg
             className={`w-4 h-4 transform transition-transform ${isExpanded ? 'rotate-90' : ''}`}
             fill="none"
@@ -43,7 +44,7 @@ export default function RoundGroup({ name, matches }: RoundGroupProps) {
           {displayName}
         </h3>
         <span className="text-xs px-2 py-1 rounded-full" 
-          style={{ background: "var(--surface)", color: "var(--muted)" }}>
+          style={{ color: "var(--muted)" }}>
           {matches.length} {matches.length === 1 ? 'match' : 'matches'}
         </span>
       </button>

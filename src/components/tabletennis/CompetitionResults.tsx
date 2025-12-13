@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { collection, query, where, getDocs } from 'firebase/firestore';
 import { db } from '@/config/firebase';
 
-interface Competitor {
+export interface Competitor {
   code: string;
   organization: string;
   seed: number;
@@ -12,7 +12,7 @@ interface Competitor {
   athlete_names: string[];
 }
 
-interface Match {
+export interface Match {
   id?: string;
   competition_id: number;
   match_id: string;
@@ -106,12 +106,12 @@ const CompetitionResults = ({ EventId, EventName }: { EventId: string, EventName
 
   const CompactMatchCard = ({ match }: { match: Match }) => (
     <div className="p-2.5 shadow transition-shadow" 
-      style={{ background: "var(--surface)" }}>
+      style={{ background: "rgba(255,255,255,0.03)", border: "1px solid var(--border)" }}>
       
       {/* Header - Event & Date */}
       <div className="flex justify-between items-center mb-2 pb-2 border-b" 
-        style={{ borderColor: "var(--primary-light)" }}>
-        <span className="text-xs md:text-sm font-medium truncate" style={{ color: "var(--primary)" }}>
+        style={{ borderColor: "var(--border)" }}>
+        <span className="text-xs md:text-sm font-medium truncate" style={{ color: "var(--foreground)" }}>
           {match.event_name}
         </span>
         <span className="text-xs whitespace-nowrap ml-2" style={{ color: "var(--muted)" }}>
@@ -157,7 +157,7 @@ const CompetitionResults = ({ EventId, EventName }: { EventId: string, EventName
       </div>
 
       {/* Final Score */}
-      <div className="mt-2 pt-2 border-t text-center" style={{ borderColor: "var(--primary-lighter)" }}>
+      <div className="mt-2 pt-2 border-t text-center" style={{ borderColor: "var(--muted-2)" }}>
         <span className="text-xs" style={{ color: "var(--muted)" }}>Score: </span>
         <span className="text-xs font-mono px-2 py-0.5 rounded font-medium" 
           style={{ background: "var(--glass)", color: "var(--foreground)" }}>
@@ -218,14 +218,10 @@ const CompetitionResults = ({ EventId, EventName }: { EventId: string, EventName
   return (
     <div>
       {/* Compact Header */}
-      <div className="flex items-center justify-between mb-3 pb-3 border-b" style={{ borderColor: "var(--glass)" }}>
+      <div className="flex items-center justify-between mb-2 pb-2 border-b" style={{ borderColor: "var(--glass)" }}>
         <h2 className="text-base md:text-lg font-bold" style={{ color: "var(--primary)" }}>
           {EventName}
         </h2>
-        <span className="text-xs px-3 py-1 rounded-full" 
-          style={{ background: "var(--glass)", color: "var(--glass)" }}>
-          {matches.length} {matches.length === 1 ? 'match' : 'matches'}
-        </span>
       </div>
 
       {/* Results grouped by rounds - Collapsible */}
@@ -240,26 +236,27 @@ const CompetitionResults = ({ EventId, EventName }: { EventId: string, EventName
             const isExpanded = expandedRounds.has(roundName);
             
             return (
-              <div key={roundName} className="overflow-hidden">
+              <div key={roundName} className="p-3"
+              style={{ background: "var(--surface)", borderColor: "var(--border)" }}>
                 
                 {/* Collapsible Round Header */}
                 <button 
                   onClick={() => toggleRound(roundName)}
-                  className="w-full flex items-center justify-between p-3 hover:opacity-80
-                  border-b transition-opacity"
-                  style={{ background: "var(--glass)", borderColor: "var(--primary)" }}
+                  className="w-full flex items-center justify-between hover:opacity-80
+                  border-b transition-opacity pb-2 mb-2"
+                  style={{ borderColor: "var(--border)" }}
                 >
                   <div className="flex items-center gap-2">
                     <svg 
                       className={`w-4 h-4 transition-transform ${isExpanded ? 'rotate-90' : ''}`}
-                      style={{ color: "var(--primary)" }}
+                      style={{ color: "var(--foreground)" }}
                       fill="none" 
                       viewBox="0 0 24 24" 
                       stroke="currentColor"
                     >
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                     </svg>
-                    <h3 className="text-sm md:text-base font-bold" style={{ color: "var(--primary)" }}>
+                    <h3 className="text-sm md:text-base font-medium" style={{ color: "var(--foreground)" }}>
                       {roundName}
                     </h3>
                   </div>

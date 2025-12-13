@@ -7,7 +7,7 @@ interface MatchCardProps {
 
 export default function MatchCard({ match }: MatchCardProps) {
   // Safely get values with fallbacks
-  const isMatchFinished = match?.matchStatus === 'F';
+  // const isMatchFinished = match?.matchStatus === 'F';
   const winner = match?.winner;
   const matchType = match?.matchTypeValue || 'Match';
   
@@ -25,11 +25,11 @@ export default function MatchCard({ match }: MatchCardProps) {
 
   return (
     <div className="shadow-sm overflow-hidden hover:shadow-md transition-shadow"
-      style={{ background: "var(--surface)"}}>
+      style={{ background: "rgba(255,255,255,0.03)", border: "1px solid var(--border)" }}>
       
       {/* Compact Header */}
       <div className="px-3 py-2 border-b flex justify-between items-center text-xs"
-        style={{ background: "var(--glass)", borderColor: "var(--primary-lighter)", color: "var(--muted)" }}>
+        style={{ background: "var(--glass)", borderColor: "var(--border)", color: "var(--muted)" }}>
         <span className="font-medium">{matchType}</span>
         <span>{formattedDate}</span>
       </div>
@@ -38,8 +38,8 @@ export default function MatchCard({ match }: MatchCardProps) {
       <div className="p-2.5">
         {/* Team 1 - Horizontal Layout */}
         <div className={`flex items-center justify-between mb-2 ${
-          winner === 1 ? 'font-semibold' : ''
-        }`} style={{ color: winner === 1 ? "var(--primary)" : "var(--foreground)" }}>
+          winner === 1 ? 'font-medium' : ''
+        }`} style={{ color: winner === 1 ? "var(--foreground)" : "var(--muted)" }}>
           
           <div className="flex items-center gap-2 flex-1 min-w-0">
             {/* Smaller Flag */}
@@ -82,10 +82,9 @@ export default function MatchCard({ match }: MatchCardProps) {
               return (
                 <span 
                   key={i}
-                  className="px-1.5 py-0.5 rounded text-xs font-medium tabular-nums"
+                  className="px-1.5 py-0.5 text-sm font-semibold tabular-nums"
                   style={{ 
-                    background: homeScore > awayScore ? "var(--primary)" : "var(--glass)",
-                    color: homeScore > awayScore ? "var(--surface)" : "var(--muted)"
+                    color: homeScore > awayScore ? "var(--primary)" : "var(--muted)"
                   }}
                 >
                   {homeScore}
@@ -97,8 +96,8 @@ export default function MatchCard({ match }: MatchCardProps) {
 
         {/* Team 2 - Same compact layout */}
         <div className={`flex items-center justify-between ${
-          winner === 2 ? 'font-semibold' : ''
-        }`} style={{ color: winner === 2 ? "var(--primary)" : "var(--foreground)" }}>
+          winner === 2 ? 'font-medium' : ''
+        }`} style={{ color: winner === 2 ? "var(--foreground)" : "var(--muted)" }}>
           
           <div className="flex items-center gap-2 flex-1 min-w-0">
             <img
@@ -138,10 +137,9 @@ export default function MatchCard({ match }: MatchCardProps) {
               return (
                 <span 
                   key={i}
-                  className="px-1.5 py-0.5 rounded text-xs font-medium tabular-nums"
+                  className="px-1.5 py-0.5 text-sm font-semibold tabular-nums"
                   style={{ 
-                    background: awayScore > homeScore ? "var(--primary)" : "var(--glass)",
-                    color: awayScore > homeScore ? "var(--surface)" : "var(--muted)"
+                    color: awayScore > homeScore ? "var(--primary)" : "var(--muted)"
                   }}
                 >
                   {awayScore}
@@ -152,12 +150,12 @@ export default function MatchCard({ match }: MatchCardProps) {
         </div>
 
         {/* Compact Footer */}
-        {isMatchFinished && typeof match?.duration === 'number' && (
+        {/* {isMatchFinished && typeof match?.duration === 'number' && (
           <div className="mt-1.5 pt-1.5 border-t text-xs" 
             style={{ borderColor: "var(--primary-lighter)", color: "var(--muted)" }}>
             Duration: {match.duration} min
           </div>
-        )}
+        )} */}
       </div>
     </div>
   );

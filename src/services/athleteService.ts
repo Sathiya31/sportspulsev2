@@ -95,10 +95,7 @@ export async function getTableTennisAthleteResults(
     console.log(`Fetching table tennis results for player: ${playerIdOrName}`);
     const q = query(
           resultsRef,
-          or(
-            where("team1PlayerIds", "array-contains", playerIdOrName),
-            where("team2PlayerIds", "array-contains", playerIdOrName)
-          )
+          where("athlete_ids", "array-contains", playerIdOrName),
         );
         
     const querySnapshot = await getDocs(q);

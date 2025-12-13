@@ -4,6 +4,7 @@ export interface ShootingEvent {
   end_date: string;
   location: string;
   hyperlink: string;
+  competition_code?: string;
 }
 
 import shootingData from "../public/data/calendars/shooting_2025.json";

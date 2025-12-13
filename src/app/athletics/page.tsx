@@ -172,14 +172,14 @@ export default function AthleticsPage() {
         w-80 md:w-96
         transform transition-transform duration-300 ease-in-out
         ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}
-        border-r p-4 bg-slate-50 border-slate-200 overflow-y-auto
+        bg-[var(--surface)] p-4 overflow-y-auto
       `}>
         {/* Filter by Month */}
         <div className="mb-4">
           <label className="block text-sm font-semibold mb-1" style={{ color: "var(--muted)" }}>Filter by Month</label>
           <select
             className="w-full p-2 rounded border"
-            style={{ borderColor: "var(--primary)", color: "var(--foreground)" }}
+            style={{ borderColor: "var(--muted-2)" }}
             value={month}
             onChange={e => setMonth(e.target.value)}
           >
@@ -223,18 +223,17 @@ export default function AthleticsPage() {
           </svg>
         </button>
 
-        <h1 className="text-2xl font-bold mb-4 ml-12 md:ml-0" style={{ color: "var(--primary)" }}>Athletics 2025 Calendar</h1>
+        <h1 className="text-2xl font-bold mb-4 ml-12 md:ml-0" style={{ color: "var(--primary)" }}>Athletics</h1>
         
         {selectedEvent ? (
           <div>
             <div className="mb-2 text-xl font-bold" style={{ color: "var(--primary)" }}>{selectedEvent.title}</div>
-            <div className="mb-2" style={{ color: "var(--muted)" }}>{selectedEvent.start_date} to {selectedEvent.end_date}</div>
-            <div className="mb-6" style={{ color: "var(--muted-2)" }}>Location: {selectedEvent.location}</div>
+            <div className="mb-2 text-sm" style={{ color: "var(--muted)" }}>{selectedEvent.location}, {selectedEvent.start_date} to {selectedEvent.end_date}</div>
             
             
             {/* Results Section */}
             <div className="mb-8 border" style={{ background: "var(--glass)", borderColor: "var(--primary)" }}>
-              <h3 className="text-lg font-semibold p-2 border-b border-slate-200" style={{ color: "var(--primary)" }}>
+              <h3 className="text-lg font-semibold p-2 border-b border-slate-200" style={{ color: "var(--muted)" }}>
                 Tournament Results</h3>
               
               {loadingResults ? (

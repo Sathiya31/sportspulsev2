@@ -31,7 +31,6 @@ const PlayerSearchBar: React.FC<PlayerSearchBarProps> = ({ sport, onSelect, onCl
 
   function handleSelect(player: any) {
     onSelect(player);
-    setQuery("");
     setShowDropdown(false);
   }
 
@@ -53,8 +52,9 @@ const PlayerSearchBar: React.FC<PlayerSearchBarProps> = ({ sport, onSelect, onCl
         <input
           ref={inputRef}
           type="text"
-          className="w-full pl-8 pr-2 py-2 border-b-2 border-[var(--primary)] focus:outline-none focus:border-[var(--primary)] transition-all duration-300 text-sm bg-[var(--surface)]"
-          style={{ color: "var(--foreground)" }}
+          className="w-80 pl-8 pr-2 py-2 border-b-2 border-[var(--primary)] focus:outline-none 
+          focus:border-[var(--primary)] transition-all duration-300 text-sm bg-[var(--surface)]"
+          style={{ color: "var(--muted)" }}
           placeholder="Search player by name..."
           value={query}
           onChange={e => setQuery(e.target.value)}
@@ -67,7 +67,7 @@ const PlayerSearchBar: React.FC<PlayerSearchBarProps> = ({ sport, onSelect, onCl
             <button
               key={player.id || player.name}
               className="w-full text-left px-4 py-2 hover:bg-[var(--primary-lighter)] transition-colors"
-              style={{ color: "var(--foreground)" }}
+              style={{ color: "var(--surface)" }}
               onClick={() => handleSelect(player)}
             >
               {toCapitalizedCase(player.name)}

@@ -71,22 +71,46 @@ const About = () => {
         {/* Contact CTA */}
         <section style={{ textAlign: "center", marginTop: "3rem" }}>
           <h3 style={{ fontSize: "1.25rem", fontWeight: 600, color: "var(--accent)" }}>
-            Let’s Connect
+            Let`&apos;`s Connect
           </h3>
           <p style={{ color: "var(--muted-2)", marginBottom: "1.5rem" }}>
             Have a story to share, a collaboration idea, or just want to talk
             sports? Reach out to us anytime!
           </p>
           <div style={{ display: "flex", justifyContent: "center", gap: "1rem", flexWrap: "wrap" }}>
-            <a href="mailto:indiaatsports31@gmail.com" className="about-social-link" style={{ background: "var(--surface)", color: "var(--primary)" }}>
-              <Mail size={20} /> Email
-            </a>
-            <a href="https://instagram.com/indian_sports_pulse" target="_blank" rel="noopener noreferrer" className="about-social-link" style={{ background: "var(--surface)", color: "var(--primary)" }}>
-              <Instagram size={20} /> Instagram
-            </a>
-            <a href="https://twitter.com/indian_sports_pulse" target="_blank" rel="noopener noreferrer" className="about-social-link" style={{ background: "var(--surface)", color: "var(--primary)" }}>
-              <Twitter size={20} /> Twitter
-            </a>
+            <div className="flex flex-col items-center gap-1">
+              <a
+                href="mailto:indiaatsports31@gmail.com"
+                className="about-social-link flex items-center gap-2 hover:text-[#FF6B6B] transition-colors"
+              >
+                <Mail size={20} />
+                <span>Email</span>
+              </a>
+            </div>
+
+            <div className="flex flex-col items-center gap-1">
+              <a
+                href="https://instagram.com/indian_sports_pulse"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="about-social-link flex items-center gap-2 hover:text-[#FF6B6B] transition-colors"
+              >
+                <Instagram size={20} />
+                <span>Instagram</span>
+              </a>
+            </div>
+
+            <div className="flex flex-col items-center gap-1">
+              <a
+                href="https://twitter.com/indian_sports_pulse"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="about-social-link flex items-center gap-2 hover:text-[#FF6B6B] transition-colors"
+              >
+                <Twitter size={20} />
+                <span>Twitter</span>
+              </a>
+            </div>
           </div>
         </section>
       </div>

@@ -1,89 +1,48 @@
 @import "tailwindcss";
 @plugin "@tailwindcss/typography";
 
-/* Smooth scrolling for the entire page */
-html {
-  scroll-behavior: smooth;
-}
+/* Dark Theme Overrides — SportzPulse Professional */
 
-/* Custom scrollbar styling */
-::-webkit-scrollbar {
-  width: 5px;
-  height: 5px;
-}
-
-::-webkit-scrollbar-track {
-  background: #f1f5f9;
-}
-
-::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
-  border-radius: 5px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: #94a3b8;
-}
-
-/* Ensure images don't overflow */
-img {
-  max-width: 100%;
-  height: auto;
-}
-
-/* Add smooth transitions for interactive elements */
-a, button {
-  transition: all 0.2s ease-in-out;
-}
-
- :root {
+:root {
   /* Base background / foreground */
-  --background: #ffffff;
-  --foreground: #171717;
-  --toolbar-bg: #f3f6fa; /* slightly darker than --background */
+  --background: #0D1117;
+  --foreground: #E6EEF5;
+  --toolbar-bg: #11161D;
 
-  /* Design tokens */
-  --muted: #374151; /* slate-700 */
-  --muted-2: #6b7280; /* slate-500 */
-  --primary: #0ea5e9; /* sky-500 */
-  --primary-dark: #0069a8; /* sky-700 */
-  --primary-light: #74d4ff; /* sky-300 */
-  --primary-lighter: #dff2fe; /* sky-100 */
-  --accent: #7c3aed; /* violet-600 */
-  --surface: #ffffff;
-  --success: #10b981;
-  --danger: #ef4444;
-  --glass: rgba(255,255,255,0.65);
-  --card-shadow: 0 10px 30px rgba(2,6,23,0.08);
+  /* Typography & muted colors */
+  --muted: #9AA5B1;
+  --muted-2: #6C7786;
+
+  /* Professional Green (Primary Action) */
+  --primary: #4CAF50;
+  --primary-dark: #3F8F44;
+  --primary-light: #A7E4A1;
+  --primary-lighter: #DFF7DA;
+
+  /* Accent */
+  --accent: #A7E4A1;
+
+  /* Brand secondary navy (optional) */
+  --brand-navy: #072B49;
+
+  /* Surfaces */
+  --surface: #161B22;
+  --border: #1F242C;
+  --glass: rgba(255,255,255,0.05);
+  --card-shadow: 0 12px 36px rgba(0,0,0,0.35);
+
+  /* State colors */
+  --success: #4CAF50;
+  --danger: #ef5350;
+
+  /* alternate colors */
+  --warning: #FF9800;
+  
+
+  /* Radii & focus */
   --radius: 12px;
-  --focus-ring: 0 0 0 4px rgba(14,165,233,0.12);
+  --focus-ring: 0 0 0 4px rgba(76,175,80,0.25);
 }
-
-/* design tokens are defined in :root above; no @theme rule needed */
-
-/* @media (prefers-color-scheme: dark) {
-  :root {
-    --background: #071025; // deep navy
-    --foreground: #e6eef8;
-    --toolbar-bg: #0a1836; // slightly lighter than --background for dark mode
-
-    // Dark theme token overrides //
-    --muted: #e6eef8;
-    --muted-2: #94a3b8;
-    --primary: #38bdf8; // sky-400 
-    --primary-dark: #0284c7; // sky-600
-    --primary-light: #7dd3fc; // sky-300
-    --primary-lighter: #bae6fd; // sky-50 
-    --accent: #a78bfa; // violet-300 
-    --surface: #061126;
-    --success: #34d399;
-    --danger: #fb7185;
-    --glass: rgba(255,255,255,0.03);
-    --card-shadow: 0 12px 36px rgba(2,6,23,0.45);
-    --radius: 12px;
-    --focus-ring: 0 0 0 4px rgba(56,189,248,0.08);
-  }
-} */
 
 body {
   background: var(--background);
@@ -91,65 +50,102 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
-/* Page layout utilities */
-.page-layout {
-  max-width: 1100px;
-  margin: 0 auto;
-  padding: 3rem 1rem;
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
+/* Scrollbars */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+::-webkit-scrollbar-track {
+  background: var(--surface);
+}
+::-webkit-scrollbar-thumb {
+  background: #2A313A;
+  border-radius: 5px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #353D47;
 }
 
-@media (min-width: 1024px) {
-  .page-layout { flex-direction: row; }
-}
-
-.sidebar {
-  width: 100%;
-  max-width: 320px;
-}
-
-/* Event list card */
+/* Event card */
 .event-card {
-  background: linear-gradient(180deg, rgba(255,255,255,0.85), rgba(255,255,255,0.7));
+  background: linear-gradient(
+    180deg,
+    rgba(22, 27, 34, 0.85),
+    rgba(22, 27, 34, 0.7)
+  );
   border-radius: 12px;
   padding: 1rem;
   cursor: pointer;
-  transition: transform 200ms ease, box-shadow 200ms ease, background-color 200ms ease;
-  border: 1px solid rgba(2,6,23,0.04);
+  transition: transform 200ms ease, box-shadow 200ms ease;
+  border: 1px solid var(--border);
 }
 .event-card:hover {
   transform: translateY(-4px);
-  box-shadow: 0 10px 30px rgba(2,6,23,0.06);
+  box-shadow: 0 10px 26px rgba(0,0,0,0.35);
 }
 
-.event-title { font-weight: 700; color: var(--muted); margin-bottom: 0.25rem; }
-.event-meta { font-size: 0.85rem; color: var(--muted-2); }
+.event-title {
+  font-weight: 700;
+  color: var(--foreground);
+  margin-bottom: 0.25rem;
+}
+.event-meta {
+  font-size: 0.85rem;
+  color: var(--muted-2);
+}
 
-/* Inputs & textareas */
+/* Inputs */
 .input, .textarea {
   width: 100%;
   padding: 0.75rem 1rem;
   border-radius: 12px;
-  border: 1px solid rgba(2,6,23,0.06);
-  background: rgba(255,255,255,0.85);
-  color: var(--muted);
-  transition: box-shadow 180ms ease, border-color 180ms ease, background-color 180ms ease;
+  border: 1px solid var(--border);
+  background: rgba(255,255,255,0.03);
+  color: var(--foreground);
+  transition: box-shadow 180ms ease, border-color 180ms ease;
 }
 .input:focus, .textarea:focus {
   box-shadow: var(--focus-ring);
   outline: none;
+  border-color: var(--primary);
 }
-.textarea { min-height: 10rem; resize: vertical; }
+.textarea {
+  min-height: 10rem;
+  resize: vertical;
+}
 
 /* Tabs */
-.tabs { display: flex; gap: 0.5rem; padding: 0.25rem; background: rgba(0,0,0,0.03); border-radius: 12px; }
-.tab { flex: 1; padding: 0.75rem 1rem; border-radius: 10px; background: transparent; border: none; cursor: pointer; font-weight: 600; }
-.tab.active { background: var(--surface); box-shadow: var(--card-shadow); }
+.tabs {
+  display: flex;
+  gap: 0.5rem;
+  padding: 0.25rem;
+  background: rgba(255,255,255,0.03);
+  border-radius: 12px;
+}
+.tab {
+  flex: 1;
+  padding: 0.75rem 1rem;
+  border-radius: 10px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  color: var(--muted);
+}
+.tab.active {
+  background: var(--surface);
+  box-shadow: var(--card-shadow);
+  color: var(--foreground);
+}
 
 /* Content card */
-.content-card { padding: 1.25rem; min-height: 300px; }
+.content-card {
+  padding: 1.25rem;
+  min-height: 300px;
+  background: var(--surface);
+  border-radius: 12px;
+  box-shadow: var(--card-shadow);
+}
 
 /* Buttons */
 .btn-primary {
@@ -159,48 +155,61 @@ body {
   gap: 0.5rem;
   padding: 0.6rem 1rem;
   border-radius: 10px;
-  background: linear-gradient(90deg, var(--primary), var(--accent));
-  color: white;
+  background: var(--primary);
+  color: #0E1A12;
+  font-weight: 600;
   border: none;
   cursor: pointer;
-  box-shadow: 0 8px 20px rgba(14,165,233,0.08);
+  box-shadow: 0 4px 14px rgba(76, 175, 80, 0.25);
 }
-.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 14px 32px rgba(14,165,233,0.12); }
-.btn-primary:focus { box-shadow: var(--focus-ring); outline: none; }
-
-/* Fallback helpers if Tailwind-like classes are used in JSX */
-.bg-primary {
-  background: var(--primary) !important;
-  color: white !important;
+.btn-primary:hover {
+  background: var(--primary-dark);
+  box-shadow: 0 8px 24px rgba(76, 175, 80, 0.35);
 }
-.dark .bg-accent {
-  background: var(--accent) !important;
-  color: white !important;
+.btn-primary:focus {
+  box-shadow: var(--focus-ring);
+  outline: none;
 }
 
-/* Disabled button */
+/* Disabled */
 .btn-disabled {
-  background: #e6eef8; /* light gray-blue */
-  color: #94a3b8;
+  background: #1F2730;
+  color: #5F6771;
   cursor: not-allowed;
   box-shadow: none;
 }
-.dark .btn-disabled {
-  background: #2a3038;
-  color: #6b7280;
-}
-
-.bg-opacity-40 { background-color: rgba(0,0,0,0.4) !important; }
 
 /* Spinner */
-.spinner { width: 3rem; height: 3rem; border-radius: 999px; border: 4px solid rgba(0,0,0,0.12); border-top-color: var(--primary); animation: spin 1s linear infinite; }
-@keyframes spin { to { transform: rotate(360deg); } }
+.spinner {
+  width: 3rem;
+  height: 3rem;
+  border-radius: 999px;
+  border: 4px solid rgba(255,255,255,0.1);
+  border-top-color: var(--primary);
+  animation: spin 1s linear infinite;
+}
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
 
-/* Error and result */
-.error-box { background: rgba(255,0,0,0.06); color: var(--danger); padding: 0.75rem; border-radius: 10px; border: 1px solid rgba(255,0,0,0.08); }
-.result-card { padding: 1rem; }
+/* Error box */
+.error-box {
+  background: rgba(255,0,0,0.05);
+  color: var(--danger);
+  padding: 0.75rem;
+  border-radius: 10px;
+  border: 1px solid rgba(255,0,0,0.08);
+}
 
-/* Responsive tweaks */
+/* Result */
+.result-card {
+  padding: 1rem;
+  background: var(--surface);
+  border-radius: 12px;
+  box-shadow: var(--card-shadow);
+}
+
+/* Responsive */
 @media (max-width: 768px) {
   .sidebar { max-width: none; }
 }

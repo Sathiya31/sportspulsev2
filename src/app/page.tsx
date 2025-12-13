@@ -80,14 +80,14 @@ export default function Home() {
     <section className="rounded-xl shadow-md p-4" 
       style={{ background: "var(--surface)", boxShadow: "var(--card-shadow)" }}>
       <h2 className="text-lg font-bold mb-3" style={{ color: "var(--primary)" }}>
-        Live Events <span className="text-green-500 animate-pulse">●</span>
+        <span className="text-green-500 animate-pulse">●</span> Live
       </h2>
       <div className="space-y-2">
         {currentEvents.length > 0 ? (
           currentEvents.map((event, idx) => (
             <div key={idx} 
               className="border-l-2 pl-3 py-1.5 hover:opacity-80 transition-opacity cursor-pointer" 
-              style={{ borderColor: "var(--primary)" }}>
+              style={{ borderColor: "var(--foreground)" }}>
               <h5 className="text-sm font-semibold" style={{ color: "var(--foreground)" }}>
                 {event.event}
               </h5>
@@ -123,10 +123,10 @@ export default function Home() {
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex flex-col justify-end p-4 md:p-6">
                 <h2 className="text-xl md:text-2xl lg:text-3xl font-bold mb-1.5" 
-                  style={{ color: "var(--surface)" }}>
+                  style={{ color: "var(--foreground)" }}>
                   {carouselSlides[active].title}
                 </h2>
-                <p className="text-sm md:text-base mb-2" style={{ color: "var(--surface)" }}>
+                <p className="text-sm md:text-base mb-2" style={{ color: "var(--foreground)" }}>
                   {carouselSlides[active].desc}
                 </p>
                 <CountdownTimer target={carouselSlides[active].date} />
@@ -159,7 +159,7 @@ export default function Home() {
               <h2 className="text-xl md:text-2xl font-bold" style={{ color: "var(--foreground)" }}>
                 Latest Articles
               </h2>
-              <Button href="/blog" variant="ghost" className="hidden md:flex text-sm">
+              <Button href="/blog" variant="secondary" className="hidden md:flex text-sm">
                 View All →
               </Button>
             </div>
@@ -184,8 +184,8 @@ export default function Home() {
       <section
         className="py-6 md:py-8 px-4 md:px-8 rounded-2xl mt-6 shadow-lg"
         style={{
-          background: "var(--foreground)",
-          color: "var(--surface)",
+          background: "var(--surface)",
+          color: "var(--foreground)",
           boxShadow: "var(--card-shadow)"
         }}
       >
@@ -208,7 +208,7 @@ export default function Home() {
             <a
               href="mailto:indiaatsports31@gmail.com"
               className="social-link flex items-center gap-2 px-4 py-2.5 border rounded-full font-semibold transition-all hover:opacity-90"
-              style={{ borderColor: "var(--surface)", color: "var(--surface)" }}
+              style={{ borderColor: "var(--primary)" }}
             >
               <Mail size={18} />
               <span className="text-sm">Email</span>
@@ -219,7 +219,7 @@ export default function Home() {
               target="_blank"
               rel="noopener noreferrer"
               className="social-link flex items-center gap-2 border px-4 py-2.5 rounded-full transition-all hover:opacity-90"
-              style={{ borderColor: "var(--surface)", color: "var(--surface)" }}
+              style={{ borderColor: "var(--primary)" }}
             >
               <Instagram size={18} />
               <span className="text-sm">Instagram</span>
@@ -230,7 +230,7 @@ export default function Home() {
               target="_blank"
               rel="noopener noreferrer"
               className="social-link flex items-center gap-2 border px-4 py-2.5 rounded-full transition-all hover:opacity-90"
-              style={{ borderColor: "var(--surface)", color: "var(--surface)" }}
+              style={{ borderColor: "var(--primary)"}}
             >
               <Twitter size={18} />
               <span className="text-sm">Twitter</span>

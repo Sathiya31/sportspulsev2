@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Button from "../ui/Button";
 
-type ShootingExtractorProps = { selectedCompetition: string | null };
+type ShootingExtractorProps = { selectedCompetition: string | undefined };
 
 const ShootingExtractor: React.FC<ShootingExtractorProps> = ({ selectedCompetition }) => {
   const [input, setInput] = useState("");

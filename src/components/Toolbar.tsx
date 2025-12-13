@@ -22,25 +22,25 @@ export default function Toolbar() {
             <div className="max-w-7xl mx-auto flex items-center justify-between px-4 py-3">
                 <Link href="/" className="flex items-center gap-3 select-none group" style={{ color: "var(--foreground)" }}>
                     {/* Rounded SP Logo */}
-                    <span className="flex items-center justify-center w-10 h-10 rounded-full shadow-lg"
+                    {/* <span className="flex items-center justify-center w-10 h-10 rounded-full shadow-lg"
                         style={{ background: "linear-gradient(135deg, var(--danger), var(--primary))" }}>
                         <span className="font-extrabold text-white text-lg tracking-widest">SP</span>
-                    </span>
+                    </span> */}
                     {/* Sports Pulse Font */}
                     <span className="flex items-center text-2xl font-extrabold tracking-tight font-sans">
                         {/* SportsPulse Logo Image */}
-                        {/* <img
-                            src="/logo-gradient.png"
-                            alt="SportsPulse Logo"
-                            className="w-8 h-8 mr-2 rounded-full object-cover"
-                        /> */}
+                        <img
+                        src="/logo-dark.png"
+                        alt="SportsPulse Logo"
+                        className="h-8 mr-3 object-contain"
+                        />
                         {/* Gradient Text */}
-                        <span
+                        {/* <span
                             className="px-1 py-1 rounded bg-clip-text text-transparent"
                             style={{ background: "linear-gradient(90deg, var(--danger), var(--accent), var(--primary))", WebkitBackgroundClip: "text", color: "transparent" }}
                         >
                             Sports Pulse
-                        </span>
+                        </span> */}
                     </span>
                 </Link>
                 {/* Desktop Nav */}
@@ -85,7 +85,7 @@ export default function Toolbar() {
                                 className={`px-3 py-2 w-full block font-medium transition-colors duration-300 border-none shadow-none rounded-none whitespace-nowrap`}
                                 style={{
                                     color: "var(--foreground)",
-                                    background: pathname && pathname.startsWith(item.href) ? "var(--glass)" : "transparent"
+                                    background: pathname && pathname.startsWith(item.href) ? "var(--muted-2)" : "transparent"
                                 }}
                                 onClick={() => setMenuOpen(false)}
                             >

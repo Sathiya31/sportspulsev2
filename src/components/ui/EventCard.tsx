@@ -30,7 +30,6 @@ const EventCard: React.FC<EventCardProps> = ({
   location,
   startDate,
   endDate,
-  accentColor = "var(--primary)",
   isLive = false,
   onClick,
   className = "",
@@ -38,8 +37,8 @@ const EventCard: React.FC<EventCardProps> = ({
 }) => {
   return (
     <div
-      className={`rounded-md shadow p-3 bg-[var(--glass)] border border-blue-100 cursor-pointer transition-all mb-1 duration-200 hover:shadow-lg flex items-center gap-4 ${className}`}
-      style={{ color: "var(--foreground)" }}
+  className={`rounded-md shadow p-3 bg-[var(--surface)] border border-[var(--muted-2)] cursor-pointer transition-all mb-1 duration-200 hover:shadow-lg hover:bg-[var(--glass)] flex items-center gap-4 ${className}`}
+  style={{ color: "var(--foreground)" }}
       onClick={onClick}
       tabIndex={0}
       role="button"
@@ -51,7 +50,7 @@ const EventCard: React.FC<EventCardProps> = ({
         </div>
       )}
       <div className="flex flex-col gap-1 text-sm flex-1">
-        <h3 className="text-md font-bold mb-1" style={{ color: accentColor }}>{name}</h3>
+        <h3 className="text-md font-medium" style={{ color: "var(--primary-lighter)" }}>{name}</h3>
         <span style={{ color: "var(--muted)" }}>{location}</span>
         <span style={{ color: "var(--muted-2)" }}>{formatDate(startDate)} - {formatDate(endDate)}</span>
         {isLive && (

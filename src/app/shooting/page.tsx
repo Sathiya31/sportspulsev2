@@ -6,15 +6,7 @@ import ShootingResults from "../../components/shooting/results";
 import ShootingExtractor from '../../components/shooting/ShootingExtractor';
 import { useSession } from 'next-auth/react';
 import { isAdmin } from "@/config/auth";
-
-interface ShootingEvent {
-  event_name: string;
-  start_date: string;
-  end_date: string;
-  location: string;
-  hyperlink: string;
-  competition_code?: string;
-}
+import { ShootingEvent } from "@/shootingCalendar";
 
 function isLive(startDate: string, endDate: string) {
   const now = new Date();
@@ -26,7 +18,7 @@ function isLive(startDate: string, endDate: string) {
 export default function ShootingPage() {
   const [filter, setFilter] = useState("");
   const [events, setEvents] = useState<ShootingEvent[]>([]);
-  const [selectedCompetition, setSelectedCompetition] = useState<string | null>(null);
+  const [selectedCompetition, setSelectedCompetition] = useState<ShootingEvent | null>(null);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const { data: session } = useSession(); 
@@ -40,7 +32,7 @@ export default function ShootingPage() {
   }, []);
 
   function handleCardClick(item: ShootingEvent) {
-    setSelectedCompetition(item?.competition_code || null);
+    setSelectedCompetition(item || null);
     setIsMobileMenuOpen(false); // Close mobile menu after selection
   }
 
@@ -68,10 +60,10 @@ export default function ShootingPage() {
       {/* Calendar Sidebar */}
       <aside className={`
         fixed md:static inset-y-0 left-0 z-40
-        w-80 md:w-96  max-h-screen
+        w-80 md:w-96
         transform transition-transform duration-300 ease-in-out
         ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}
-        p-4 border-r border-slate-200 bg-slate-50 overflow-y-auto
+        bg-[var(--surface)] p-4 overflow-y-auto
       `}>
         <h2 className="text-xl font-bold my-3" style={{ color: "var(--primary)" }}>2025 Calendar</h2>
         <div className="mb-2">
@@ -98,10 +90,10 @@ export default function ShootingPage() {
               location={item.location}
               startDate={item.start_date}
               endDate={item.end_date}
-              accentColor={selectedCompetition === item.competition_code ? "var(--primary)" : "var(--muted-2)"}
+              accentColor={selectedCompetition?.competition_code === item.competition_code ? "var(--primary)" : "var(--muted-2)"}
               isLive={isLive(item.start_date, item.end_date)}
               onClick={() => handleCardClick(item)}
-              className={selectedCompetition === item.competition_code ? "ring-2" : ""}
+              className={selectedCompetition?.competition_code === item.competition_code ? "ring-2" : ""}
             />
           ))}
         </div>
@@ -111,7 +103,7 @@ export default function ShootingPage() {
       <main className="flex-1 p-4 md:p-8" style={{ background: "var(--background)" }}>
         {/* Mobile menu button */}
         <button
-          className="md:hidden fixed top-20 right-4 z-50 p-2 rounded-lg shadow-lg"
+          className="md:hidden fixed top-20 right-4 z-50 p-1 rounded-lg shadow-lg"
           style={{ background: "var(--surface)", color: "var(--foreground)" }}
           onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
         >
@@ -124,7 +116,7 @@ export default function ShootingPage() {
           </svg>
         </button>
 
-        <h1 className="text-2xl font-bold mb-4 ml-12 md:ml-0" style={{ color: "var(--primary)" }}>Shooting 2025</h1>
+        <h1 className="text-2xl font-bold mb-4 ml-12 md:ml-0" style={{ color: "var(--primary)" }}>Shooting</h1>
         
         {/* Live Events Display */}
         {liveEvents.length > 0 && (
@@ -152,7 +144,7 @@ export default function ShootingPage() {
         {/* Extractor for admins only */}
         {userIsAdmin && (
           <div className="mt-8 pt-8 border-t" style={{ borderColor: "var(--muted-2)" }}>
-            <ShootingExtractor selectedCompetition={selectedCompetition}/>
+            <ShootingExtractor selectedCompetition={selectedCompetition?.competition_code}/>
           </div>
         )}
       </main>

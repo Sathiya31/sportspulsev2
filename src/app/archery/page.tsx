@@ -8,6 +8,7 @@ import { db } from '@/config/firebase';
 import { useSession } from 'next-auth/react';
 import { isAdmin } from "@/config/auth";
 import {archeryCategoryMap} from '../../utils/archeryCategoryMap';
+// import PlayerSearchBar from '@/components/badminton/PlayerSearchBar';
 
 // Types
 interface Event {
@@ -136,7 +137,10 @@ const MatchCard = ({ match, isTeamMatch }: { match: MatchData; isTeamMatch: bool
       <div className="flex justify-between items-center mb-2">
         <div className="flex items-center gap-2 flex-1 min-w-0">
           <span className="text-sm" style={{ color: "var(--muted)" }}>{getNOC(comp1)}</span>
-          <span className="text-sm font-medium truncate" style={{ color: "var(--foreground)" }}>{getCompetitorName(comp1)}</span>
+          <span className="text-sm font-medium truncate" 
+             style={{ color: comp1.WinLose ? "var(--foreground)" : "var(--muted-2)" }}>
+            {getCompetitorName(comp1)}
+            </span>
           <span className="text-xs" style={{ color: "var(--muted-2)" }}>({comp1.QualRank})</span>
         </div>
         <div className={`text-lg font-bold ml-2`} style={{ color: comp1.WinLose ? "var(--success)" : "var(--muted)" }}>
@@ -149,7 +153,10 @@ const MatchCard = ({ match, isTeamMatch }: { match: MatchData; isTeamMatch: bool
       <div className="flex justify-between items-center">
         <div className="flex items-center gap-2 flex-1 min-w-0">
           <span className="text-sm" style={{ color: "var(--muted)" }}>{getNOC(comp2)}</span>
-          <span className="text-sm font-medium truncate" style={{ color: "var(--foreground)" }}>{getCompetitorName(comp2)}</span>
+          <span className="text-sm font-medium truncate" 
+          style={{ color: comp2.WinLose ? "var(--foreground)" : "var(--muted-2)" }}>
+            {getCompetitorName(comp2)}
+            </span>
           <span className="text-xs" style={{ color: "var(--muted-2)" }}>({comp2.QualRank})</span>
         </div>
         <div className={`text-lg font-bold ml-2`} style={{ color: comp2.WinLose ? "var(--success)" : "var(--muted)" }}>
@@ -160,7 +167,7 @@ const MatchCard = ({ match, isTeamMatch }: { match: MatchData; isTeamMatch: bool
 
       {/* Set Points Expandable */}
       {(comp1.SP || comp2.SP) && (
-        <div className="mt-2 pt-2 border-t border-blue-200">
+        <div className="mt-2 pt-2 border-t" style={{ borderColor: "var(--border)" }}>
           <button
             onClick={() => setShowSetPoints(!showSetPoints)}
             className="flex items-center gap-1 text-xs hover:opacity-80"
@@ -206,13 +213,16 @@ const PhaseAccordion = ({
   if (validMatches.length === 0) return null;
 
   return (
-    <div className="mb-4 shadow-sm" style={{ background: "var(--surface)" }}>
+    <div className="mb-4 p-2 shadow-sm" 
+    style={{ background: "var(--background)", borderColor: "var(--border)" }}>
       <button
         onClick={() => setIsExpanded(!isExpanded)}
-        className="w-full px-4 py-3 flex items-center justify-between border-b border-blue-200 hover:opacity-90 transition-opacity"
+        className="w-full px-4 py-2 flex items-center justify-between 
+        border-b border-blue-200 hover:opacity-90 transition-opacity"
+        style={{ borderColor: "var(--border)" }}
       >
         <div className="flex items-center gap-3">
-          <span className="font-semibold" style={{ color: "var(--primary)" }}>{getPhaseName(phase)}</span>
+          <span className="font-medium" style={{ color: "var(--foreground)" }}>{getPhaseName(phase)}</span>
           <span className="text-sm" style={{ color: "var(--muted)" }}>({validMatches.length} matches)</span>
           {hasLiveMatch && (
             <span className="text-xs px-2 py-1 rounded-full" style={{ background: "var(--danger)", color: "var(--surface)" }}>
@@ -378,8 +388,8 @@ export default function ArcheryDashboard() {
     <div className="min-h-screen" style={{ background: "var(--background)", color: "var(--foreground)" }}>
       <div className="grid grid-cols-1 lg:grid-cols-3">
         {/* Events Calendar - Left Side */}
-        <div className="lg:col-span-1 bg-slate-50">
-          <div className="shadow-sm border-r border-slate-200 bg-slate-50">
+        <div className="lg:col-span-1 bg-[var(--surface)]">
+          <div className="shadow-sm">
             <div className="px-8 mt-4">
               <h2 className="text-xl font-semibold" style={{ color: "var(--primary)" }}>
                 Calendar 2025
@@ -411,15 +421,26 @@ export default function ArcheryDashboard() {
         </div>
 
         {/* Results Panel - Right Side */}
-        <div className="lg:col-span-2">
+        <div className="p-4 md:p-8 lg:col-span-2">
+          <div className="flex items-center justify-between mb-2">
+            <h1 className="text-xl md:text-2xl font-bold px-2" style={{ color: "var(--primary)" }}>Archery</h1>
+            {/* <div className="w-full max-w-xs ml-4">
+              <PlayerSearchBar
+                sport="Archery"
+                onSelect={handlePlayerSelect}
+                onClear={handlePlayerClear}
+              />
+            </div> */}
+          </div>
+                  
           {selectedEvent ? (
             <div className="shadow-sm" style={{ background: "var(--surface)" }}>
               {/* Event Header */}
-              <div className="p-6 border-b" style={{ borderColor: "var(--muted-2)" }}>
-                <h2 className="text-xl font-semibold mb-2" style={{ color: "var(--primary)" }}>
+              <div className="p-4 border-b" style={{ borderColor: "var(--muted-2)" }}>
+                <h2 className="text-lg font-semibold mb-2" style={{ color: "var(--primary)" }}>
                   {selectedEvent.name}
                 </h2>
-                <p style={{ color: "var(--muted)" }}>
+                <p className="text-sm" style={{ color: "var(--muted)" }}>
                   {selectedEvent.location} • {formatDate(selectedEvent.start_date)} - {formatDate(selectedEvent.end_date)}
                 </p>
               </div>
@@ -432,7 +453,8 @@ export default function ArcheryDashboard() {
                       <Button
                         key={categoryCode}
                         variant={activeFilter === categoryCode ? "primary" : "secondary"}
-                        className="rounded-full text-xs font-medium px-4 py-2"
+                        className="text-xs font-medium"
+                        size="sm"
                         onClick={() => handleFilterClick(categoryCode)}
                       >
                         {getCategoryLabel(categoryCode)}
@@ -446,7 +468,7 @@ export default function ArcheryDashboard() {
               <div className="p-6">
                 {loading ? (
                   <div className="text-center py-12">
-                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 mx-auto" style={{ borderColor: "var(--primary)" }}></div>
+                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 mx-auto" style={{ borderColor: "var(--muted-2)" }}></div>
                     <p className="mt-2" style={{ color: "var(--muted-2)" }}>Loading results...</p>
                   </div>
                 ) : error ? (
@@ -467,9 +489,9 @@ export default function ArcheryDashboard() {
                   </div>
                 ) : (
                   <div>
-                    <h3 className="text-lg font-medium mb-4" style={{ color: "var(--primary)" }}>
+                    {/* <h3 className="text-lg font-medium mb-4" style={{ color: "var(--foreground)" }}>
                       {getCategoryLabel(activeFilter)} ({displayMatches.length} matches)
-                    </h3>
+                    </h3> */}
                     <div className="space-y-4">
                       {sortedPhases.map((phase) => (
                         <PhaseAccordion

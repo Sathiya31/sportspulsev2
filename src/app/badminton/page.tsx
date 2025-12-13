@@ -132,7 +132,7 @@ export default function BadmintonPage() {
   }
 
   // Find live event
-  const liveEvent = tournaments.find(t => isLive(t.start_date, t.end_date));
+  // const liveEvent = tournaments.find(t => isLive(t.start_date, t.end_date));
 
   // Fetch Firebase results for a tournament
   async function fetchFirebaseResults(tournamentCode: string) {
@@ -205,7 +205,7 @@ export default function BadmintonPage() {
   const userIsAdmin = isAdmin(session?.user?.email);
 
   return (
-    <div className="flex flex-col md:flex-row min-h-screen" style={{ background: "var(--background)", color: "var(--foreground)" }}>
+  <div className="flex flex-col md:flex-row min-h-screen" style={{ background: "var(--background)", color: "var(--foreground)" }}>
       {/* Mobile Overlay */}
       {isMobileMenuOpen && (
         <div
@@ -214,20 +214,19 @@ export default function BadmintonPage() {
         ></div>
       )}
 
-      {/* Left panel calendar */}
+      {/* Consistent Calendar Sidebar */}
       <aside className={`
         fixed md:static inset-y-0 left-0 z-40
-        w-80 md:w-96 
+        w-80 md:w-96
         transform transition-transform duration-300 ease-in-out
         ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}
-        border-r p-4 bg-slate-50 border-slate-200 overflow-y-auto
+        bg-[var(--surface)] border-r border-[var(--border)] p-4 overflow-y-auto
       `}>
-        {/* Filter by Month */}
-        <div className="mb-2">
+        <div className="mb-4">
           <label className="block text-sm font-semibold mb-1" style={{ color: "var(--muted)" }}>Filter by Month</label>
           <select
-            className="w-full p-2 rounded"
-            style={{ borderColor: "var(--primary)", color: "var(--foreground)" }}
+            className="w-full p-2 rounded mb-2 bg-[var(--background)] border border-[var(--muted-2)]"
+            style={{ color: "var(--foreground)" }}
             value={month}
             onChange={e => setMonth(e.target.value)}
           >
@@ -273,7 +272,7 @@ export default function BadmintonPage() {
         </button>
 
         <div className="flex items-center justify-between mb-4 ml-12 md:ml-0">
-          <h1 className="text-2xl font-bold" style={{ color: "var(--primary)" }}>Badminton 2025</h1>
+          <h1 className="text-2xl font-bold" style={{ color: "var(--primary)" }}>Badminton</h1>
           <div className="ml-4">
             <PlayerSearchBar
               sport="badminton"
@@ -282,10 +281,32 @@ export default function BadmintonPage() {
             />
           </div>
         </div>
-        {liveEvent && (
-          <div className="mb-4 flex items-center gap-2">
-            <span className="px-3 py-1 rounded-full font-bold text-xs shadow" style={{ background: "var(--success)", color: "white", letterSpacing: 1 }}>LIVE</span>
-            <span className="font-semibold" style={{ color: "var(--success)" }}>{liveEvent.name}</span>
+        {/* Compact Live Events Badges */}
+        {tournaments.filter(t => isLive(t.start_date, t.end_date)).length > 0 && (
+          <div className="mb-4">
+            <div className="flex items-center gap-2 mb-2">
+              <span className="inline-block w-2 h-2 rounded-full animate-pulse" style={{ background: "var(--warning)" }}></span>
+              <span className="font-semibold text-sm" style={{ color: "var(--warning)" }}>Live : </span>
+            {/* </div>
+            <div className="flex flex-wrap gap-2"> */}
+              {tournaments.filter(t => isLive(t.start_date, t.end_date)).map((ev, idx) => {
+                const key = ev.id ? `${ev.id}_${idx}` : `live_${idx}`;
+                return (
+                  <button
+                    key={key}
+                    onClick={() => handleSelectEvent(ev)}
+                    className="px-3 py-1.5 rounded-full text-xs hover:opacity-80 transition-opacity"
+                    style={{ 
+                      background: "var(--glass)",
+                      color: "var(--foreground)",
+                      border: `1px solid var(--muted-2)`
+                    }}
+                  >
+                    {ev.name}
+                  </button>
+                );
+              })}
+            </div>
           </div>
         )}
         <div>
@@ -295,8 +316,8 @@ export default function BadmintonPage() {
               {fetchError && <div className="mb-4" style={{ color: "var(--danger)" }}>{fetchError}</div>}
               {selectedEvent ? (
                 <>
-                  <div className="mb-2 text-xl font-bold" style={{ color: "var(--primary)" }}>{selectedEvent.name}</div>
-                  <div className="mb-2" style={{ color: "var(--muted)" }}>{formatDate(selectedEvent.start_date.slice(0, 10))} to {formatDate(selectedEvent.end_date.slice(0, 10))}</div>
+                  <div className="mb-2 text-lg font-semibold" style={{ color: "var(--primary)" }}>{selectedEvent.name}</div>
+                  <div className="mb-2 text-xs" style={{ color: "var(--muted)" }}>{formatDate(selectedEvent.start_date.slice(0, 10))} to {formatDate(selectedEvent.end_date.slice(0, 10))}</div>
                   <TournamentResults results={tournamentResults} isLoading={fetching} />
                 </>
               )

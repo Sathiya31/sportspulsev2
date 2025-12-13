@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { collection, query, where, getDocs } from 'firebase/firestore';
 import { db } from '@/config/firebase';
 import Button from '@/components/ui/Button';
+import { ShootingEvent } from '@/shootingCalendar';
 
 interface SeriesScores {
   series_1: string;
@@ -61,7 +62,7 @@ interface GroupedResults {
   };
 }
 
-const ShootingResults = ({ selectedCompetition }: { selectedCompetition: string | null }) => {
+const ShootingResults = ({ selectedCompetition }: { selectedCompetition: ShootingEvent | null }) => {
   const [results, setResults] = useState<GroupedResults>({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -70,13 +71,13 @@ const ShootingResults = ({ selectedCompetition }: { selectedCompetition: string 
 
   useEffect(() => {
     fetchResults();
-  }, [selectedCompetition]);
+  }, [selectedCompetition?.competition_code]);
 
   const fetchResults = async () => {
     try {
       setLoading(true);
       const q = query(collection(db, 'shooting'),
-       where('competition_info.competition_id', '==', selectedCompetition)
+       where('competition_info.competition_id', '==', selectedCompetition?.competition_code)
         );
       const querySnapshot = await getDocs(q);
       const fetchedResults: ShootingResult[] = [];
@@ -162,7 +163,7 @@ const ShootingResults = ({ selectedCompetition }: { selectedCompetition: string 
       <div key={teamId} 
            className="rounded-lg shadow-sm border p-3 hover:shadow-md transition-shadow"
            style={{ 
-             background: isQualification ? "var(--surface)" : "rgba(34, 197, 94, 0.05)",
+             background: "var(--surface)",
              borderColor: isQualification ? "var(--primary-light)" : "rgba(34, 197, 94, 0.3)"
            }}>
         
@@ -219,7 +220,7 @@ const ShootingResults = ({ selectedCompetition }: { selectedCompetition: string 
             className="w-full flex items-center justify-between py-2 border-t hover:opacity-80 transition-opacity"
             style={{ borderColor: "var(--muted-2)" }}
           >
-            <h4 className="text-xs font-semibold flex items-center gap-2" style={{ color: "var(--primary)" }}>
+            <h4 className="text-xs font-semibold flex items-center gap-2" style={{ color: "var(--muted)" }}>
               <svg
                 className={`w-3 h-3 transition-transform ${isExpanded ? 'rotate-90' : ''}`}
                 fill="none"
@@ -418,7 +419,7 @@ const ShootingResults = ({ selectedCompetition }: { selectedCompetition: string 
       {/* Header with Event Chips */}
       <div className="border-b pb-3" style={{ borderColor: "var(--muted-2)" }}>
         <h3 className="text-base md:text-lg font-bold mb-3" style={{ color: "var(--primary)" }}>
-          Indian Results
+          {selectedCompetition?.event_name} Results
         </h3>
         
         {/* Event Format Chips - Using Button Component */}
@@ -428,6 +429,7 @@ const ShootingResults = ({ selectedCompetition }: { selectedCompetition: string 
               key={eventFormat}
               variant={selectedEvent === eventFormat ? "primary" : "secondary"}
               className="text-xs font-medium px-3 py-2"
+              size="sm"
               onClick={() => handleEventClick(eventFormat)}
             >
               {eventFormat}

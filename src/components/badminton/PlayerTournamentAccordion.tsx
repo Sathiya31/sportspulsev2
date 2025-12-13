@@ -121,7 +121,7 @@ export default function AthleteTournamentAccordion({ results, selectedPlayer }: 
                 </span>
               </button>
               {open[t.name] && (
-                <div className="p-4 border-t bg-white/70">
+                <div className="p-4 border-t bg-white/10">
                   <table className="w-full text-sm rounded overflow-hidden">
                     <thead>
                       <tr style={{ background: "var(--surface)" }}>
