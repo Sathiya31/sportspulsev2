@@ -70,7 +70,9 @@ const ShootingResults = ({ selectedCompetition }: { selectedCompetition: Shootin
   const [expandedTeams, setExpandedTeams] = useState<Set<string>>(new Set());
 
   useEffect(() => {
-    fetchResults();
+    if(selectedCompetition?.competition_code) {
+      fetchResults();
+    }
   }, [selectedCompetition?.competition_code]);
 
   const fetchResults = async () => {

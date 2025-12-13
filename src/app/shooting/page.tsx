@@ -138,7 +138,19 @@ export default function ShootingPage() {
 
         {/* Results Section */}
         <div className="mb-8">
-          <ShootingResults selectedCompetition={selectedCompetition} />
+          {selectedCompetition ?
+            <ShootingResults selectedCompetition={selectedCompetition} />
+            :
+            <div className="shadow-sm" style={{ background: "var(--surface)" }}>
+              <div className="p-12 text-center">
+                <h2 className="text-xl font-semibold mb-2" style={{ color: "var(--primary)" }}>
+                  Select an Event
+                </h2>
+                <p style={{ color: "var(--muted-2)" }}>
+                  Choose an event from the calendar to view results
+                </p>
+              </div>
+            </div>}
         </div>
 
         {/* Extractor for admins only */}
