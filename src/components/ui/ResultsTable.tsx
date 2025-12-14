@@ -113,7 +113,7 @@ export default function ResultsTable({ results, eventName, columnOrder }: Result
     if (pos === 1) return 'bg-yellow-50 border-l-4 border-yellow-500';
     if (pos === 2) return 'bg-gray-50 border-l-4 border-gray-400';
     if (pos === 3) return 'bg-orange-50 border-l-4 border-orange-600';
-    return 'border-slate-200';
+    return 'border-var(--border-subtle)';
   };
 
   if (results.length === 0) {
@@ -130,14 +130,14 @@ export default function ResultsTable({ results, eventName, columnOrder }: Result
       <div className="overflow-x-auto">
         <table className="w-full border-collapse">
           <thead className="sticky top-0 z-10" style={{ background: 'var(--surface)' }}>
-            <tr className='border-b border-slate-200'>
+            <tr className='border-b border-var(--border)'>
               {columns.map((col) => (
                 <th
                   key={String(col.key)}
                   className={`px-3 py-3 text-sm font-semibold ${col.width} ${
                     col.align === 'right' ? 'text-right' : col.align === 'center' ? 'text-center' : 'text-left'
                   }`}
-                  style={{ color: 'var(--primary)' }}
+                  style={{ color: 'var(--muted)' }}
                 >
                   <div className={`flex items-center gap-1 ${
                     col.align === 'right' ? 'justify-end' : col.align === 'center' ? 'justify-center' : 'justify-start'

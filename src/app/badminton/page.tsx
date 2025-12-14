@@ -258,7 +258,7 @@ export default function BadmintonPage() {
       <main className="flex-1 p-4 md:p-8" style={{ background: "var(--background)" }}>
         {/* Mobile menu button */}
         <button
-          className="md:hidden fixed top-20 right-4 z-50 p-2 rounded-lg shadow-lg"
+          className="md:hidden fixed top-15 right-4 z-50 p-2 rounded-lg shadow-lg"
           style={{ background: "var(--surface)", color: "var(--foreground)" }}
           onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
         >
@@ -271,14 +271,18 @@ export default function BadmintonPage() {
           </svg>
         </button>
 
-        <div className="flex items-center justify-between mb-4 ml-12 md:ml-0">
-          <h1 className="text-2xl font-bold" style={{ color: "var(--primary)" }}>Badminton</h1>
-          <div className="ml-4">
-            <PlayerSearchBar
-              sport="badminton"
-              onSelect={handlePlayerSelect}
-              onClear={handlePlayerClear}
-            />
+        <div className="mb-4">
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3 md:gap-4">
+            <h1 className="text-xl font-bold" style={{ color: "var(--foreground)" }}>
+              Badminton
+            </h1>
+            <div className="w-full md:w-auto md:max-w-xs">
+              <PlayerSearchBar
+                sport="badminton"
+                onSelect={handlePlayerSelect}
+                onClear={handlePlayerClear}
+              />
+            </div>
           </div>
         </div>
         {/* Compact Live Events Badges */}

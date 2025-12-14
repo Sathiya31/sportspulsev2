@@ -194,14 +194,18 @@ export default function TableTennisPage() {
           </svg>
         </button>
 
-        <div className="flex items-center justify-between mb-2">
-          <h1 className="text-xl md:text-2xl font-bold" style={{ color: "var(--primary)" }}>Table Tennis</h1>
-          <div className="w-full max-w-xs ml-4">
-            <PlayerSearchBar
-              sport="Table Tennis"
-              onSelect={handlePlayerSelect}
-              onClear={handlePlayerClear}
-            />
+        <div className="mb-4">
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3 md:gap-4">
+            <h1 className="text-xl md:text-2xl font-bold" style={{ color: "var(--foreground)" }}>
+              Table Tennis
+            </h1>
+            <div className="w-full md:w-auto md:max-w-xs">
+              <PlayerSearchBar
+                sport="Table Tennis"
+                onSelect={handlePlayerSelect}
+                onClear={handlePlayerClear}
+              />
+            </div>
           </div>
         </div>
         {/* Compact Live Events Badges */}

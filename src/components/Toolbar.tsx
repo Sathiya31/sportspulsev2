@@ -19,7 +19,7 @@ export default function Toolbar() {
 
     return (
     <nav className="w-full sticky top-0 z-50 shadow-md transition-colors duration-500" style={{ background: "var(--toolbar-bg)", color: "var(--foreground)" }}>
-            <div className="max-w-7xl mx-auto flex items-center justify-between px-4 py-3">
+            <div className="max-w-7xl mx-auto flex items-center justify-between px-4">
                 <Link href="/" className="flex items-center gap-3 select-none group" style={{ color: "var(--foreground)" }}>
                     {/* Rounded SP Logo */}
                     {/* <span className="flex items-center justify-center w-10 h-10 rounded-full shadow-lg"
@@ -49,10 +49,11 @@ export default function Toolbar() {
                         <Link
                             key={item.name}
                             href={item.href}
-                            className={`px-3 py-1 w-full block font-medium transition-colors duration-300 border-none shadow-none rounded-none whitespace-nowrap`}
+                            className={`px-3 py-3 w-full block font-medium transition-colors duration-300 
+                                whitespace-nowrap hover:!bg-[var(--glass-strong)]`}
                             style={{
-                                color: "var(--foreground)",
-                                background: pathname && pathname.startsWith(item.href) ? "var(--glass)" : "transparent"
+                                background: pathname && pathname.startsWith(item.href) ? "var(--glass)" : "transparent",
+                                borderBottom: pathname && pathname.startsWith(item.href) ? "2px solid var(--primary)" : "none"
                             }}
                         >
                             {item.name}

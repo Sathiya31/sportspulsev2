@@ -4,44 +4,144 @@
 /* Dark Theme Overrides — SportzPulse Professional */
 
 :root {
-  /* Base background / foreground */
+  /* ============================================
+     BASE COLORS - Background & Foreground
+     ============================================ */
   --background: #0D1117;
   --foreground: #E6EEF5;
   --toolbar-bg: #11161D;
 
-  /* Typography & muted colors */
+  /* ============================================
+     TYPOGRAPHY & MUTED COLORS
+     ============================================ */
   --muted: #9AA5B1;
   --muted-2: #6C7786;
-
-  /* Professional Green (Primary Action) */
-  --primary: #4CAF50;
-  --primary-dark: #3F8F44;
-  --primary-light: #A7E4A1;
-  --primary-lighter: #DFF7DA;
-
-  /* Accent */
-  --accent: #A7E4A1;
-
-  /* Brand secondary navy (optional) */
-  --brand-navy: #072B49;
-
-  /* Surfaces */
-  --surface: #161B22;
-  --border: #1F242C;
-  --glass: rgba(255,255,255,0.05);
-  --card-shadow: 0 12px 36px rgba(0,0,0,0.35);
-
-  /* State colors */
-  --success: #4CAF50;
-  --danger: #ef5350;
-
-  /* alternate colors */
-  --warning: #FF9800;
+  --muted-3: #4A5562;
   
+  /* Semantic text tokens */
+  --text-primary: var(--foreground);
+  --text-secondary: var(--muted);
+  --text-tertiary: var(--muted-2);
 
-  /* Radii & focus */
+  /* ============================================
+     PRIMARY - Professional Green
+     ============================================ */
+  --primary: #4CAF50;
+  --primary-hover: #5DBF61;
+  --primary-pressed: #3F8F44;
+  --primary-dark: #3F8F44;
+  --primary-light: #81C784;
+  --primary-lighter: #A7E4A1;
+  --primary-lightest: #DFF7DA;
+  --primary-rgb: 76, 175, 80;
+  
+  /* Primary with opacity variants */
+  --primary-10: rgba(76, 175, 80, 0.1);
+  --primary-20: rgba(76, 175, 80, 0.2);
+  --primary-30: rgba(76, 175, 80, 0.3);
+
+  /* ============================================
+     ACCENT - Energetic Orange
+     ============================================ */
+  --accent: #FF6B35;
+  --accent-hover: #FF7F50;
+  --accent-pressed: #E55A2B;
+  --accent-light: #FFA070;
+  --accent-rgb: 255, 107, 53;
+
+  /* ============================================
+     SECONDARY - Brand Navy (Optional)
+     ============================================ */
+  --brand-navy: #072B49;
+  --brand-navy-light: #0A3D63;
+
+  /* ============================================
+     SURFACES & BORDERS
+     ============================================ */
+  --surface: #161B22;
+  --surface-hover: #1C2128;
+  --surface-active: #22272E;
+  --surface-elevated: #1F242C;
+  
+  --border: #2D333B;
+  --border-subtle: #1F242C;
+  --border-emphasis: #3D444D;
+  
+  --glass: rgba(255, 255, 255, 0.05);
+  --glass-strong: rgba(255, 255, 255, 0.1);
+  
+  /* Shadows */
+  --card-shadow: 0 12px 36px rgba(0, 0, 0, 0.35);
+  --card-shadow-hover: 0 16px 48px rgba(0, 0, 0, 0.45);
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.2);
+  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.25);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.3);
+
+  /* ============================================
+     STATE COLORS
+     ============================================ */
+  --success: #4CAF50;
+  --success-light: #81C784;
+  --success-bg: rgba(76, 175, 80, 0.15);
+  
+  --danger: #EF5350;
+  --danger-light: #FF6B6B;
+  --danger-bg: rgba(239, 83, 80, 0.15);
+  
+  --warning: #FF9800;
+  --warning-light: #FFB74D;
+  --warning-bg: rgba(255, 152, 0, 0.15);
+  
+  --info: #2196F3;
+  --info-light: #64B5F6;
+  --info-bg: rgba(33, 150, 243, 0.15);
+
+  /* ============================================
+     INTERACTIVE ELEMENTS
+     ============================================ */
+  --link: #64B5F6;
+  --link-hover: #90CAF9;
+  --link-visited: #9C87CF;
+
+  /* ============================================
+     FOCUS & ACCESSIBILITY
+     ============================================ */
   --radius: 12px;
-  --focus-ring: 0 0 0 4px rgba(76,175,80,0.25);
+  --radius-sm: 8px;
+  --radius-lg: 16px;
+  --radius-full: 9999px;
+  
+  --focus-ring: 0 0 0 4px rgba(76, 175, 80, 0.25);
+  --focus-ring-accent: 0 0 0 4px rgba(255, 107, 53, 0.25);
+  --focus-ring-danger: 0 0 0 4px rgba(239, 83, 80, 0.25);
+
+  /* ============================================
+     TRANSITIONS
+     ============================================ */
+  --transition-fast: 150ms ease;
+  --transition-base: 250ms ease;
+  --transition-slow: 350ms ease;
+
+  /* ============================================
+     SPACING SCALE (Optional)
+     ============================================ */
+  --space-xs: 0.25rem;   /* 4px */
+  --space-sm: 0.5rem;    /* 8px */
+  --space-md: 1rem;      /* 16px */
+  --space-lg: 1.5rem;    /* 24px */
+  --space-xl: 2rem;      /* 32px */
+  --space-2xl: 3rem;     /* 48px */
+
+  /* ============================================
+     Z-INDEX SCALE
+     ============================================ */
+  --z-dropdown: 1000;
+  --z-sticky: 1020;
+  --z-fixed: 1030;
+  --z-modal-backdrop: 1040;
+  --z-modal: 1050;
+  --z-popover: 1060;
+  --z-tooltip: 1070;
 }
 
 body {

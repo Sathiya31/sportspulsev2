@@ -16,8 +16,7 @@ export default function PlayerTournamentResults({ player, results, isLoading, er
   return (
     <div className="mt-4">
       <div className="flex items-center gap-2 mb-4">
-        <span className="text-lg font-bold" style={{ color: "var(--primary)" }}>{toCapitalizedCase(player.name)}</span>
-        <button className="text-xs px-2 py-1 rounded" style={{ background: "var(--danger)", color: "white" }} onClick={onClear}>Clear</button>
+        <span className="text-lg font-bold" style={{ color: "var(--primary)" }}>{toCapitalizedCase(player.name)}&apos;s Tournament Results</span>
       </div>
       {isLoading ? (
         <div className="text-center py-8" style={{ color: "var(--muted)" }}>Loading player results...</div>

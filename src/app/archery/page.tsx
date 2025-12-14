@@ -1,6 +1,6 @@
 'use client';
-import { useState, useEffect } from 'react';
-import { ChevronDown, ChevronUp } from 'lucide-react';
+import { useState, useEffect, useRef } from 'react';
+import { ChevronDown, ChevronUp, Menu, X } from 'lucide-react';
 import EventCard from "@/components/ui/EventCard";
 import Button from "@/components/ui/Button";
 import { collection, query, where, getDocs } from 'firebase/firestore';
@@ -8,7 +8,6 @@ import { db } from '@/config/firebase';
 import { useSession } from 'next-auth/react';
 import { isAdmin } from "@/config/auth";
 import {archeryCategoryMap} from '../../utils/archeryCategoryMap';
-// import PlayerSearchBar from '@/components/badminton/PlayerSearchBar';
 
 // Types
 interface Event {
@@ -244,6 +243,162 @@ const PhaseAccordion = ({
   );
 };
 
+// Mobile Calendar Overlay Component
+const MobileCalendarOverlay = ({ 
+  isOpen, 
+  onClose, 
+  events, 
+  selectedEvent, 
+  onEventSelect,
+  formatDate
+}: {
+  isOpen: boolean;
+  onClose: () => void;
+  events: Event[];
+  selectedEvent: Event | null;
+  onEventSelect: (event: Event) => void;
+  formatDate: (date: string) => string;
+}) => {
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [isOpen]);
+
+  if (!isOpen) return null;
+
+  return (
+    <>
+      {/* Backdrop */}
+      <div 
+        className="fixed inset-0 bg-black/50 z-40 lg:hidden"
+        onClick={onClose}
+      />
+      
+      {/* Overlay Panel */}
+      <div 
+        className="fixed inset-0 z-50 lg:hidden"
+        style={{ background: "var(--surface)" }}
+      >
+        {/* Header */}
+        <div className="flex items-center justify-between p-4 border-b" style={{ borderColor: "var(--border)" }}>
+          <h2 className="text-xl font-semibold" style={{ color: "var(--primary)" }}>
+            Calendar 2025
+          </h2>
+          <button
+            onClick={onClose}
+            className="p-2 hover:opacity-70 transition-opacity"
+            style={{ color: "var(--foreground)" }}
+          >
+            <X size={24} />
+          </button>
+        </div>
+
+        {/* Events List */}
+        <div className="overflow-y-auto p-4" style={{ height: 'calc(100vh - 73px)' }}>
+          {events.length === 0 ? (
+            <p className="text-center py-8" style={{ color: "var(--muted-2)" }}>Loading events...</p>
+          ) : (
+            <div className="space-y-3">
+              {events.map((event) => (
+                <EventCard
+                  key={event.id}
+                  id={event.id}
+                  name={event.name}
+                  location={event.location}
+                  startDate={formatDate(event.start_date)}
+                  endDate={formatDate(event.end_date)}
+                  accentColor={selectedEvent?.id === event.id ? "var(--primary)" : "var(--muted-2)"}
+                  isLive={isLive(event.start_date, event.end_date)}
+                  onClick={() => {
+                    onEventSelect(event);
+                    onClose(); // Auto-close after selection
+                  }}
+                  className={selectedEvent?.id === event.id ? "ring-2" : ""}
+                />
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+    </>
+  );
+};
+
+// Mobile Category Dropdown Component
+const MobileCategoryDropdown = ({ 
+  categories, 
+  activeFilter, 
+  onFilterClick
+}: {
+  categories: string[];
+  activeFilter: string | null;
+  onFilterClick: (category: string) => void;
+}) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  const selectedLabel = activeFilter ? getCategoryLabel(activeFilter) : 'Select Category';
+
+  return (
+    <div className="relative lg:hidden" ref={dropdownRef}>
+      <button
+        onClick={() => setIsOpen(!isOpen)}
+        className="w-full px-4 py-3 rounded-lg flex items-center justify-between transition-colors"
+        style={{
+          background: "var(--surface)",
+          border: "1px solid var(--border)",
+          color: activeFilter ? "var(--primary)" : "var(--foreground)"
+        }}
+      >
+        <span className="font-medium">{selectedLabel}</span>
+        {isOpen ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
+      </button>
+
+      {isOpen && (
+        <div 
+          className="absolute top-full left-0 right-0 mt-2 rounded-lg shadow-lg z-30 max-h-80 overflow-y-auto"
+          style={{ background: "var(--surface)", border: "1px solid var(--border)" }}
+        >
+          {categories.map((categoryCode: string) => (
+            <button
+              key={categoryCode}
+              onClick={() => {
+                onFilterClick(categoryCode);
+                setIsOpen(false);
+              }}
+              className="w-full px-4 py-3 text-left hover:opacity-80 transition-opacity border-b last:border-b-0"
+              style={{
+                background: activeFilter === categoryCode ? "var(--primary)" : "transparent",
+                color: activeFilter === categoryCode ? "white" : "var(--foreground)",
+                borderColor: "var(--border)"
+              }}
+            >
+              {getCategoryLabel(categoryCode)}
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
+
 export default function ArcheryDashboard() {
   const [events, setEvents] = useState<Event[]>([]);
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
@@ -252,6 +407,7 @@ export default function ArcheryDashboard() {
   const [availableCategories, setAvailableCategories] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const { data: session } = useSession(); 
   const userIsAdmin = isAdmin(session?.user?.email);
@@ -387,8 +543,8 @@ export default function ArcheryDashboard() {
   return (
     <div className="min-h-screen" style={{ background: "var(--background)", color: "var(--foreground)" }}>
       <div className="grid grid-cols-1 lg:grid-cols-3">
-        {/* Events Calendar - Left Side */}
-        <div className="lg:col-span-1 bg-[var(--surface)]">
+        {/* Desktop Calendar - Left Side */}
+        <div className="hidden lg:block lg:col-span-1 bg-[var(--surface)]">
           <div className="shadow-sm">
             <div className="px-8 mt-4">
               <h2 className="text-xl font-semibold" style={{ color: "var(--primary)" }}>
@@ -420,17 +576,31 @@ export default function ArcheryDashboard() {
           </div>
         </div>
 
+        {/* Mobile Calendar Overlay */}
+        <MobileCalendarOverlay
+          isOpen={isMobileMenuOpen}
+          onClose={() => setIsMobileMenuOpen(false)}
+          events={events}
+          selectedEvent={selectedEvent}
+          onEventSelect={handleEventSelect}
+          formatDate={formatDate}
+        />
+
         {/* Results Panel - Right Side */}
         <div className="p-4 md:p-8 lg:col-span-2">
-          <div className="flex items-center justify-between mb-2">
-            <h1 className="text-xl md:text-2xl font-bold px-2" style={{ color: "var(--primary)" }}>Archery</h1>
-            {/* <div className="w-full max-w-xs ml-4">
-              <PlayerSearchBar
-                sport="Archery"
-                onSelect={handlePlayerSelect}
-                onClear={handlePlayerClear}
-              />
-            </div> */}
+          {/* Header with Mobile Menu Toggle */}
+          <div className="flex items-center justify-between mb-4">
+            <h1 className="text-xl md:text-2xl font-bold" style={{ color: "var(--foreground)" }}>
+              Archery
+            </h1>
+            <button
+              onClick={() => setIsMobileMenuOpen(true)}
+              className="lg:hidden p-2 hover:opacity-70 transition-opacity"
+              style={{ color: "var(--primary)" }}
+              aria-label="Open calendar menu"
+            >
+              <Menu size={24} />
+            </button>
           </div>
                   
           {selectedEvent ? (
@@ -445,23 +615,35 @@ export default function ArcheryDashboard() {
                 </p>
               </div>
 
-              {/* Dynamic Filter Chips */}
+              {/* Category Filters */}
               {availableCategories.length > 0 && (
-                <div className="px-6 py-4 border-b" style={{ background: "var(--glass)", borderColor: "var(--muted-2)" }}>
-                  <div className="flex flex-wrap gap-2">
-                    {availableCategories.map((categoryCode) => (
-                      <Button
-                        key={categoryCode}
-                        variant={activeFilter === categoryCode ? "primary" : "secondary"}
-                        className="text-xs font-medium"
-                        size="sm"
-                        onClick={() => handleFilterClick(categoryCode)}
-                      >
-                        {getCategoryLabel(categoryCode)}
-                      </Button>
-                    ))}
+                <>
+                  {/* Mobile Dropdown */}
+                  <div className="p-4 lg:hidden">
+                    <MobileCategoryDropdown
+                      categories={availableCategories}
+                      activeFilter={activeFilter}
+                      onFilterClick={handleFilterClick}
+                    />
                   </div>
-                </div>
+
+                  {/* Desktop Chips */}
+                  <div className="hidden lg:block px-6 py-4 border-b" style={{ background: "var(--glass)", borderColor: "var(--muted-2)" }}>
+                    <div className="flex flex-wrap gap-2">
+                      {availableCategories.map((categoryCode) => (
+                        <Button
+                          key={categoryCode}
+                          variant={activeFilter === categoryCode ? "primary" : "secondary"}
+                          className="text-xs font-medium"
+                          size="sm"
+                          onClick={() => handleFilterClick(categoryCode)}
+                        >
+                          {getCategoryLabel(categoryCode)}
+                        </Button>
+                      ))}
+                    </div>
+                  </div>
+                </>
               )}
 
               {/* Results */}
@@ -489,9 +671,6 @@ export default function ArcheryDashboard() {
                   </div>
                 ) : (
                   <div>
-                    {/* <h3 className="text-lg font-medium mb-4" style={{ color: "var(--foreground)" }}>
-                      {getCategoryLabel(activeFilter)} ({displayMatches.length} matches)
-                    </h3> */}
                     <div className="space-y-4">
                       {sortedPhases.map((phase) => (
                         <PhaseAccordion
@@ -515,6 +694,13 @@ export default function ArcheryDashboard() {
                 <p style={{ color: "var(--muted-2)" }}>
                   Choose an event from the calendar to view archery results
                 </p>
+                <button
+                  onClick={() => setIsMobileMenuOpen(true)}
+                  className="lg:hidden mt-6 px-6 py-3 rounded-lg font-medium transition-opacity hover:opacity-90"
+                  style={{ background: "var(--primary)", color: "white" }}
+                >
+                  Open Calendar
+                </button>
               </div>
             </div>
           )}

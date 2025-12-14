@@ -210,7 +210,7 @@ export default function AthleticsPage() {
       <main className="flex-1 p-4 md:p-8 overflow-y-auto" style={{ background: "var(--background)" }}>
         {/* Mobile menu button */}
         <button
-          className="md:hidden fixed top-20 right-4 z-50 p-2 rounded-lg shadow-lg"
+          className="md:hidden fixed top-15 right-4 z-50 p-2 rounded-lg shadow-lg"
           style={{ background: "var(--surface)", color: "var(--foreground)" }}
           onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
         >
@@ -223,7 +223,7 @@ export default function AthleticsPage() {
           </svg>
         </button>
 
-        <h1 className="text-2xl font-bold mb-4 ml-12 md:ml-0" style={{ color: "var(--primary)" }}>Athletics</h1>
+        <h1 className="text-xl font-bold mb-4 md:ml-0" style={{ color: "var(--foreground)" }}>Athletics</h1>
         
         {selectedEvent ? (
           <div>
@@ -232,16 +232,16 @@ export default function AthleticsPage() {
             
             
             {/* Results Section */}
-            <div className="mb-8 border" style={{ background: "var(--glass)", borderColor: "var(--primary)" }}>
-              <h3 className="text-lg font-semibold p-2 border-b border-slate-200" style={{ color: "var(--muted)" }}>
-                Tournament Results</h3>
+            <div className="mb-8 b-r" style={{ background: "var(--surface)", borderColor: "var(--border)" }}>
+              {/* <h3 className="text-md font-semibold p-2" style={{ color: "var(--muted)" }}>
+                Tournament Results</h3> */}
               
               {loadingResults ? (
                 <div>Fetching tournament results...</div>
               ) : resultsError ? (
                 <div>{resultsError}</div>
               ) : eventNames.length > 0 ? (
-                <div className="flex flex-col md:flex-row gap-4">
+                <div className="flex flex-col md:flex-row">
                   {/* Vertical Tabs */}
                   <VerticalTabs
                     tabs={eventNames}
@@ -330,7 +330,7 @@ export default function AthleticsPage() {
             </div>
           </div>
         ) : (
-          <div>
+          <div className="text-center text-sm mt-20" style={{ color: "var(--muted)" }}>
             Select a tournament from the calendar to see details and results.
           </div>
         )}

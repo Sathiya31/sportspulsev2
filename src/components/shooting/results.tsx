@@ -1,6 +1,7 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
+import { ChevronDown, ChevronUp } from 'lucide-react';
 import { collection, query, where, getDocs } from 'firebase/firestore';
 import { db } from '@/config/firebase';
 import Button from '@/components/ui/Button';
@@ -61,6 +62,75 @@ interface GroupedResults {
     finals: ShootingResult[];
   };
 }
+
+// Mobile Event Format Dropdown Component
+const MobileEventDropdown = ({ 
+  availableEvents,
+  selectedEvent,
+  onEventSelect
+}: {
+  availableEvents: string[];
+  selectedEvent: string | null;
+  onEventSelect: (event: string) => void;
+}) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  const selectedLabel = selectedEvent || 'Select Event Format';
+
+  return (
+    <div className="relative lg:hidden" ref={dropdownRef}>
+      <button
+        onClick={() => setIsOpen(!isOpen)}
+        className="w-full px-4 py-3 rounded-lg flex items-center justify-between transition-colors"
+        style={{
+          background: "var(--surface)",
+          border: "1px solid var(--border)",
+          color: selectedEvent ? "var(--primary)" : "var(--foreground)"
+        }}
+      >
+        <span className="font-medium">{selectedLabel}</span>
+        {isOpen ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
+      </button>
+
+      {isOpen && (
+        <div 
+          className="absolute top-full left-0 right-0 mt-2 rounded-lg shadow-lg z-30 max-h-80 overflow-y-auto"
+          style={{ background: "var(--surface)", border: "1px solid var(--border)" }}
+        >
+          {availableEvents.map((eventFormat: string) => (
+            <button
+              key={eventFormat}
+              onClick={() => {
+                onEventSelect(eventFormat);
+                setIsOpen(false);
+              }}
+              className="w-full px-4 py-3 text-left hover:opacity-80 transition-opacity border-b last:border-b-0"
+              style={{
+                background: selectedEvent === eventFormat ? "var(--primary)" : "transparent",
+                color: selectedEvent === eventFormat ? "white" : "var(--foreground)",
+                borderColor: "var(--border)"
+              }}
+            >
+              {eventFormat}
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
 
 const ShootingResults = ({ selectedCompetition }: { selectedCompetition: ShootingEvent | null }) => {
   const [results, setResults] = useState<GroupedResults>({});
@@ -199,18 +269,24 @@ const ShootingResults = ({ selectedCompetition }: { selectedCompetition: Shootin
             <h4 className="text-xs font-medium mb-2" style={{ color: "var(--muted)" }}>
               TEAM SERIES
             </h4>
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2">
-              {Object.entries(result.athlete_result.team_series_scores).map(([series, score]) => (
-                <div key={series} className="text-center">
-                  <div className="text-xs mb-1" style={{ color: "var(--muted)" }}>
-                    {series.replace('series_', 'S')}
+            <div className="grid grid-cols-3 md:grid-cols-6 gap-2">
+              {Object.entries(result.athlete_result.team_series_scores)
+                .sort(([a], [b]) => {
+                  const numA = parseInt(a.replace('series_', ''));
+                  const numB = parseInt(b.replace('series_', ''));
+                  return numA - numB;
+                })
+                .map(([series, score]) => (
+                  <div key={series} className="text-center">
+                    <div className="text-xs mb-1" style={{ color: "var(--muted)" }}>
+                      {series.replace('series_', 'S')}
+                    </div>
+                    <div className="rounded px-2 py-1 text-xs font-semibold border"
+                      style={{ background: "var(--surface)", borderColor: "var(--muted-2)" }}>
+                      {score}
+                    </div>
                   </div>
-                  <div className="rounded px-2 py-1 text-xs font-semibold border" 
-                    style={{ background: "var(--surface)", borderColor: "var(--muted-2)" }}>
-                    {score}
-                  </div>
-                </div>
-              ))}
+                ))}
             </div>
           </div>
         )}
@@ -257,18 +333,23 @@ const ShootingResults = ({ selectedCompetition }: { selectedCompetition: Shootin
                   
                   {/* Individual Series Scores (only for qualification) */}
                   {isQualification && member.series_scores && (
-                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-1.5 mt-2">
-                      {Object.entries(member.series_scores).map(([series, score]) => (
-                        <div key={series} className="text-center">
-                          <div className="text-xs mb-0.5" style={{ color: "var(--muted)" }}>
-                            {series.replace('series_', 'S')}
+                    <div className="grid grid-cols-3 md:grid-cols-6 gap-1.5 mt-2">
+                      {Object.entries(member.series_scores)
+                        .sort(([a], [b]) => {
+                          const numA = parseInt(a.replace('series_', ''));
+                          const numB = parseInt(b.replace('series_', ''));
+                          return numA - numB;
+                        }).map(([series, score]) => (
+                          <div key={series} className="text-center">
+                            <div className="text-xs mb-0.5" style={{ color: "var(--muted)" }}>
+                              {series.replace('series_', 'S')}
+                            </div>
+                            <div className="rounded px-1.5 py-0.5 text-xs font-medium border"
+                              style={{ background: "var(--surface)", borderColor: "var(--muted-2)" }}>
+                              {score}
+                            </div>
                           </div>
-                          <div className="rounded px-1.5 py-0.5 text-xs font-medium border" 
-                            style={{ background: "var(--surface)", borderColor: "var(--muted-2)" }}>
-                            {score}
-                          </div>
-                        </div>
-                      ))}
+                        ))}
                     </div>
                   )}
                 </div>
@@ -322,18 +403,23 @@ const ShootingResults = ({ selectedCompetition }: { selectedCompetition: Shootin
       </div>
 
       {result.athlete_result.series_scores && (
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-1.5 mb-2">
-          {Object.entries(result.athlete_result.series_scores).map(([series, score]) => (
-            <div key={series} className="text-center">
-              <div className="text-xs mb-0.5" style={{ color: "var(--muted)" }}>
-                {series.replace('series_', 'S')}
+        <div className="grid grid-cols-3 md:grid-cols-6 gap-1.5 mb-2">
+          {Object.entries(result.athlete_result.series_scores)
+            .sort(([a], [b]) => {
+              const numA = parseInt(a.replace('series_', ''));
+              const numB = parseInt(b.replace('series_', ''));
+              return numA - numB;
+            }).map(([series, score]) => (
+              <div key={series} className="text-center">
+                <div className="text-xs mb-0.5" style={{ color: "var(--muted)" }}>
+                  {series.replace('series_', 'S')}
+                </div>
+                <div className="rounded px-2 py-0.5 text-xs font-medium"
+                  style={{ background: "var(--glass)" }}>
+                  {score}
+                </div>
               </div>
-              <div className="rounded px-2 py-0.5 text-xs font-medium" 
-                style={{ background: "var(--glass)" }}>
-                {score}
-              </div>
-            </div>
-          ))}
+            ))}
         </div>
       )}
 
@@ -418,14 +504,21 @@ const ShootingResults = ({ selectedCompetition }: { selectedCompetition: Shootin
 
   return (
     <div className="space-y-4">
-      {/* Header with Event Chips */}
+      {/* Header with Event Selection */}
       <div className="border-b pb-3" style={{ borderColor: "var(--muted-2)" }}>
         <h3 className="text-base md:text-lg font-bold mb-3" style={{ color: "var(--primary)" }}>
           {selectedCompetition?.event_name} Results
         </h3>
         
-        {/* Event Format Chips - Using Button Component */}
-        <div className="flex flex-wrap gap-2">
+        {/* Mobile Dropdown */}
+        <MobileEventDropdown
+          availableEvents={availableEvents}
+          selectedEvent={selectedEvent}
+          onEventSelect={handleEventClick}
+        />
+
+        {/* Desktop Chips */}
+        <div className="hidden lg:flex flex-wrap gap-2">
           {availableEvents.map((eventFormat) => (
             <Button
               key={eventFormat}

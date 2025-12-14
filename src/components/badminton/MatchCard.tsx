@@ -39,7 +39,7 @@ export default function MatchCard({ match }: MatchCardProps) {
         {/* Team 1 - Horizontal Layout */}
         <div className={`flex items-center justify-between mb-2 ${
           winner === 1 ? 'font-medium' : ''
-        }`} style={{ color: winner === 1 ? "var(--foreground)" : "var(--muted)" }}>
+        }`} style={{ color: winner === 1 ? "var(--foreground)" : "var(--muted-2)" }}>
           
           <div className="flex items-center gap-2 flex-1 min-w-0">
             {/* Smaller Flag */}
@@ -61,7 +61,7 @@ export default function MatchCard({ match }: MatchCardProps) {
                     </span>
                   ))}
                   {match?.team1seed && (
-                    <span className="text-xs ml-1" style={{ color: "var(--muted)" }}>
+                    <span className="text-xs ml-1" style={{ color: "var(--muted-2)" }}>
                       [{match.team1seed}]
                     </span>
                   )}
@@ -84,7 +84,7 @@ export default function MatchCard({ match }: MatchCardProps) {
                   key={i}
                   className="px-1.5 py-0.5 text-sm font-semibold tabular-nums"
                   style={{ 
-                    color: homeScore > awayScore ? "var(--primary)" : "var(--muted)"
+                    color: homeScore > awayScore ? "var(--primary)" : "var(--muted-2)"
                   }}
                 >
                   {homeScore}
@@ -117,7 +117,7 @@ export default function MatchCard({ match }: MatchCardProps) {
                     </span>
                   ))}
                   {match?.team2seed && (
-                    <span className="text-xs ml-1" style={{ color: "var(--muted)" }}>
+                    <span className="text-xs ml-1" style={{ color: "var(--muted-2)" }}>
                       [{match.team2seed}]
                     </span>
                   )}
@@ -139,7 +139,7 @@ export default function MatchCard({ match }: MatchCardProps) {
                   key={i}
                   className="px-1.5 py-0.5 text-sm font-semibold tabular-nums"
                   style={{ 
-                    color: awayScore > homeScore ? "var(--primary)" : "var(--muted)"
+                    color: awayScore > homeScore ? "var(--primary)" : "var(--muted-2)"
                   }}
                 >
                   {awayScore}
