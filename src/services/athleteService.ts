@@ -114,6 +114,60 @@ export async function getTableTennisAthleteResults(
   }
 }
 
+export async function getShootingAthleteResults(
+  playerIdOrName: string
+): Promise<Match[]> {
+  try {
+    const resultsRef = collection(db, "shooting");
+    console.log(`Fetching shooting results for player: ${playerIdOrName}`);
+    const q = query(
+          resultsRef,
+          where("athlete_ids", "array-contains", playerIdOrName),
+        );
+        
+    const querySnapshot = await getDocs(q);
+
+    const results: Match[] = [];
+    querySnapshot.forEach((doc) => {
+      results.push(doc.data() as Match);
+    });
+
+    console.log(`Fetched ${results.length} results for player: ${playerIdOrName} from collection : shooting`);
+
+    return results;
+  } catch (error) {
+    console.error("Error fetching athlete results:", error);
+    throw new Error("Failed to fetch athlete results");
+  }
+}
+
+export async function getArcheryAthleteResults(
+  playerIdOrName: string
+): Promise<Match[]> {
+  try {
+    const resultsRef = collection(db, "archery");
+    console.log(`Fetching archery results for player: ${playerIdOrName}`);
+    const q = query(
+          resultsRef,
+          where("athlete_ids", "array-contains", playerIdOrName),
+        );
+        
+    const querySnapshot = await getDocs(q);
+
+    const results: Match[] = [];
+    querySnapshot.forEach((doc) => {
+      results.push(doc.data() as Match);
+    });
+
+    console.log(`Fetched ${results.length} results for player: ${playerIdOrName} from collection : archery`);
+
+    return results;
+  } catch (error) {
+    console.error("Error fetching athlete results:", error);
+    throw new Error("Failed to fetch athlete results");
+  }
+}
+
 /**
  * Helper to select the correct field for athlete id or name based on collectionName
  */

@@ -335,7 +335,6 @@ export default function BadmintonPage() {
                 results={playerResults}
                 isLoading={isPlayerLoading}
                 error={playerError}
-                onClear={handlePlayerClear}
               />
             )}
             {/* Indian Players Section - Only visible to admin */}

@@ -9,10 +9,9 @@ interface PlayerTournamentResultsProps {
   results: Match[];
   isLoading: boolean;
   error: string;
-  onClear: () => void;
 }
 
-export default function PlayerTournamentResults({ player, results, isLoading, error, onClear }: PlayerTournamentResultsProps) {
+export default function PlayerTournamentResults({ player, results, isLoading, error }: PlayerTournamentResultsProps) {
   return (
     <div className="mt-4">
       <div className="flex items-center gap-2 mb-4">

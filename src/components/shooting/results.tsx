@@ -7,7 +7,7 @@ import { db } from '@/config/firebase';
 import Button from '@/components/ui/Button';
 import { ShootingEvent } from '@/shootingCalendar';
 
-interface SeriesScores {
+export interface SeriesScores {
   series_1: string;
   series_2: string;
   series_3: string;
@@ -16,14 +16,14 @@ interface SeriesScores {
   series_6: string;
 }
 
-interface TeamMember {
+export interface TeamMember {
   athlete_id: string;
   athlete_name: string;
   series_scores?: SeriesScores;
   total_score?: string;
 }
 
-interface AthleteResult {
+export interface AthleteResult {
   result_type: string;
   rank: number;
   bib_number?: number;
@@ -39,7 +39,7 @@ interface AthleteResult {
   team_series_scores?: SeriesScores;
 }
 
-interface Competition {
+export interface Competition {
   name: string;
   location: string;
   date: string | null;
@@ -49,7 +49,7 @@ interface Competition {
   extracted_timestamp: string;
 }
 
-interface ShootingResult {
+export interface ShootingResult {
   athlete_result: AthleteResult;
   event_format: string;
   event_stage: string;

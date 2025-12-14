@@ -8,6 +8,11 @@ import ShootingExtractor from '../../components/shooting/ShootingExtractor';
 import { useSession } from 'next-auth/react';
 import { isAdmin } from "@/config/auth";
 import { ShootingEvent } from "@/shootingCalendar";
+import PlayerSearchBar from "@/components/badminton/PlayerSearchBar";
+import { getShootingAthleteResults } from "@/services/athleteService";
+import AthleteResultsDisplay from "@/components/shooting/AthleteResults";
+
+// Utility to check if an event is live
 
 function isLive(startDate: string, endDate: string) {
   const now = new Date();
@@ -210,6 +215,8 @@ export default function ShootingPage() {
   const [events, setEvents] = useState<ShootingEvent[]>([]);
   const [selectedCompetition, setSelectedCompetition] = useState<ShootingEvent | null>(null);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [selectedPlayer, setSelectedPlayer] = useState<any>(null);
+  const [playerResults, setPlayerResults] = useState<any[]>([]);
 
   const { data: session } = useSession(); 
   const userIsAdmin = isAdmin(session?.user?.email);
@@ -235,6 +242,26 @@ export default function ShootingPage() {
     item.start_date.includes(filter) ||
     item.end_date.includes(filter)
   );
+
+  async function handlePlayerSelect(player: any) {
+    console.log("Selected player:", player);
+    setSelectedPlayer(player);
+    try {
+      const playerId = player.playerId
+      const results = await getShootingAthleteResults(playerId);
+      console.log("Fetched player results:", playerId, results);
+      // console.log(JSON.stringify(results));
+      setPlayerResults(results);
+    } catch (err: any) {
+      console.error(err)
+      setPlayerResults([]);
+    }
+  }
+  
+  function handlePlayerClear() {
+    setSelectedPlayer(null);
+    setPlayerResults([]);
+  }
 
   return (
     <div className="min-h-screen" style={{ background: "var(--background)", color: "var(--foreground)" }}>
@@ -305,6 +332,13 @@ export default function ShootingPage() {
             >
               <Menu size={24} />
             </button>
+            <div className="w-full md:w-auto md:max-w-xs">
+              <PlayerSearchBar
+                sport="Shooting"
+                onSelect={handlePlayerSelect}
+                onClear={handlePlayerClear}
+              />
+            </div>
           </div>
           
           {/* Mobile Live Events Dropdown */}
@@ -336,10 +370,19 @@ export default function ShootingPage() {
           )}
 
           {/* Results Section */}
-          <div className="mb-8">
+          <div>
             {selectedCompetition ? (
               <ShootingResults selectedCompetition={selectedCompetition} />
-            ) : (
+            ) : 
+              selectedPlayer ? (
+                <div>
+                  <AthleteResultsDisplay
+                    athlete={selectedPlayer}
+                    results={playerResults}
+                    onBack={() => handlePlayerClear()} />
+                </div>
+              ) :
+            (
               <div className="shadow-sm" style={{ background: "var(--surface)" }}>
                 <div className="p-12 text-center">
                   <h2 className="text-xl font-semibold mb-2" style={{ color: "var(--primary)" }}>
