@@ -320,24 +320,28 @@ export default function ShootingPage() {
         {/* Main Content */}
         <div className="p-4 md:p-8 lg:col-span-2">
           {/* Header with Mobile Menu Toggle */}
-          <div className="flex items-center justify-between mb-4">
-            <h1 className="text-xl md:text-2xl font-bold" style={{ color: "var(--foreground)" }}>
-              Shooting
-            </h1>
-            <button
-              onClick={() => setIsMobileMenuOpen(true)}
-              className="lg:hidden p-2 hover:opacity-70 transition-opacity"
-              style={{ color: "var(--primary)" }}
-              aria-label="Open calendar menu"
-            >
-              <Menu size={24} />
-            </button>
-            <div className="w-full md:w-auto md:max-w-xs">
-              <PlayerSearchBar
-                sport="Shooting"
-                onSelect={handlePlayerSelect}
-                onClear={handlePlayerClear}
-              />
+          <div className="mb-4">
+            <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between mb-3">
+              <div className="flex items-center justify-between gap-2">
+                <h1 className="text-xl md:text-2xl font-bold" style={{ color: "var(--foreground)" }}>
+                  Shooting
+                </h1>
+                <button
+                  onClick={() => setIsMobileMenuOpen(true)}
+                  className="lg:hidden p-2 hover:opacity-70 transition-opacity"
+                  style={{ color: "var(--primary)" }}
+                  aria-label="Open calendar menu"
+                >
+                  <Menu size={28} />
+                </button>
+              </div>
+              <div className="w-full max-w-xs mt-2 md:mt-0">
+                <PlayerSearchBar
+                  sport="Shooting"
+                  onSelect={handlePlayerSelect}
+                  onClear={handlePlayerClear}
+                />
+              </div>
             </div>
           </div>
           
