@@ -374,7 +374,7 @@ export default function ShootingPage() {
             {selectedCompetition ? (
               <ShootingResults selectedCompetition={selectedCompetition} />
             ) : 
-              selectedPlayer ? (
+              (selectedPlayer && playerResults) ? (
                 <div>
                   <AthleteResultsDisplay
                     athlete={selectedPlayer}

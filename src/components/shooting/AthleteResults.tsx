@@ -18,10 +18,10 @@ const AthleteResultsDisplay = ({ athlete, results, onBack }:
 
   // Group results by competition
   const groupedResults: GroupedResults = results.reduce((acc, result) => {
-    const key = `${result.competition.competition_id}-${result.competition.date}`;
+    const key = `${result.competition_info?.competition_id}-${result.competition_info?.date}`;
     if (!acc[key]) {
       acc[key] = {
-        competition: result.competition,
+        competition: result.competition_info,
         results: []
       };
     }
@@ -31,8 +31,8 @@ const AthleteResultsDisplay = ({ athlete, results, onBack }:
 
   // Sort competitions by date (most recent first)
   const sortedCompetitions = Object.entries(groupedResults).sort((a, b) => {
-    const dateA = new Date(a[1].competition.date ?? 0);
-    const dateB = new Date(b[1].competition.date ?? 0);
+    const dateA = new Date(a[1].competition?.date ?? 0);
+    const dateB = new Date(b[1].competition?.date ?? 0);
     return dateB.getTime() - dateA.getTime();
   });
 
@@ -166,10 +166,10 @@ const AthleteResultsDisplay = ({ athlete, results, onBack }:
               {/* Competition Header */}
               <div className="p-4 border-b" style={{ background: "var(--glass)", borderColor: "var(--border)" }}>
                 <h3 className="font-bold text-lg mb-1" style={{ color: "var(--foreground)" }}>
-                  {competition.name}
+                  {competition?.name}
                 </h3>
                 <p className="text-sm" style={{ color: "var(--muted)" }}>
-                  📍 {competition.location} • 📅 {competition.date}
+                  📍 {competition?.location} • 📅 {competition?.date}
                 </p>
               </div>
 

@@ -53,7 +53,7 @@ export interface ShootingResult {
   athlete_result: AthleteResult;
   event_format: string;
   event_stage: string;
-  competition: Competition;
+  competition_info: Competition;
 }
 
 interface GroupedResults {
