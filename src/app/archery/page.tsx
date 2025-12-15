@@ -459,6 +459,8 @@ export default function ArcheryDashboard() {
     setGroupedMatches({});
     setAvailableCategories([]);
     setActiveFilter(null);
+    setSelectedPlayer(null);
+    setPlayerResults([]);
     
     // Fetch all matches for this event
     fetchAllMatches(event.id.toString());
@@ -537,6 +539,7 @@ export default function ArcheryDashboard() {
   
     function handlePlayerClear() {
       setSelectedPlayer(null);
+      setSelectedEvent(null);
       setPlayerResults([]);
     }
 

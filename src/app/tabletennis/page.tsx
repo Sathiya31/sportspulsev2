@@ -60,6 +60,7 @@ export default function TableTennisPage() {
   function handlePlayerClear() {
     setSelectedPlayer(null);
     setPlayerResults([]);
+    setSelectedEvent(null);
   }
 
   function handleLoadData() {

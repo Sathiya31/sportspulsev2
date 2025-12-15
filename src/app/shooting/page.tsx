@@ -246,6 +246,7 @@ export default function ShootingPage() {
   async function handlePlayerSelect(player: any) {
     console.log("Selected player:", player);
     setSelectedPlayer(player);
+    setSelectedCompetition(null);
     try {
       const playerId = player.playerId
       const results = await getShootingAthleteResults(playerId);
@@ -259,6 +260,7 @@ export default function ShootingPage() {
   }
   
   function handlePlayerClear() {
+    setSelectedCompetition(null);
     setSelectedPlayer(null);
     setPlayerResults([]);
   }

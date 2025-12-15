@@ -50,6 +50,7 @@ export default function BadmintonPage() {
   function handlePlayerClear() {
     setSelectedPlayer(null);
     setPlayerResults([]);
+    setSelectedEvent(null);
   }
 
   // Helper to check if an event is live
