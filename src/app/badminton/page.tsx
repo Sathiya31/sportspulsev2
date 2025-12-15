@@ -8,17 +8,15 @@ import { getTournamentResults } from "@/services/badmintonService";
 import TournamentResults from "@/components/badminton/TournamentResults";
 import TournamentActions from "@/components/badminton/TournamentActions";
 import PlayerSearchBar from "@/components/badminton/PlayerSearchBar";
-import PlayerTournamentResults from "@/components/badminton/PlayerTournamentResults";
+import BadmintonPlayerResults from "@/components/badminton/AthleteResults";
 
 import { getBadmintonAthleteResults, type AthleteData } from "@/services/athleteService";
-import { Match } from "@/types/badminton";
+import { Match, Tournament } from "@/types/badminton";
 
 export default function BadmintonPage() {
   // Player search state
   const [selectedPlayer, setSelectedPlayer] = useState<AthleteData | null>(null);
   const [playerResults, setPlayerResults] = useState<Match[]>([]);
-  const [isPlayerLoading, setIsPlayerLoading] = useState(false);
-  const [playerError, setPlayerError] = useState("");
   // Ref for Indian results copy buttons
   const indianResultRefs = useRef<Record<string, HTMLPreElement | null>>({});
   const [tournaments, setTournaments] = useState<Tournament[]>([]);
@@ -38,39 +36,20 @@ export default function BadmintonPage() {
     console.log("Selected player:", player);
     setSelectedEvent(null);
     setSelectedPlayer(player);
-    setIsPlayerLoading(true);
-    setPlayerError("");
     try {
       // Use flexible results fetcher for badminton
       const results = await getBadmintonAthleteResults(player.playerId || player.name);
+      console.log(JSON.stringify(results, null, 2));
       setPlayerResults(results);
     } catch (err: any) {
       console.error(err)
-      setPlayerError("Failed to fetch player results");
       setPlayerResults([]);
-    } finally {
-      setIsPlayerLoading(false);
     }
   }
 
   function handlePlayerClear() {
     setSelectedPlayer(null);
     setPlayerResults([]);
-    setPlayerError("");
-  }
-
-
-  interface Tournament {
-    id: number;
-    code: string;
-    name: string;
-    category: string;
-    prize_money: string;
-    start_date: string;
-    end_date: string;
-    location: string;
-    logo: string;
-    is_etihad: boolean;
   }
 
   // Helper to check if an event is live
@@ -330,11 +309,16 @@ export default function BadmintonPage() {
               }
             </div>
             {selectedPlayer && (
-              <PlayerTournamentResults
+              // <PlayerTournamentResults
+              //   player={selectedPlayer}
+              //   results={playerResults}
+              //   isLoading={isPlayerLoading}
+              //   error={playerError}
+              // />
+              <BadmintonPlayerResults
                 player={selectedPlayer}
-                results={playerResults}
-                isLoading={isPlayerLoading}
-                error={playerError}
+                matches={playerResults}
+                onBack={handlePlayerClear}
               />
             )}
             {/* Indian Players Section - Only visible to admin */}

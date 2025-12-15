@@ -6,7 +6,7 @@ import Button from "@/components/ui/Button";
 import { useSession } from "next-auth/react";
 import { isAdmin } from "@/config/auth";
 import PlayerSearchBar from "@/components/badminton/PlayerSearchBar";
-import PlayerTournamentResults from "@/components/tabletennis/PlayerTournamentResults";
+import TableTennisPlayerResults from "@/components/tabletennis/AthleteResults";
 import { getTableTennisAthleteResults } from "@/services/athleteService";
 
 function isLive(start: string, end: string) {
@@ -49,6 +49,7 @@ export default function TableTennisPage() {
           const playerId = player.playerId.replace("TT",""); // Remove TT prefix if present
           const results = await getTableTennisAthleteResults(playerId || player.name);
           console.log("Fetched player results:", playerId, results);
+          console.log(JSON.stringify(results, null, 2));
           setPlayerResults(results);
         } catch (err: any) {
           console.error(err)
@@ -239,11 +240,15 @@ export default function TableTennisPage() {
 
         {/* Player Search Bar and Results */}
         {selectedPlayer && (
-            <PlayerTournamentResults
-              player={selectedPlayer}
-              results={playerResults}
-              calendarEvents={events}
-            />
+            // <PlayerTournamentResults
+            //   player={selectedPlayer}
+            //   results={playerResults}
+            //   calendarEvents={events}
+            // />
+          <TableTennisPlayerResults
+            player={selectedPlayer}
+            matches={playerResults}
+            calendarEvents={events} />
             )}
 
         {/* Display selected event Results or Empty State */}

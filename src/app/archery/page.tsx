@@ -7,10 +7,13 @@ import { collection, query, where, getDocs } from 'firebase/firestore';
 import { db } from '@/config/firebase';
 import { useSession } from 'next-auth/react';
 import { isAdmin } from "@/config/auth";
-import {archeryCategoryMap} from '../../utils/archeryCategoryMap';
+import PlayerSearchBar from '@/components/badminton/PlayerSearchBar';
+import { getArcheryAthleteResults } from '@/services/athleteService';
+import ArcheryPlayerResults from '@/components/archery/AthleteResults';
+import { getCategoryLabel, getPhaseName } from '@/utils/archeryUtils';
 
 // Types
-interface Event {
+export interface Event {
   id: number;
   name: string;
   level: string;
@@ -20,7 +23,7 @@ interface Event {
   end_date: string;
 }
 
-interface Athlete {
+export interface Athlete {
   Id: string;
   FName: string;
   GName: string;
@@ -28,7 +31,7 @@ interface Athlete {
   NOC: string;
 }
 
-interface Competitor {
+export interface Competitor {
   MatchNo: number;
   QualRank: number;
   Arr: string;
@@ -41,10 +44,11 @@ interface Competitor {
   WinLose: boolean;
   Name?: string;
   Athlete?: Athlete;
+  Members?: Athlete[];
   NOC?: string;
 }
 
-interface MatchData {
+export interface MatchData {
   Phase: number;
   Cat: string;
   MatchMode: number;
@@ -56,6 +60,8 @@ interface MatchData {
   Competitor1: Competitor;
   Competitor2: Competitor;
   CategoryCode: string;
+  athlete_ids?: string[];
+  competition_id: string;
 }
 
 // Helper functions
@@ -64,35 +70,6 @@ function isLive(startDate: string, endDate: string) {
   const start = new Date(startDate);
   const end = new Date(endDate);
   return now >= start && now <= end;
-}
-
-function getPhaseName(phase: number): string {
-  const matchCount = 2 * phase;
-
-  if (matchCount >= 65 && matchCount <= 128) {
-    return 'Round of 128';
-  } else if (matchCount >= 33 && matchCount <= 64) {
-    return 'Round of 64';
-  } else if (matchCount >= 17 && matchCount <= 32) {
-    return 'Round of 32';
-  } else if (matchCount >= 9 && matchCount <= 16) {
-    return 'Round of 16';
-  } else if (matchCount >= 5 && matchCount <= 8) {
-    return 'Quarter Finals';
-  } else if (matchCount >= 3 && matchCount <= 4) {
-    return 'Semi Finals';
-  } else if (phase === 1) {
-    return 'Bronze Medal Match';
-  } else if (phase === 0) {
-    return 'Gold Medal Match';
-  }
-  
-  return `Phase ${phase}`;
-}
-
-// Category Code to Label Converter
-function getCategoryLabel(categoryCode: string): string {
-  return archeryCategoryMap[categoryCode] || `${categoryCode} Category`;
 }
 
 // Category ordering function
@@ -408,6 +385,8 @@ export default function ArcheryDashboard() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [selectedPlayer, setSelectedPlayer] = useState<any>(null);
+  const [playerResults, setPlayerResults] = useState<any[]>([]);
 
   const { data: session } = useSession(); 
   const userIsAdmin = isAdmin(session?.user?.email);
@@ -540,6 +519,27 @@ export default function ArcheryDashboard() {
 
   const isTeamMatch = activeFilter?.includes('T') || false;
 
+  async function handlePlayerSelect(player: any) {
+      console.log("Selected player:", player);
+      setSelectedPlayer(player);
+      setSelectedEvent(null);
+      try {
+            // Use flexible results fetcher for badminton
+            const playerId = player.playerId; // Remove TT prefix if present
+            const results = await getArcheryAthleteResults(playerId || player.name);
+            console.log("Fetched player results:", playerId, results);
+            setPlayerResults(results);
+          } catch (err: any) {
+            console.error(err)
+            setPlayerResults([]);
+          }
+    }
+  
+    function handlePlayerClear() {
+      setSelectedPlayer(null);
+      setPlayerResults([]);
+    }
+
   return (
     <div className="min-h-screen" style={{ background: "var(--background)", color: "var(--foreground)" }}>
       <div className="grid grid-cols-1 lg:grid-cols-3">
@@ -601,7 +601,22 @@ export default function ArcheryDashboard() {
             >
               <Menu size={24} />
             </button>
+            <div className="w-full md:w-auto md:max-w-xs">
+              <PlayerSearchBar
+                sport="Archery"
+                onSelect={handlePlayerSelect}
+                onClear={handlePlayerClear}
+              />
+            </div>
           </div>
+
+          {/* Athlete Results */}
+          {selectedPlayer && (
+            <ArcheryPlayerResults
+              player={selectedPlayer}
+              matches={playerResults}
+             onBack={handlePlayerClear} />
+          )}
                   
           {selectedEvent ? (
             <div className="shadow-sm" style={{ background: "var(--surface)" }}>

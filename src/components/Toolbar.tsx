@@ -18,29 +18,17 @@ export default function Toolbar() {
     const [menuOpen, setMenuOpen] = useState(false);
 
     return (
-    <nav className="w-full sticky top-0 z-50 shadow-md transition-colors duration-500" style={{ background: "var(--toolbar-bg)", color: "var(--foreground)" }}>
-            <div className="max-w-7xl mx-auto flex items-center justify-between px-4">
+    <nav className="w-full sticky top-0 z-50 shadow-md transition-colors duration-500" style={{ background: "var(--toolbar-bg)", color: "var(--foreground)", minHeight: "72px" }}>
+            <div className="max-w-7xl mx-auto flex items-center justify-between px-4" style={{ minHeight: "72px" }}>
                 <Link href="/" className="flex items-center gap-3 select-none group" style={{ color: "var(--foreground)" }}>
-                    {/* Rounded SP Logo */}
-                    {/* <span className="flex items-center justify-center w-10 h-10 rounded-full shadow-lg"
-                        style={{ background: "linear-gradient(135deg, var(--danger), var(--primary))" }}>
-                        <span className="font-extrabold text-white text-lg tracking-widest">SP</span>
-                    </span> */}
                     {/* Sports Pulse Font */}
-                    <span className="flex items-center text-2xl font-extrabold tracking-tight font-sans">
+                    <span className="flex items-center text-2xl md:text-3xl font-extrabold tracking-tight font-sans">
                         {/* SportsPulse Logo Image */}
                         <img
                         src="/logo-dark.png"
                         alt="SportsPulse Logo"
-                        className="h-8 mr-3 object-contain"
+                        className="h-12 w-auto mr-4 object-contain"
                         />
-                        {/* Gradient Text */}
-                        {/* <span
-                            className="px-1 py-1 rounded bg-clip-text text-transparent"
-                            style={{ background: "linear-gradient(90deg, var(--danger), var(--accent), var(--primary))", WebkitBackgroundClip: "text", color: "transparent" }}
-                        >
-                            Sports Pulse
-                        </span> */}
                     </span>
                 </Link>
                 {/* Desktop Nav */}
