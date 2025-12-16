@@ -40,6 +40,8 @@ const CompactMatchCard = ({ match, playerAthleteIds }: { match: MatchData, playe
   const playerWon = playerComp.WinLose;
   const isTeam = !!match.Competitor1.Members;
   const isFinal = match.Phase <= 1;
+  const goldMedalMatch = match.Phase === 0;
+  const bronzeMedalMatch = match.Phase === 1;
 
   const playerSets = formatSetScores(playerComp.SP);
   const opponentSets = formatSetScores(opponentComp.SP);
@@ -49,7 +51,7 @@ const CompactMatchCard = ({ match, playerAthleteIds }: { match: MatchData, playe
       style={{
         background: "var(--surface)",
         borderLeft: `4px solid ${playerWon ? 'var(--success)' : 'var(--danger)'}`,
-        borderColor: isFinal ? (playerWon ? '#FFD700' : 'var(--border)') : 'var(--border)'
+        borderColor: (goldMedalMatch || (bronzeMedalMatch && playerWon)) ? '#FFD700' : 'var(--border)'
       }}>
       
       {/* Match Header - Single Line */}
@@ -66,8 +68,14 @@ const CompactMatchCard = ({ match, playerAthleteIds }: { match: MatchData, playe
             {getCategoryLabel(match.CategoryCode)}
           </span>
         </div>
-        {isFinal && playerWon && (
+        {goldMedalMatch && playerWon && (
           <span className="text-lg">🥇</span>
+        )}
+        {goldMedalMatch && !playerWon && (
+          <span className="text-lg">🥈</span>
+        )}
+        {bronzeMedalMatch && playerWon && (
+          <span className="text-lg">🥉</span>
         )}
       </div>
 
@@ -205,6 +213,12 @@ const ArcheryPlayerResults = ({
                         ? m.Competitor1 : m.Competitor2;
       return m.Phase === 0 && playerComp.WinLose;
     }).length,
+    silver: matches.filter(m => {
+      const playerComp = m.Competitor1.Members?.some(mem => playerAthleteIds.includes(mem.Id)) ||
+                        (m.Competitor1.Athlete && playerAthleteIds.includes(m.Competitor1.Athlete.Id))
+                        ? m.Competitor1 : m.Competitor2;
+      return m.Phase === 0 && !playerComp.WinLose;
+    }).length,
     bronze: matches.filter(m => {
       const playerComp = m.Competitor1.Members?.some(mem => playerAthleteIds.includes(mem.Id)) ||
                         (m.Competitor1.Athlete && playerAthleteIds.includes(m.Competitor1.Athlete.Id))
@@ -245,7 +259,7 @@ const ArcheryPlayerResults = ({
           </div>
 
           {/* Statistics Section */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 p-4 rounded-lg" style={{ background: "var(--glass)" }}>
+          <div className="grid grid-cols-3 md:grid-cols-5 gap-4 p-4 rounded-lg" style={{ background: "var(--glass)" }}>
             <div className="text-center">
               <div className="flex items-center justify-center gap-1 mb-1">
                 <Trophy size={20} style={{ color: "#FFD700" }} />
@@ -254,6 +268,15 @@ const ArcheryPlayerResults = ({
                 </span>
               </div>
               <p className="text-xs" style={{ color: "var(--muted)" }}>Gold</p>
+            </div>
+            <div className="text-center">
+              <div className="flex items-center justify-center gap-1 mb-1">
+                <Trophy size={20} style={{ color: "#C0C0C0" }} />
+                <span className="text-2xl font-bold" style={{ color: "var(--foreground)" }}>
+                  {stats.silver}
+                </span>
+              </div>
+              <p className="text-xs" style={{ color: "var(--muted)" }}>Silver</p>
             </div>
             <div className="text-center">
               <div className="flex items-center justify-center gap-1 mb-1">
@@ -293,7 +316,7 @@ const ArcheryPlayerResults = ({
               {/* Competition Header */}
               <div className="p-4 border-b" style={{ background: "var(--glass)", borderColor: "var(--border)" }}>
                 <h3 className="font-bold text-lg" style={{ color: "var(--foreground)" }}>
-                  Competition #{compId}
+                  {compMatches[0]?.competition_name || `Competition #${compId}`}
                 </h3>
               </div>
 

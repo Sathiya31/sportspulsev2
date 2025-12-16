@@ -171,7 +171,7 @@ const ShootingResults = ({ selectedCompetition }: { selectedCompetition: Shootin
           };
         }
 
-        if (eventStage.toLowerCase() == 'qualification') {
+        if ((eventStage || '').toLowerCase().includes('qualification')) {
           acc[eventFormat].qualification.push(result);
         } else {
           acc[eventFormat].finals.push(result);
@@ -185,6 +185,8 @@ const ShootingResults = ({ selectedCompetition }: { selectedCompetition: Shootin
         grouped[eventFormat].qualification.sort((a, b) => a.athlete_result.rank - b.athlete_result.rank);
         grouped[eventFormat].finals.sort((a, b) => a.athlete_result.rank - b.athlete_result.rank);
       });
+
+      console.log("Fetched results:", grouped);
 
       setResults(grouped);
       

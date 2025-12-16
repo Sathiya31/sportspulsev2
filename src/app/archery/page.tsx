@@ -62,6 +62,7 @@ export interface MatchData {
   CategoryCode: string;
   athlete_ids?: string[];
   competition_id: string;
+  competition_name?: string;
 }
 
 // Helper functions

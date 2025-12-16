@@ -229,6 +229,7 @@ export default function ShootingPage() {
   }, []);
 
   function handleCardClick(item: ShootingEvent) {
+    console.log("Selected competition:", item);
     setSelectedCompetition(item || null);
   }
 
