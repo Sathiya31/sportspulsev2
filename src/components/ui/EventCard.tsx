@@ -52,7 +52,7 @@ const EventCard: React.FC<EventCardProps> = ({
         </div>
       )}
       <div className="flex flex-col gap-1 text-sm flex-1">
-        <h3 className="text-md font-medium" style={{ color: "var(--text-primary)" }}>{name}</h3>
+        <h3 className="text-base font-medium" style={{ color: "var(--text-primary)" }}>{name}</h3>
         <span style={{ color: "var(--muted)" }}>{location}</span>
         <span style={{ color: "var(--muted-2)" }}>{formatDate(startDate)} - {formatDate(endDate)}</span>
         {isLive && (

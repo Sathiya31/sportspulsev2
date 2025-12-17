@@ -99,7 +99,7 @@ export default function AthleteTournamentAccordion({ results, selectedPlayer }: 
                 onClick={() => toggleTournament(t.name)}
               >
                 <span className="flex flex-col">
-                  <span className="text-md font-semibold">{t.name}</span>
+                  <span className="text-base font-semibold">{t.name}</span>
                   <span className="text-xs font-normal mt-1 flex items-center gap-2" style={{ color: "var(--muted)" }}>
                     <span>{t.results.length} matches</span>
                     <span>•</span>

@@ -113,8 +113,8 @@ const MatchCard = ({ match, isTeamMatch }: { match: MatchData; isTeamMatch: bool
       {/* Competitor 1 */}
       <div className="flex justify-between items-center mb-2">
         <div className="flex items-center gap-2 flex-1 min-w-0">
-          <span className="text-sm md:text-md" style={{ color: "var(--muted)" }}>{getNOC(comp1)}</span>
-          <span className="text-sm md:text-md font-medium truncate" 
+          <span className="text-sm md:text-base" style={{ color: "var(--muted)" }}>{getNOC(comp1)}</span>
+          <span className="text-sm md:text-base font-medium truncate" 
              style={{ color: comp1.WinLose ? "var(--foreground)" : "var(--muted-2)" }}>
             {getCompetitorName(comp1)}
             </span>
@@ -129,8 +129,8 @@ const MatchCard = ({ match, isTeamMatch }: { match: MatchData; isTeamMatch: bool
       {/* Competitor 2 */}
       <div className="flex justify-between items-center">
         <div className="flex items-center gap-2 flex-1 min-w-0">
-          <span className="text-sm md:text-md" style={{ color: "var(--muted)" }}>{getNOC(comp2)}</span>
-          <span className="text-sm md:text-md font-medium truncate" 
+          <span className="text-sm md:text-base" style={{ color: "var(--muted)" }}>{getNOC(comp2)}</span>
+          <span className="text-sm md:text-base font-medium truncate" 
           style={{ color: comp2.WinLose ? "var(--foreground)" : "var(--muted-2)" }}>
             {getCompetitorName(comp2)}
             </span>
@@ -731,7 +731,7 @@ export default function ArcheryDashboard() {
             <div className="mt-8 pt-8 border-t" style={{ borderColor: "var(--muted-2)" }}>
               <div className="flex p-2 space-4">
                 <p className="p-2 bold">
-                  <label className="text-md font-semibold">Selected Event:</label> {selectedEvent?.name} ({selectedEvent?.id})
+                  <label className="text-base font-semibold">Selected Event:</label> {selectedEvent?.name} ({selectedEvent?.id})
                 </p>
                 <Button
                   variant="primary"

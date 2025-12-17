@@ -51,7 +51,7 @@ export default function MatchCard({ match }: MatchCardProps) {
             />
             
             {/* Players - Inline on one line */}
-            <div className="text-sm md:text-md truncate">
+            <div className="text-sm md:text-base truncate">
               {match?.team1?.players?.length > 0 ? (
                 <>
                   {match.team1.players.map((p: any, i: number) => (
@@ -61,7 +61,7 @@ export default function MatchCard({ match }: MatchCardProps) {
                     </span>
                   ))}
                   {match?.team1seed && (
-                    <span className="text-sm md:text-md ml-1" style={{ color: "var(--muted-2)" }}>
+                    <span className="text-sm md:text-base ml-1" style={{ color: "var(--muted-2)" }}>
                       [{match.team1seed}]
                     </span>
                   )}

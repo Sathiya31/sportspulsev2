@@ -102,7 +102,7 @@ const ShootingExtractor: React.FC<ShootingExtractorProps> = ({ selectedCompetiti
       <h3 className="text-lg font-semibold mb-4" style={{ color: "var(--primary)" }}>Shooting Data Extractor</h3>
       <div className="flex p-2 space-2">
         <p className="bold p-2">
-          <label className="text-md font-semibold">Selected Event:</label> {selectedCompetition}
+          <label className="text-base font-semibold">Selected Event:</label> {selectedCompetition}
         </p>
         <Button
           variant="primary"

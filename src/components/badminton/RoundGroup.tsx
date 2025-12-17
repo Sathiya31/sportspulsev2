@@ -31,7 +31,7 @@ export default function RoundGroup({ name, matches }: RoundGroupProps) {
         border-b hover:opacity-80 transition-opacity"
         style={{ background: "var(--surface)", borderColor: "var(--border)" }}
       >
-        <h3 className="text-md font-medium flex items-center gap-2" 
+        <h3 className="text-base font-medium flex items-center gap-2" 
           style={{ color: "var(--foreground)" }}>
           <svg
             className={`w-4 h-4 transform transition-transform ${isExpanded ? 'rotate-90' : ''}`}
