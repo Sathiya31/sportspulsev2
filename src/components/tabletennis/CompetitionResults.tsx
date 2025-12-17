@@ -151,7 +151,7 @@ const CompetitionResults = ({ EventId, EventName }: { EventId: string, EventName
 
   // Enhanced Match Card Component
   const CompactMatchCard = ({ match }: { match: Match }) => {
-    const { score, sets } = parseSetScores(match.result);
+    const { sets } = parseSetScores(match.result);
     
     return (
       <div className="border hover:shadow-md transition-all duration-200"
