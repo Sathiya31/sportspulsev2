@@ -92,10 +92,8 @@ const PlayerTournamentResults: React.FC<PlayerTournamentResultsProps> = ({
   // Check if player won the match
   const didPlayerWin = (match: Match) => {
     for (const competitor of match.competitors) {
-      if (competitor.athlete_names?.some((name: string) => 
-        name.toLowerCase().includes(player.name.toLowerCase()) || 
-        player.name.toLowerCase().includes(name.toLowerCase())
-      )) {
+      const athleteIds = competitor.athletes ? Object.keys(competitor.athletes) : [];
+      if (athleteIds.includes(player.playerId)) {
         return competitor.win_loss === "W";
       }
     }
@@ -105,10 +103,8 @@ const PlayerTournamentResults: React.FC<PlayerTournamentResultsProps> = ({
   // Get opponent name(s)
   const getOpponentName = (match: Match) => {
     for (const competitor of match.competitors) {
-      const isPlayer = competitor.athlete_names?.some((name: string) => 
-        name.toLowerCase().includes(player.name.toLowerCase()) || 
-        player.name.toLowerCase().includes(name.toLowerCase())
-      );
+      const athleteIds = competitor.athletes ? Object.keys(competitor.athletes) : [];
+      const isPlayer = athleteIds.includes(player.playerId);
       if (!isPlayer) {
         return competitor.team_name.replaceAll("/", " / ");
       }
@@ -119,10 +115,8 @@ const PlayerTournamentResults: React.FC<PlayerTournamentResultsProps> = ({
   // Get opponent organization
   const getOpponentOrg = (match: Match) => {
     for (const competitor of match.competitors) {
-      const isPlayer = competitor.athlete_names?.some((name: string) => 
-        name.toLowerCase().includes(player.name.toLowerCase()) || 
-        player.name.toLowerCase().includes(name.toLowerCase())
-      );
+      const athleteIds = competitor.athletes ? Object.keys(competitor.athletes) : [];
+      const isPlayer = athleteIds.includes(player.playerId);
       if (!isPlayer) {
         return competitor.organization;
       }
@@ -136,10 +130,8 @@ const getMatchScore = (match: Match) => {
   let opponentScore = "";
   
   for (const competitor of match.competitors) {
-    const isPlayer = competitor.athlete_names?.some((name: string) => 
-      name.toLowerCase().includes(player.name.toLowerCase()) || 
-      player.name.toLowerCase().includes(name.toLowerCase())
-    );
+    const athleteIds = competitor.athletes ? Object.keys(competitor.athletes) : [];
+    const isPlayer = athleteIds.includes(player.playerId);
     if (isPlayer) {
       playerScore = competitor.result;
     } else {
