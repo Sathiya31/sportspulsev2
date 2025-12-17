@@ -2,7 +2,7 @@
 
 import { useState, useMemo } from 'react';
 import { ChevronDown, ChevronUp, ArrowLeft, Trophy, Target, TrendingUp } from 'lucide-react';
-import { Match} from './CompetitionResults'
+import { Match } from './CompetitionResults'
 import { toCapitalizedCase } from '@/utils/common';
 
 // // Types
@@ -83,47 +83,47 @@ const getMedalEmoji = (roundName: string, won: boolean): string | null => {
 };
 
 const getSummaryStyles = (best_round_name: string, won: boolean) => {
-    const isFinal = best_round_name === "Final";
-    if (isFinal && won) {
-        return {
-            background: "linear-gradient(135deg, #FFD700 0%, #FFA500 100%)",
-            color: "#854D0E",
-            fontWeight: "bold",
-            border: "1px solid #FFD700"
-        };
-    } 
-    // add background and colors for silver and bronze
-    else if (isFinal && !won) {
-        return {
-            background: "linear-gradient(135deg, #C0C0C0 0%, #A9A9A9 100%)",
-            color: "#3C3C3C",
-            fontWeight: "bold",
-            border: "1px solid #C0C0C0"
-        };
-    } else if (best_round_name === "Semifinals" && !won) {
-        return {
-            background: "linear-gradient(135deg, #CD7F32 0%, #B87333 100%)",
-            color: "#4E2A0C",
-            fontWeight: "bold",
-            border: "1px solid #CD7F32"
-        };
-    } else {
-        return {
-            background: "var(--glass)",
-            color: "var(--foreground)",
-            border: "1px solid var(--border)"
-        };
-    }
+  const isFinal = best_round_name === "Final";
+  if (isFinal && won) {
+    return {
+      background: "linear-gradient(135deg, #FFD700 0%, #FFA500 100%)",
+      color: "#854D0E",
+      fontWeight: "bold",
+      border: "1px solid #FFD700"
+    };
+  }
+  // add background and colors for silver and bronze
+  else if (isFinal && !won) {
+    return {
+      background: "linear-gradient(135deg, #C0C0C0 0%, #A9A9A9 100%)",
+      color: "#3C3C3C",
+      fontWeight: "bold",
+      border: "1px solid #C0C0C0"
+    };
+  } else if (best_round_name === "Semifinals" && !won) {
+    return {
+      background: "linear-gradient(135deg, #CD7F32 0%, #B87333 100%)",
+      color: "#4E2A0C",
+      fontWeight: "bold",
+      border: "1px solid #CD7F32"
+    };
+  } else {
+    return {
+      background: "var(--glass)",
+      color: "var(--foreground)",
+      border: "1px solid var(--border)"
+    };
+  }
 };
 
 
-const TableTennisPlayerResults = ({ 
+const TableTennisPlayerResults = ({
   player,
   matches,
   calendarEvents,
-  onBack 
-}: { 
-  player: { name: string; code: string };
+  onBack
+}: {
+  player: { name: string; playerId: string };
   matches: Match[];
   calendarEvents: any[];
   onBack?: () => void;
@@ -145,10 +145,8 @@ const TableTennisPlayerResults = ({
   // Helper: Check if player won
   const didPlayerWin = (match: Match): boolean => {
     for (const comp of match.competitors) {
-      if (comp.athlete_names.some(name => 
-        name.toLowerCase().includes(player.name.toLowerCase()) ||
-        player.name.toLowerCase().includes(name.toLowerCase())
-      )) {
+      const athleteIds = comp.athletes?.map(a => String(a.id)) || [];
+      if (athleteIds.includes(player.playerId)) {
         return comp.win_loss === "W";
       }
     }
@@ -158,10 +156,8 @@ const TableTennisPlayerResults = ({
   // Helper: Get opponent info
   const getOpponentInfo = (match: Match) => {
     for (const comp of match.competitors) {
-      const isPlayer = comp.athlete_names.some(name =>
-        name.toLowerCase().includes(player.name.toLowerCase()) ||
-        player.name.toLowerCase().includes(name.toLowerCase())
-      );
+      const athleteIds = comp.athletes?.map(a => String(a.id)) || [];
+      const isPlayer = athleteIds.includes(player.playerId);
       if (!isPlayer) {
         // Shorten doubles partner names
         const names = comp.team_name.split('/').map(n => {
@@ -182,10 +178,8 @@ const TableTennisPlayerResults = ({
     let playerScore = "";
     let opponentScore = "";
     for (const comp of match.competitors) {
-      const isPlayer = comp.athlete_names.some(name =>
-        name.toLowerCase().includes(player.name.toLowerCase()) ||
-        player.name.toLowerCase().includes(name.toLowerCase())
-      );
+      const athleteIds = comp.athletes?.map(a => String(a.id)) || [];
+      const isPlayer = athleteIds.includes(player.playerId);
       if (isPlayer) {
         playerScore = comp.result;
       } else {
@@ -269,7 +263,7 @@ const TableTennisPlayerResults = ({
   const getBestResult = (matches: Match[]) => {
     return matches.reduce((best, match) =>
       getRoundOrder(match.round_name) > getRoundOrder(best.round_name) ? match : best
-    , matches[0]);
+      , matches[0]);
   };
 
   // Auto-expand tournaments with medals
@@ -395,7 +389,7 @@ const TableTennisPlayerResults = ({
             return (
               <div key={tournament.key} className="rounded-xl shadow-lg overflow-hidden"
                 style={{ background: "var(--surface)" }}>
-                
+
                 {/* Tournament Header */}
                 <button
                   onClick={() => toggleTournament(tournament.key)}
@@ -448,7 +442,7 @@ const TableTennisPlayerResults = ({
                             background: isFinalWon ? "rgba(255, 215, 0, 0.1)" : "var(--glass)",
                             border: `1px solid ${isFinalWon ? "#FFD700" : "var(--border)"}`
                           }}>
-                          
+
                           {/* Event Header */}
                           <div className="flex items-center gap-2 mb-2">
                             <span className="text-base">{getEventIcon(eventName)}</span>

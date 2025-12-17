@@ -49,7 +49,6 @@ export default function TableTennisPage() {
           const playerId = player.playerId.replace("TT",""); // Remove TT prefix if present
           const results = await getTableTennisAthleteResults(playerId || player.name);
           console.log("Fetched player results:", playerId, results);
-          console.log(JSON.stringify(results, null, 2));
           setPlayerResults(results);
         } catch (err: any) {
           console.error(err)

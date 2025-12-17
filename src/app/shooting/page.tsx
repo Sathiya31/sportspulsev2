@@ -252,7 +252,6 @@ export default function ShootingPage() {
       const playerId = player.playerId
       const results = await getShootingAthleteResults(playerId);
       console.log("Fetched player results:", playerId, results);
-      // console.log(JSON.stringify(results));
       setPlayerResults(results);
     } catch (err: any) {
       console.error(err)

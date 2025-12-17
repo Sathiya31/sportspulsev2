@@ -39,7 +39,6 @@ export default function BadmintonPage() {
     try {
       // Use flexible results fetcher for badminton
       const results = await getBadmintonAthleteResults(player.playerId || player.name);
-      console.log(JSON.stringify(results, null, 2));
       setPlayerResults(results);
     } catch (err: any) {
       console.error(err)
