@@ -24,11 +24,11 @@ export default function MatchCard({ match }: MatchCardProps) {
   const fallbackFlag = '/default-flag.png';
 
   return (
-    <div className="shadow-sm overflow-hidden hover:shadow-md transition-shadow"
+    <div className="shadow-sm overflow-hidden hover:shadow-md transition-shadow rounded-lg"
       style={{ background: "rgba(255,255,255,0.03)", border: "1px solid var(--border)" }}>
       
       {/* Compact Header */}
-      <div className="px-3 py-2 border-b flex justify-between items-center text-xs"
+      <div className="px-3 py-2 border-b flex justify-between items-center text-xs md:text-sm"
         style={{ background: "var(--glass)", borderColor: "var(--border)", color: "var(--muted)" }}>
         <span className="font-medium">{matchType}</span>
         <span>{formattedDate}</span>
@@ -37,7 +37,7 @@ export default function MatchCard({ match }: MatchCardProps) {
       {/* Match Content - More Compact */}
       <div className="p-2.5">
         {/* Team 1 - Horizontal Layout */}
-        <div className={`flex items-center justify-between mb-2 ${
+        <div className={`flex items-center justify-between mb-2 p-1 ${
           winner === 1 ? 'font-medium' : ''
         }`} style={{ color: winner === 1 ? "var(--foreground)" : "var(--muted-2)" }}>
           
@@ -51,7 +51,7 @@ export default function MatchCard({ match }: MatchCardProps) {
             />
             
             {/* Players - Inline on one line */}
-            <div className="text-xs md:text-sm truncate">
+            <div className="text-sm md:text-md truncate">
               {match?.team1?.players?.length > 0 ? (
                 <>
                   {match.team1.players.map((p: any, i: number) => (
@@ -61,7 +61,7 @@ export default function MatchCard({ match }: MatchCardProps) {
                     </span>
                   ))}
                   {match?.team1seed && (
-                    <span className="text-xs ml-1" style={{ color: "var(--muted-2)" }}>
+                    <span className="text-sm md:text-md ml-1" style={{ color: "var(--muted-2)" }}>
                       [{match.team1seed}]
                     </span>
                   )}
@@ -95,7 +95,7 @@ export default function MatchCard({ match }: MatchCardProps) {
         </div>
 
         {/* Team 2 - Same compact layout */}
-        <div className={`flex items-center justify-between ${
+        <div className={`flex items-center justify-between p-1 ${
           winner === 2 ? 'font-medium' : ''
         }`} style={{ color: winner === 2 ? "var(--foreground)" : "var(--muted)" }}>
           

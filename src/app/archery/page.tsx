@@ -113,12 +113,12 @@ const MatchCard = ({ match, isTeamMatch }: { match: MatchData; isTeamMatch: bool
       {/* Competitor 1 */}
       <div className="flex justify-between items-center mb-2">
         <div className="flex items-center gap-2 flex-1 min-w-0">
-          <span className="text-sm" style={{ color: "var(--muted)" }}>{getNOC(comp1)}</span>
-          <span className="text-sm font-medium truncate" 
+          <span className="text-sm md:text-md" style={{ color: "var(--muted)" }}>{getNOC(comp1)}</span>
+          <span className="text-sm md:text-md font-medium truncate" 
              style={{ color: comp1.WinLose ? "var(--foreground)" : "var(--muted-2)" }}>
             {getCompetitorName(comp1)}
             </span>
-          <span className="text-xs" style={{ color: "var(--muted-2)" }}>({comp1.QualRank})</span>
+          <span className="text-xs md:text-sm" style={{ color: "var(--muted-2)" }}>({comp1.QualRank})</span>
         </div>
         <div className={`text-lg font-bold ml-2`} style={{ color: comp1.WinLose ? "var(--success)" : "var(--muted)" }}>
           {comp1.Score}
@@ -129,12 +129,12 @@ const MatchCard = ({ match, isTeamMatch }: { match: MatchData; isTeamMatch: bool
       {/* Competitor 2 */}
       <div className="flex justify-between items-center">
         <div className="flex items-center gap-2 flex-1 min-w-0">
-          <span className="text-sm" style={{ color: "var(--muted)" }}>{getNOC(comp2)}</span>
-          <span className="text-sm font-medium truncate" 
+          <span className="text-sm md:text-md" style={{ color: "var(--muted)" }}>{getNOC(comp2)}</span>
+          <span className="text-sm md:text-md font-medium truncate" 
           style={{ color: comp2.WinLose ? "var(--foreground)" : "var(--muted-2)" }}>
             {getCompetitorName(comp2)}
             </span>
-          <span className="text-xs" style={{ color: "var(--muted-2)" }}>({comp2.QualRank})</span>
+          <span className="text-xs md:text-sm" style={{ color: "var(--muted-2)" }}>({comp2.QualRank})</span>
         </div>
         <div className={`text-lg font-bold ml-2`} style={{ color: comp2.WinLose ? "var(--success)" : "var(--muted)" }}>
           {comp2.Score}
@@ -154,7 +154,7 @@ const MatchCard = ({ match, isTeamMatch }: { match: MatchData; isTeamMatch: bool
             Set Points
           </button>
           {showSetPoints && (
-            <div className="mt-2 text-xs space-y-1" style={{ color: "var(--muted)" }}>
+            <div className="mt-2 text-xs md:text-sm space-y-1" style={{ color: "var(--muted)" }}>
               {comp1.SP && (
                 <div>
                   <span className="font-medium">{getCompetitorName(comp1).split(' ')[0]}:</span> {comp1.SP.replace(/\|/g, ' | ')}
