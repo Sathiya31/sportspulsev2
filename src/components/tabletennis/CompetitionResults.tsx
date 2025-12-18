@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ChevronDown, ChevronUp } from 'lucide-react';
+import { ChevronDown, ChevronUp, Search, AlertTriangle, TrendingUp, Calendar } from 'lucide-react';
 import { collection, query, where, getDocs } from 'firebase/firestore';
 import { db } from '@/config/firebase';
 
@@ -47,14 +47,14 @@ const firebaseService = {
 
 // Helper functions
 const getRoundOrder = (round: string): number => {
-  if (round.toLowerCase().includes('final') && !round.toLowerCase().includes('semi')
-  && !round.toLowerCase().includes('quarter')) return 7;
-  if (round.toLowerCase().includes('semi')) return 6;
-  if (round.toLowerCase().includes('quarter')) return 5;
-  if (round.includes('16')) return 4;
-  if (round.includes('32')) return 3;
-  if (round.includes('64')) return 2;
-  if (round.includes('128')) return 1;
+  const lowerRound = round.toLowerCase();
+  if (lowerRound.includes('final') && !lowerRound.includes('semi') && !lowerRound.includes('quarter')) return 7;
+  if (lowerRound.includes('semi')) return 6;
+  if (lowerRound.includes('quarter')) return 5;
+  if (lowerRound.includes('16')) return 4;
+  if (lowerRound.includes('32')) return 3;
+  if (lowerRound.includes('64')) return 2;
+  if (lowerRound.includes('128')) return 1;
   return 0;
 };
 
@@ -76,7 +76,6 @@ const CompetitionResults = ({ EventId, EventName }: { EventId: string, EventName
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [expandedRounds, setExpandedRounds] = useState<Set<string>>(new Set());
-  const [expandedEvents, setExpandedEvents] = useState<Set<string>>(new Set());
 
   useEffect(() => {
     const fetchResults = async () => {
@@ -88,16 +87,22 @@ const CompetitionResults = ({ EventId, EventName }: { EventId: string, EventName
         setMatches(results);
         console.log('Fetched competition results:', results);
         
-        // Auto-expand all round
+        // Smart expand: Only expand the most recent/important round
         if (results.length > 0) {
-          const rounds = new Set(results.map(m => m.round_name));
-          setExpandedRounds(rounds);
-          
-          // Auto-expand all events within rounds
-          const eventKeys = new Set(
-            results.map(m => `${m.round_name}-${m.event_name}`)
+          const groupedByRound = results.reduce((acc, match) => {
+            if (!acc[match.round_name]) acc[match.round_name] = [];
+            acc[match.round_name].push(match);
+            return acc;
+          }, {} as Record<string, Match[]>);
+
+          // Get highest priority round (final, semi, etc.)
+          const sortedRounds = Object.keys(groupedByRound).sort(
+            (a, b) => getRoundOrder(b) - getRoundOrder(a)
           );
-          setExpandedEvents(eventKeys);
+          
+          if (sortedRounds.length > 0) {
+            setExpandedRounds(new Set([sortedRounds[0]]));
+          }
         }
       } catch (err) {
         setError('Failed to fetch competition results');
@@ -124,134 +129,203 @@ const CompetitionResults = ({ EventId, EventName }: { EventId: string, EventName
     });
   };
 
-  const toggleEvent = (roundName: string, eventName: string) => {
-    const key = `${roundName}-${eventName}`;
-    setExpandedEvents(prev => {
-      const newSet = new Set(prev);
-      if (newSet.has(key)) {
-        newSet.delete(key);
-      } else {
-        newSet.add(key);
-      }
-      return newSet;
-    });
-  };
-
-  // Group by round first, then by event
+  // Group by round first, then by event - flatten structure
   const groupedByRound = matches.reduce((acc, match) => {
     if (!acc[match.round_name]) {
-      acc[match.round_name] = {};
+      acc[match.round_name] = [];
     }
-    if (!acc[match.round_name][match.event_name]) {
-      acc[match.round_name][match.event_name] = [];
-    }
-    acc[match.round_name][match.event_name].push(match);
+    acc[match.round_name].push(match);
     return acc;
-  }, {} as Record<string, Record<string, Match[]>>);
+  }, {} as Record<string, Match[]>);
 
   // Enhanced Match Card Component
   const CompactMatchCard = ({ match }: { match: Match }) => {
     const { sets } = parseSetScores(match.result);
     
     return (
-      <div className="border hover:shadow-md transition-all duration-200"
+      <div 
+        className="border hover:shadow-lg transition-all duration-200 hover:scale-[1.01]"
         style={{ 
           background: "var(--surface)", 
           borderColor: "var(--border)",
-          padding: "var(--space-md)",
           borderRadius: "var(--radius-sm)"
-        }}>
+        }}
+      >
+        {/* Event Name Badge */}
+        <div className="flex justify-between px-3 pt-2 pb-1">
+          <span 
+            className="text-xs font-semibold px-2 py-1 rounded inline-block"
+            style={{ 
+              background: "var(--glass)",
+              color: "var(--muted)"
+            }}
+          >
+            {match.event_name}
+          </span>
+          {match.date && (
+              <span className="text-xs shrink-0 flex items-center gap-1">
+                <Calendar size={10} />
+                {match.date}
+              </span>
+          )}
+        </div>
 
         {/* Competitors */}
-        <div className="space-y-2">
-          {match.competitors.map((competitor) => (
-            <div key={competitor.code}
-              className="flex items-center justify-between gap-3 p-2.5 transition-colors"
+        <div className="px-3 pb-3 space-y-2">
+          {match.competitors.map((competitor, idx) => (
+            <div 
+              key={competitor.code}
+              className="flex items-center justify-between gap-2 p-2 transition-all"
               style={{
-                background: competitor.win_loss === 'W' ? "var(--success-bg)" : "var(--glass)",
+                background: competitor.win_loss === 'W' 
+                  ? "linear-gradient(90deg, var(--success-bg), transparent)"
+                  : "var(--glass)",
                 borderLeft: `3px solid ${competitor.win_loss === 'W' ? "var(--success)" : "var(--border)"}`,
                 borderRadius: "var(--radius-sm)"
-              }}>
+              }}
+            >
               {/* Player Info */}
               <div className="flex items-center gap-2 flex-1 min-w-0">
-                <span className="text-xs px-2 py-1 font-medium whitespace-nowrap overflow-hidden text-ellipsis"
+                <span 
+                  className="text-xs px-1.5 py-0.5 rounded shrink-0"
                   style={{ 
-                    background: "var(--muted)", 
-                    color: "var(--surface)",
-                    borderRadius: "var(--radius-sm)",
-                    maxWidth: 80,
-                    whiteSpace: 'nowrap',
-                    overflow: 'hidden',
-                    textOverflow: 'ellipsis'
-                  }}>
+                    background: "var(--glass-strong)",
+                  }}
+                >
                   {competitor.organization}
                 </span>
-                <span className="text-sm font-medium truncate overflow-hidden text-ellipsis"
+                <span 
+                  className="text-xs font-medium truncate"
                   style={{ 
-                    color: competitor.win_loss === 'W' ? "var(--success)" : "var(--foreground)",
-                    maxWidth: 180,
-                    whiteSpace: 'nowrap',
-                    overflow: 'hidden',
-                    textOverflow: 'ellipsis'
-                  }}>
-                  {competitor.team_name.replace(/\//g, ' / ')}
+                    color: competitor.win_loss === 'W' ? "var(--success)" : "var(--muted)"
+                  }}
+                >
+                  {competitor.team_name?.replace(/\//g, ' / ') || 'Unknown'}
                 </span>
                 {competitor.seed > 0 && (
-                  <span className="text-xs font-medium" style={{ color: "var(--muted)" }}>
-                    [{competitor.seed}]
+                  <span 
+                    className="text-[10px] px-1.5 py-0.5 rounded-full shrink-0"
+                    style={{ 
+                      background: "var(--glass-strong)",
+                      color: "var(--muted)"
+                    }}
+                  >
+                    #{competitor.seed}
                   </span>
                 )}
               </div>
+
               {/* Score */}
-              <div className="flex items-center gap-2">
-                <span className="text-xl font-bold tabular-nums"
-                  style={{ color: competitor.win_loss === 'W' ? "var(--success)" : "var(--muted)" }}>
+              <div className="flex items-center gap-1.5">
+                <span 
+                  className={`font-bold tabular-nums transition-all ${
+                    competitor.win_loss === 'W' ? 'text-xl' : 'text-base'
+                  }`}
+                  style={{ 
+                    color: competitor.win_loss === 'W' ? "var(--success)" : "var(--muted)"
+                  }}
+                >
                   {competitor.result}
                 </span>
                 {competitor.win_loss === 'W' && (
-                  <span style={{ color: "var(--success)" }}>✓</span>
+                  <div 
+                    className="w-5 h-5 rounded-full flex items-center justify-center shrink-0"
+                    style={{ background: "var(--success)" }}
+                  >
+                    <span className="text-white text-xs font-bold">✓</span>
+                  </div>
                 )}
               </div>
             </div>
           ))}
         </div>
 
-        {/* Set Scores */}
+        {/* Set Scores & Metadata */}
         {sets && (
-          <div className="mt-3 pt-3 border-t flex justify-between items-center" style={{ borderColor: "var(--border)" }}>
-            <span className="text-xs font-mono px-3 py-1.5 inline-block"
-              style={{ 
-                background: "var(--glass)", 
-                color: "var(--muted)",
-                borderRadius: "var(--radius-sm)"
-              }}>
-              <b>Sets: </b> {sets}
-            </span>
-            {/* Date/Time */}
-          <span className="text-xs" style={{ color: "var(--muted)" }}>
-            {match.date}
-          </span>
+          <div 
+            className="px-3 pb-2 pt-0 flex justify-center items-center gap-2 text-[10px]"
+            style={{ color: "var(--muted)" }}
+          >
+            {sets && (
+              <span className="font-mono truncate">
+                <span className="font-bold">Sets:</span> {sets}
+              </span>
+            )}
           </div>
         )}
       </div>
     );
   };
 
-  const LoadingSpinner = () => (
-    <div className="flex items-center justify-center py-12">
-      <div className="animate-spin rounded-full h-8 w-8 border-b-2" style={{ borderColor: "var(--primary)" }}></div>
-      <span className="ml-3 text-sm" style={{ color: "var(--muted)" }}>Loading matches...</span>
+  // Loading Skeleton
+  const LoadingSkeleton = () => (
+    <div className="space-y-4">
+      {[...Array(3)].map((_, i) => (
+        <div 
+          key={i}
+          className="relative overflow-hidden rounded-xl h-32"
+          style={{ background: "var(--surface)" }}
+        >
+          <div 
+            className="absolute inset-0 -translate-x-full animate-[shimmer_2s_infinite]"
+            style={{
+              background: "linear-gradient(90deg, transparent, var(--glass-strong), transparent)"
+            }}
+          />
+        </div>
+      ))}
+    </div>
+  );
+
+  // Empty State Component
+  const EmptyState = ({ 
+    icon: Icon, 
+    title, 
+    description, 
+    action 
+  }: { 
+    icon: any; 
+    title: string; 
+    description: string; 
+    action?: { label: string; onClick: () => void }
+  }) => (
+    <div className="flex flex-col items-center justify-center py-16 px-4">
+      <div 
+        className="w-20 h-20 rounded-full flex items-center justify-center mb-6"
+        style={{ background: "var(--glass-strong)" }}
+      >
+        <Icon size={40} style={{ color: "var(--primary)" }} />
+      </div>
+      <h3 className="text-lg font-bold mb-2 text-center" style={{ color: "var(--foreground)" }}>
+        {title}
+      </h3>
+      <p className="text-sm text-center mb-6 max-w-md" style={{ color: "var(--muted)" }}>
+        {description}
+      </p>
+      {action && (
+        <button 
+          onClick={action.onClick}
+          className="px-6 py-3 rounded-lg font-semibold transition-all hover:scale-105"
+          style={{
+            background: "var(--primary)",
+            color: "#0E1A12",
+            boxShadow: "0 4px 14px rgba(76, 175, 80, 0.25)"
+          }}
+        >
+          {action.label}
+        </button>
+      )}
     </div>
   );
 
   // Show placeholder when no competition is selected
   if (!EventId) {
     return (
-      <div className="text-center py-12">
-        <div className="text-4xl mb-4">🏓</div>
-        <h2 className="text-lg font-bold mb-2" style={{ color: "var(--muted)" }}>No Competition Selected</h2>
-        <p className="text-sm" style={{ color: "var(--muted-2)" }}>Select an event from the calendar to view results</p>
-      </div>
+      <EmptyState
+        icon={Search}
+        title="No Competition Selected"
+        description="Select an event from the calendar to view match results and standings"
+      />
     );
   }
 
@@ -259,151 +333,110 @@ const CompetitionResults = ({ EventId, EventName }: { EventId: string, EventName
     return (
       <div>
         <div className="mb-6">
-          <h2 className="text-lg md:text-xl font-bold" style={{ color: "var(--primary)" }}>
+          <h2 className="text-base md:text-lg font-bold" style={{ color: "var(--primary)" }}>
             {EventName}
           </h2>
+          <p className="text-xs mt-1" style={{ color: "var(--muted)" }}>Loading results...</p>
         </div>
-        <LoadingSpinner />
+        <LoadingSkeleton />
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="text-center py-12">
-        <div className="text-3xl mb-3" style={{ color: "var(--danger)" }}>⚠️</div>
-        <h2 className="text-base font-bold mb-2" style={{ color: "var(--danger)" }}>Error Loading Results</h2>
-        <p className="text-sm mb-4" style={{ color: "var(--muted)" }}>{error}</p>
-        <button 
-          onClick={() => window.location.reload()} 
-          className="px-4 py-2 text-sm transition-opacity hover:opacity-90"
-          style={{ 
-            background: "var(--primary)", 
-            color: "white",
-            borderRadius: "var(--radius)"
-          }}
-        >
-          Retry
-        </button>
-      </div>
+      <EmptyState
+        icon={AlertTriangle}
+        title="Error Loading Results"
+        description={error}
+        action={{
+          label: "Retry",
+          onClick: () => window.location.reload()
+        }}
+      />
     );
   }
 
   if (matches.length === 0) {
     return (
-      <div className="text-center py-12">
-        <div className="text-4xl mb-3">📊</div>
-        <h3 className="text-base font-semibold mb-2" style={{ color: "var(--muted)" }}>No matches found</h3>
-        <p className="text-sm" style={{ color: "var(--muted-2)" }}>No match results available for this competition</p>
-      </div>
+      <EmptyState
+        icon={TrendingUp}
+        title="No Matches Found"
+        description="No match results are available for this competition yet. Check back later for updates."
+      />
     );
   }
 
   return (
     <div>
       {/* Header */}
-      <div className="mb-6 pb-4 border-b" style={{ borderColor: "var(--border)" }}>
-        <h2 className="text-lg md:text-xl font-bold mb-2" style={{ color: "var(--primary)" }}>
+      <div className="mb-4 pb-3 border-b" style={{ borderColor: "var(--border)" }}>
+        <h2 className="text-base md:text-lg font-bold mb-1" style={{ color: "var(--primary)" }}>
           {EventName}
         </h2>
-        <div className="flex flex-wrap gap-3 text-xs" style={{ color: "var(--muted)" }}>
-          <span>{matches.length} {matches.length === 1 ? 'match' : 'matches'}</span>
-          <span>•</span>
-          <span>{Object.keys(groupedByRound).length} {Object.keys(groupedByRound).length === 1 ? 'round' : 'rounds'}</span>
-        </div>
+        <p className="text-xs" style={{ color: "var(--muted)" }}>
+          {matches.length} {matches.length === 1 ? 'match' : 'matches'} • {Object.keys(groupedByRound).length} {Object.keys(groupedByRound).length === 1 ? 'round' : 'rounds'}
+        </p>
       </div>
 
-      {/* Results grouped by Round → Events */}
-      <div className="space-y-6">
+      {/* Results grouped by Round (flat structure) */}
+      <div className="space-y-4">
         {Object.entries(groupedByRound)
           .sort(([a], [b]) => getRoundOrder(b) - getRoundOrder(a))
-          .map(([roundName, events]) => {
+          .map(([roundName, roundMatches]) => {
             const isRoundExpanded = expandedRounds.has(roundName);
-            const totalMatches = Object.values(events).reduce((sum, matches) => sum + matches.length, 0);
 
             return (
-              <div key={roundName} className="shadow-lg overflow-hidden"
+              <div 
+                key={roundName} 
+                className="overflow-hidden shadow-lg"
                 style={{ 
                   background: "var(--surface)", 
                   border: "1px solid var(--border)",
                   borderRadius: "var(--radius)"
-                }}>
-                
+                }}
+              >
                 {/* Round Header */}
                 <button
                   onClick={() => toggleRound(roundName)}
-                  className="w-full p-4 md:p-5 text-left hover:opacity-90 transition-opacity"
+                  className="w-full p-3 text-left hover:opacity-90 transition-opacity"
                   style={{ background: "var(--glass)" }}
                 >
-                  <div className="flex items-center justify-between mb-2">
-                    <h3 className="text-base md:text-lg font-bold" style={{ color: "var(--foreground)" }}>
-                      {roundName}
-                    </h3>
-                    {isRoundExpanded ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
-                  </div>
-                  <div className="flex items-center gap-3 text-xs md:text-sm" style={{ color: "var(--muted)" }}>
-                    <span>{totalMatches} {totalMatches === 1 ? 'match' : 'matches'}</span>
-                    <span>•</span>
-                    <span>{Object.keys(events).length} {Object.keys(events).length === 1 ? 'event' : 'events'}</span>
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <h3 className="text-sm font-bold mb-1" style={{ color: "var(--foreground)" }}>
+                        {roundName}
+                      </h3>
+                      <p className="text-xs" style={{ color: "var(--muted)" }}>
+                        {roundMatches.length} {roundMatches.length === 1 ? 'match' : 'matches'}
+                      </p>
+                    </div>
+                    {isRoundExpanded ? (
+                      <ChevronUp size={18} style={{ color: "var(--foreground)" }} />
+                    ) : (
+                      <ChevronDown size={18} style={{ color: "var(--foreground)" }} />
+                    )}
                   </div>
                 </button>
 
-                {/* Events within Round */}
+                {/* Matches - Flat List */}
                 {isRoundExpanded && (
-                  <div className="p-1 md:p-5 pt-0 space-y-4">
-                    {Object.entries(events)
-                      .sort(([a], [b]) => a.localeCompare(b))
-                      .map(([eventName, eventMatches]) => {
-                        const eventKey = `${roundName}-${eventName}`;
-                        const isEventExpanded = expandedEvents.has(eventKey);
-
-                        return (
-                          <div key={eventName} className="overflow-hidden"
-                            style={{ 
-                              background: "var(--background)", 
-                              border: "1px solid var(--border)",
-                              borderRadius: "var(--radius-sm)"
-                            }}>
-                            
-                            {/* Event Header */}
-                            <button
-                              onClick={() => toggleEvent(roundName, eventName)}
-                              className="w-full p-3 md:p-4 flex items-center justify-between hover:bg-opacity-80 transition-all"
-                              style={{ background: "var(--glass)" }}
-                            >
-                              <div className="flex items-center gap-2">
-                                {isEventExpanded ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
-                                <h4 className="text-sm md:text-base font-semibold" style={{ color: "var(--foreground)" }}>
-                                  {eventName}
-                                </h4>
-                              </div>
-                              <span className="text-xs px-2.5 py-1 font-medium"
-                                style={{ 
-                                  background: "var(--surface)", 
-                                  color: "var(--muted)",
-                                  borderRadius: "var(--radius-full)"
-                                }}>
-                                {eventMatches.length} {eventMatches.length === 1 ? 'match' : 'matches'}
-                              </span>
-                            </button>
-
-                            {/* Matches */}
-                            {isEventExpanded && (
-                              <div className="p-1 md:p-4 grid gap-4 md:grid-cols-1 lg:grid-cols-2">
-                                {eventMatches.map((match) => (
-                                  <CompactMatchCard key={match.match_id} match={match} />
-                                ))}
-                              </div>
-                            )}
-                          </div>
-                        );
-                      })}
+                  <div className="p-3 grid gap-3 grid-cols-1 md:grid-cols-2">
+                    {roundMatches.map((match) => (
+                      <CompactMatchCard key={match.match_id} match={match} />
+                    ))}
                   </div>
                 )}
               </div>
             );
           })}
       </div>
+
+      <style>{`
+        @keyframes shimmer {
+          100% { transform: translateX(100%); }
+        }
+      `}</style>
     </div>
   );
 };
