@@ -51,7 +51,7 @@ export default function MatchCard({ match }: MatchCardProps) {
             />
             
             {/* Players - Inline on one line */}
-            <div className="text-sm md:text-base truncate">
+            <div className="text-sm xl:text-base truncate">
               {match?.team1?.players?.length > 0 ? (
                 <>
                   {match.team1.players.map((p: any, i: number) => (
@@ -61,7 +61,7 @@ export default function MatchCard({ match }: MatchCardProps) {
                     </span>
                   ))}
                   {match?.team1seed && (
-                    <span className="text-sm md:text-base ml-1" style={{ color: "var(--muted-2)" }}>
+                    <span className="text-sm xl:text-base ml-1" style={{ color: "var(--muted-2)" }}>
                       [{match.team1seed}]
                     </span>
                   )}
@@ -82,7 +82,7 @@ export default function MatchCard({ match }: MatchCardProps) {
               return (
                 <span 
                   key={i}
-                  className="px-1.5 py-0.5 text-sm font-semibold tabular-nums"
+                  className="px-1.5 py-0.5 text-sm xl:text-base font-semibold tabular-nums"
                   style={{ 
                     color: homeScore > awayScore ? "var(--primary)" : "var(--muted-2)"
                   }}
@@ -107,7 +107,7 @@ export default function MatchCard({ match }: MatchCardProps) {
               onError={(e: any) => { e.target.src = fallbackFlag; }}
             />
             
-            <div className="text-xs md:text-sm truncate">
+            <div className="text-sm xl:text-base truncate">
               {match?.team2?.players?.length > 0 ? (
                 <>
                   {match.team2.players.map((p: any, i: number) => (
@@ -117,7 +117,7 @@ export default function MatchCard({ match }: MatchCardProps) {
                     </span>
                   ))}
                   {match?.team2seed && (
-                    <span className="text-xs ml-1" style={{ color: "var(--muted-2)" }}>
+                    <span className="text-sm xl:text-base ml-1" style={{ color: "var(--muted-2)" }}>
                       [{match.team2seed}]
                     </span>
                   )}
@@ -137,7 +137,7 @@ export default function MatchCard({ match }: MatchCardProps) {
               return (
                 <span 
                   key={i}
-                  className="px-1.5 py-0.5 text-sm font-semibold tabular-nums"
+                  className="px-1.5 py-0.5 text-sm xl:text-base font-semibold tabular-nums"
                   style={{ 
                     color: awayScore > homeScore ? "var(--primary)" : "var(--muted-2)"
                   }}

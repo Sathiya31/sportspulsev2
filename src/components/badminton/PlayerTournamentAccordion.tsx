@@ -1,4 +1,5 @@
 import { useState, useMemo } from "react";
+import { ChevronRight } from "lucide-react";
 import { Match } from "@/types/badminton";
 import { roundNames } from "./RoundGroup";
 
@@ -115,9 +116,7 @@ export default function AthleteTournamentAccordion({ results, selectedPlayer }: 
                   <span className="px-2 py-1 rounded-full text-xs font-semibold shadow" style={{ background: "var(--primary)", color: "var(--surface)" }}>
                     {roundNames[t.best?.roundName] || "Qualification"}
                   </span>
-                  <svg className={`w-4 h-4 transition-transform ${open[t.name] ? "rotate-90" : ""}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                  </svg>
+                  <ChevronRight className={`w-4 h-4 transition-transform ${open[t.name] ? "rotate-90" : ""}`} />
                 </span>
               </button>
               {open[t.name] && (

@@ -6,6 +6,7 @@ import { collection, query, where, getDocs } from 'firebase/firestore';
 import { db } from '@/config/firebase';
 import Button from '@/components/ui/Button';
 import { ShootingEvent } from '@/shootingCalendar';
+import {getMedalIcon, getMedalStyle} from '@/utils/common';
 
 export interface SeriesScores {
   series_1: string;
@@ -444,7 +445,7 @@ const ShootingResults = ({ selectedCompetition }: { selectedCompetition: Shootin
         <div className="flex items-center gap-3">
           <div className="flex items-center justify-center w-9 h-9 rounded-full font-bold text-sm"
             style={getMedalStyle(result.athlete_result.rank)}>
-            {result.athlete_result.rank}
+            {getMedalIcon(result.athlete_result.rank) || result.athlete_result.rank}
           </div>
           <div>
             <h3 className="font-bold text-sm md:text-base" style={{ color: "var(--foreground)" }}>

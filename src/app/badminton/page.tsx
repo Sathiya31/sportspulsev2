@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useState, useRef } from "react";
+import { Menu, X } from "lucide-react";
 import EventCard from "@/components/ui/EventCard";
 import { useSession } from "next-auth/react";
 import { isAdmin } from "@/config/auth";
@@ -188,18 +189,18 @@ export default function BadmintonPage() {
       {/* Mobile Overlay */}
       {isMobileMenuOpen && (
         <div
-          className="md:hidden fixed inset-0 bg-black bg-opacity-50 z-30"
+          className="md:hidden fixed inset-0 bg-black bg-opacity-50 z-50"
           onClick={() => setIsMobileMenuOpen(false)}
         ></div>
       )}
 
       {/* Consistent Calendar Sidebar */}
       <aside className={`
-        fixed md:static inset-y-0 left-0 z-40
+        fixed md:static inset-y-0 left-0 z-50
         w-80 md:w-96
-        transform transition-transform duration-300 ease-in-out
+          transform transition-transform duration-300 ease-in-out
         ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}
-        bg-[var(--surface)] border-r border-[var(--border)] p-4 overflow-y-auto
+          bg-[var(--surface)] border-r border-[var(--border)] p-4 overflow-y-auto
       `}>
         <div className="mb-4">
           <label className="block text-sm font-semibold mb-1" style={{ color: "var(--muted)" }}>Filter by Month</label>
@@ -235,27 +236,22 @@ export default function BadmintonPage() {
 
       {/* Right panel: event details and results */}
       <main className="flex-1 p-4 md:p-8" style={{ background: "var(--background)" }}>
-        {/* Mobile menu button */}
-        <button
-          className="md:hidden fixed top-15 right-4 z-50 p-2 rounded-lg shadow-lg"
-          style={{ background: "var(--surface)", color: "var(--foreground)" }}
-          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-        >
-          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            {isMobileMenuOpen ? (
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-            ) : (
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-            )}
-          </svg>
-        </button>
-
         <div className="mb-4">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3 md:gap-4">
-            <h1 className="text-xl font-bold" style={{ color: "var(--foreground)" }}>
-              Badminton
-            </h1>
-            <div className="w-full md:w-auto md:max-w-xs">
+            <div className="flex items-center justify-between w-full md:w-auto">
+              <h1 className="text-xl font-bold" style={{ color: "var(--foreground)" }}>
+                Badminton
+              </h1>
+              <button
+                className="md:hidden ml-2 p-2 rounded-lg shadow-lg"
+                style={{ background: "var(--surface)", color: "var(--foreground)" }}
+                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                aria-label="Open calendar menu"
+              >
+                {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+              </button>
+            </div>
+            <div className="w-full md:w-auto md:max-w-xs mt-2 md:mt-0">
               <PlayerSearchBar
                 sport="badminton"
                 onSelect={handlePlayerSelect}

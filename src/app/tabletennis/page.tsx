@@ -1,6 +1,11 @@
 "use client";
+import Head from "next/head";
+// SEO metadata
+const pageTitle = "Table Tennis Results & News | Sports Pulse";
+const pageDescription = "Latest Indian Table Tennis results, tournament schedules, athlete stats, and news. Follow live updates and in-depth coverage on Sports Pulse.";
 import CompetitionResults from "@/components/tabletennis/CompetitionResults";
 import { useEffect, useState } from "react";
+import { Menu, X } from "lucide-react";
 import EventCard from "@/components/ui/EventCard";
 import Button from "@/components/ui/Button";
 import { useSession } from "next-auth/react";
@@ -116,7 +121,29 @@ export default function TableTennisPage() {
   const userIsAdmin = isAdmin(session?.user?.email);
 
   return (
-    <div className="flex flex-col md:flex-row min-h-screen" style={{ background: "var(--background)", color: "var(--foreground)" }}>
+    <>
+      <Head>
+        <title>{pageTitle}</title>
+        <meta name="description" content={pageDescription} />
+        <meta property="og:title" content={pageTitle} />
+        <meta property="og:description" content={pageDescription} />
+        <meta property="og:image" content="https://sportzpulse.com/og-image.png" />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+        <meta property="og:url" content="https://sportzpulse.com/tabletennis" />
+        <script type="application/ld+json">
+          {`
+            {
+              "@context": "https://schema.org",
+              "@type": "WebPage",
+              "name": "${pageTitle}",
+              "description": "${pageDescription}",
+              "url": "https://sportzpulse.com/tabletennis"
+            }
+          `}
+        </script>
+      </Head>
+      <div className="flex flex-col md:flex-row min-h-screen" style={{ background: "var(--background)", color: "var(--foreground)" }}>
       {/* Mobile Overlay */}
       {isMobileMenuOpen && (
         <div
@@ -127,7 +154,7 @@ export default function TableTennisPage() {
 
       {/* Consistent Calendar Sidebar */}
       <aside className={`
-        fixed md:static inset-y-0 left-0 z-40
+        fixed md:static inset-y-0 left-0 z-50
         w-80 md:w-96
         transform transition-transform duration-300 ease-in-out
         ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}
@@ -185,14 +212,9 @@ export default function TableTennisPage() {
           className="md:hidden fixed top-20 right-4 z-50 p-2 rounded-lg shadow-lg"
           style={{ background: "var(--surface)", color: "var(--foreground)" }}
           onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          aria-label="Open calendar menu"
         >
-          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            {isMobileMenuOpen ? (
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-            ) : (
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-            )}
-          </svg>
+          {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
         </button>
 
         <div className="mb-4">
@@ -318,5 +340,6 @@ export default function TableTennisPage() {
         )}
       </main>
     </div>
+    </>
   );
 }

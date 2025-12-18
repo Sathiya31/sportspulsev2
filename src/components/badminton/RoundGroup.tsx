@@ -1,6 +1,7 @@
 import { Match } from '@/types/badminton';
 import MatchCard from './MatchCard';
 import { useState } from 'react';
+import { ChevronRight } from 'lucide-react';
 
 interface RoundGroupProps {
   name: string;
@@ -33,14 +34,7 @@ export default function RoundGroup({ name, matches }: RoundGroupProps) {
       >
         <h3 className="text-base font-medium flex items-center gap-2" 
           style={{ color: "var(--foreground)" }}>
-          <svg
-            className={`w-4 h-4 transform transition-transform ${isExpanded ? 'rotate-90' : ''}`}
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-          </svg>
+          <ChevronRight className={`w-4 h-4 transform transition-transform ${isExpanded ? 'rotate-90' : ''}`} />
           {displayName}
         </h3>
         <span className="text-xs px-2 py-1 rounded-full" 
@@ -50,7 +44,7 @@ export default function RoundGroup({ name, matches }: RoundGroupProps) {
       </button>
       
       {isExpanded && (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-3">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-2 md:gap-3">
           {matches.map((match) => (
             <MatchCard key={match.id} match={match} />
           ))}

@@ -2,6 +2,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
+import { Menu } from "lucide-react";
 import SignInButton from "./auth/SignInButton";
 
 const navItems = [
@@ -26,8 +27,8 @@ export default function Toolbar() {
                         {/* SportsPulse Logo Image */}
                         <img
                         src="/logo-dark.png"
-                        alt="SportsPulse Logo"
-                        className="h-12 w-auto mr-4 object-contain"
+                        alt="SportsPulse"
+                        className="h-12 w-auto mr-4 p-2 object-contain"
                         />
                     </span>
                 </Link>
@@ -56,11 +57,7 @@ export default function Toolbar() {
                     onClick={() => setMenuOpen((open) => !open)}
                     aria-label="Toggle navigation"
                 >
-                    <svg width="28" height="28" fill="none" viewBox="0 0 24 24">
-                        <rect y="5" width="24" height="2" rx="1" fill="#333" />
-                        <rect y="11" width="24" height="2" rx="1" fill="#333" />
-                        <rect y="17" width="24" height="2" rx="1" fill="#333" />
-                    </svg>
+                    <Menu size={28} />
                 </button>
             </div>
             {/* Mobile Nav */}

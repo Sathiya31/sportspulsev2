@@ -88,7 +88,7 @@ const CompetitionResults = ({ EventId, EventName }: { EventId: string, EventName
         setMatches(results);
         console.log('Fetched competition results:', results);
         
-        // Auto-expand all rounds
+        // Auto-expand all round
         if (results.length > 0) {
           const rounds = new Set(results.map(m => m.round_name));
           setExpandedRounds(rounds);
@@ -172,19 +172,28 @@ const CompetitionResults = ({ EventId, EventName }: { EventId: string, EventName
                 borderLeft: `3px solid ${competitor.win_loss === 'W' ? "var(--success)" : "var(--border)"}`,
                 borderRadius: "var(--radius-sm)"
               }}>
-              
               {/* Player Info */}
               <div className="flex items-center gap-2 flex-1 min-w-0">
-                <span className="text-xs px-2 py-1 font-medium whitespace-nowrap"
+                <span className="text-xs px-2 py-1 font-medium whitespace-nowrap overflow-hidden text-ellipsis"
                   style={{ 
                     background: "var(--muted)", 
                     color: "var(--surface)",
-                    borderRadius: "var(--radius-sm)"
+                    borderRadius: "var(--radius-sm)",
+                    maxWidth: 80,
+                    whiteSpace: 'nowrap',
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis'
                   }}>
                   {competitor.organization}
                 </span>
-                <span className="text-sm font-medium truncate"
-                  style={{ color: competitor.win_loss === 'W' ? "var(--success)" : "var(--foreground)" }}>
+                <span className="text-sm font-medium truncate overflow-hidden text-ellipsis"
+                  style={{ 
+                    color: competitor.win_loss === 'W' ? "var(--success)" : "var(--foreground)",
+                    maxWidth: 180,
+                    whiteSpace: 'nowrap',
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis'
+                  }}>
                   {competitor.team_name.replace(/\//g, ' / ')}
                 </span>
                 {competitor.seed > 0 && (
@@ -193,7 +202,6 @@ const CompetitionResults = ({ EventId, EventName }: { EventId: string, EventName
                   </span>
                 )}
               </div>
-              
               {/* Score */}
               <div className="flex items-center gap-2">
                 <span className="text-xl font-bold tabular-nums"
@@ -342,7 +350,7 @@ const CompetitionResults = ({ EventId, EventName }: { EventId: string, EventName
 
                 {/* Events within Round */}
                 {isRoundExpanded && (
-                  <div className="p-4 md:p-5 pt-0 space-y-4">
+                  <div className="p-1 md:p-5 pt-0 space-y-4">
                     {Object.entries(events)
                       .sort(([a], [b]) => a.localeCompare(b))
                       .map(([eventName, eventMatches]) => {
@@ -381,7 +389,7 @@ const CompetitionResults = ({ EventId, EventName }: { EventId: string, EventName
 
                             {/* Matches */}
                             {isEventExpanded && (
-                              <div className="p-3 md:p-4 grid gap-4 md:grid-cols-1 lg:grid-cols-2">
+                              <div className="p-1 md:p-4 grid gap-4 md:grid-cols-1 lg:grid-cols-2">
                                 {eventMatches.map((match) => (
                                   <CompactMatchCard key={match.match_id} match={match} />
                                 ))}

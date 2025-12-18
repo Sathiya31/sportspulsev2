@@ -1,11 +1,57 @@
 
 import React from "react";
+import { Metadata } from "next";
+import Head from "next/head";
+export const metadata: Metadata = {
+  title: "About Sports Pulse | Indian Sports News & Team",
+  description: "Meet the team behind Sports Pulse. Learn about our mission, vision, and commitment to delivering the best Indian sports news, results, and stories.",
+  openGraph: {
+    title: "About Sports Pulse | Indian Sports News & Team",
+    description: "Meet the team behind Sports Pulse. Learn about our mission, vision, and commitment to delivering the best Indian sports news, results, and stories.",
+    url: "https://sportzpulse.com/about",
+    images: [
+      {
+        url: "https://sportzpulse.com/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "SportsPulse Open Graph Image"
+      }
+    ]
+  }
+};
 import { Users, Target, Newspaper, Mail, Instagram, Twitter } from "lucide-react";
 
 const About = () => {
   return (
-    <section style={{ background: "var(--background)", color: "var(--foreground)", minHeight: "100vh", padding: "4rem 1.5rem" }}>
-      <div style={{ maxWidth: 900, margin: "0 auto", gap: "2.5rem", display: "flex", flexDirection: "column" }}>
+    <>
+      <Head>
+        <title>About Sports Pulse | Indian Sports News &amp; Team</title>
+        <meta name="description" content="Meet the team behind Sports Pulse. Learn about our mission, vision, and commitment to delivering the best Indian sports news, results, and stories." />
+        <meta property="og:title" content="About Sports Pulse | Indian Sports News &amp; Team" />
+        <meta property="og:description" content="Meet the team behind Sports Pulse. Learn about our mission, vision, and commitment to delivering the best Indian sports news, results, and stories." />
+        <meta property="og:url" content="https://sportzpulse.com/about" />
+        <meta property="og:image" content="https://sportzpulse.com/og-image.png" />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+        <script type="application/ld+json">
+          {`
+            {
+              "@context": "https://schema.org",
+              "@type": "Organization",
+              "name": "Sports Pulse",
+              "url": "https://sportzpulse.com/about",
+              "logo": "https://sportzpulse.com/og-image.png",
+              "sameAs": [
+                "https://instagram.com/indian_sports_pulse",
+                "https://twitter.com/indian_sports_pulse"
+              ],
+              "description": "Meet the team behind Sports Pulse. Learn about our mission, vision, and commitment to delivering the best Indian sports news, results, and stories."
+            }
+          `}
+        </script>
+      </Head>
+      <section style={{ background: "var(--background)", color: "var(--foreground)", minHeight: "100vh", padding: "4rem 1.5rem" }}>
+        <div style={{ maxWidth: 900, margin: "0 auto", gap: "2.5rem", display: "flex", flexDirection: "column" }}>
         {/* Header */}
         <header style={{ textAlign: "center", gap: "1rem", display: "flex", flexDirection: "column" }}>
           <h1 style={{ fontSize: "2.5rem", fontWeight: 700, color: "var(--primary)" }}>
@@ -113,8 +159,9 @@ const About = () => {
             </div>
           </div>
         </section>
-      </div>
-    </section>
+        </div>
+      </section>
+    </>
   );
 };
 

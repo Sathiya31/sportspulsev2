@@ -11,6 +11,7 @@ import { ShootingEvent } from "@/shootingCalendar";
 import PlayerSearchBar from "@/components/badminton/PlayerSearchBar";
 import { getShootingAthleteResults } from "@/services/athleteService";
 import AthleteResultsDisplay from "@/components/shooting/AthleteResults";
+import Head from "next/head";
 
 // Utility to check if an event is live
 
@@ -266,6 +267,22 @@ export default function ShootingPage() {
   }
 
   return (
+    <>
+      <Head>
+        <title>Shooting Results & News | Sports Pulse</title>
+        <meta name="description" content="Latest Indian Shooting results, tournament schedules, athlete stats, and news. Follow live updates and in-depth coverage on Sports Pulse." />
+        <meta property="og:title" content="Shooting Results & News | Sports Pulse" />
+        <meta property="og:description" content="Latest Indian Shooting results, tournament schedules, athlete stats, and news. Follow live updates and in-depth coverage on Sports Pulse." />
+        <meta property="og:image" content="https://sportzpulse.com/og-image.png" />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+        <meta property="og:url" content="https://sportzpulse.com/shooting" />
+        <script type="application/ld+json">
+          {`
+            {"@context": "https://schema.org","@type": "WebPage","name": "Shooting Results & News | Sports Pulse","description": "Latest Indian Shooting results, tournament schedules, athlete stats, and news. Follow live updates and in-depth coverage on Sports Pulse.","url": "https://sportzpulse.com/shooting"}
+          `}
+        </script>
+      </Head>
     <div className="min-h-screen" style={{ background: "var(--background)", color: "var(--foreground)" }}>
       <div className="grid grid-cols-1 lg:grid-cols-3">
         {/* Desktop Calendar - Left Side */}
@@ -418,5 +435,6 @@ export default function ShootingPage() {
         </div>
       </div>
     </div>
+    </>
   );
 }

@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { ChevronDown, ChevronUp, ArrowLeft, Trophy, Target, Award } from 'lucide-react';
-import { toCapitalizedCase } from '@/utils/common';
+import { getMedalIcon, getMedalStyle, toCapitalizedCase } from '@/utils/common';
 import type { ShootingResult, Competition } from './results';
 
 interface GroupedResults {
@@ -43,20 +43,6 @@ const AthleteResultsDisplay = ({ athlete, results, onBack }:
     bronze: results.filter(r => r.athlete_result.rank === 3 && (r.event_stage.toLowerCase().includes('final') || r.event_stage.toLowerCase().includes('medal'))).length,
     totalCompetitions: Object.keys(groupedResults).length,
     bestScore: Math.max(...results.filter(r => r.athlete_result.total_score).map(r => parseFloat(r.athlete_result.total_score || '0')))
-  };
-
-  const getMedalIcon = (rank: number) => {
-    if (rank === 1) return '🥇';
-    if (rank === 2) return '🥈';
-    if (rank === 3) return '🥉';
-    return null;
-  };
-
-  const getMedalStyle = (rank: number) => {
-    if (rank === 1) return { background: "#FFD700", color: "#854D0E" };
-    if (rank === 2) return { background: "#C0C0C0", color: "#1F2937" };
-    if (rank === 3) return { background: "#CD7F32", color: "#1C1917" };
-    return { background: "var(--muted)", color: "var(--surface)" };
   };
 
   const getStageColor = (stage: string) => {
@@ -175,7 +161,25 @@ const AthleteResultsDisplay = ({ athlete, results, onBack }:
 
               {/* Event Results */}
               <div className="p-4 space-y-3">
-                {compResults.map((result, idx) => {
+                {/* Sort the results to gold medal first, bronze next, then final first */}
+                {compResults.sort((a, b) => {
+                  const getMedalValue = (rank: number | string, stage: string) => {
+                    const r = Number(rank);
+                    const s = (stage || '').toLowerCase();
+                    if (r === 1 && (s.includes('final') || s.includes('medal'))) return 1;
+                    if (r === 2 && (s.includes('final') || s.includes('medal'))) return 2;
+                    if (r === 3 && (s.includes('final') || s.includes('medal'))) return 3;
+                    if (s.includes('final') || s.includes('medal')) return 4;
+                    return 5;
+                  };
+                  const aVal = getMedalValue(a.athlete_result.rank, a.event_stage || '');
+                  const bVal = getMedalValue(b.athlete_result.rank, b.event_stage || '');
+                  if (aVal !== bVal) return aVal - bVal;
+                  // fallback: sort by total_score descending when medal priority is equal
+                  const aScore = parseFloat(a.athlete_result.total_score || '0');
+                  const bScore = parseFloat(b.athlete_result.total_score || '0');
+                  return bScore - aScore;
+                }).map((result, idx) => {
                   const resultId = `${key}-${idx}`;
                   const isExpanded = expandedResults.has(resultId);
                   const isFinal = result.event_stage.toLowerCase().includes('final') || result.event_stage.toLowerCase().includes('medal');
