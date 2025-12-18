@@ -2132,5 +2132,29 @@
         "ShowInCalendar": null,
         "Type": null,
         "Event_Tier_Name": "WTT Feeder Series"
+    },
+    {
+        "PageLink": null,
+        "EventName": "WTT Finals Hong Kong 2025",
+        "EventType": "WTT Finals",
+        "EventTypeId": 75,
+        "Country": "Hong Kong, China",
+        "City": null,
+        "ContinentCode": "asia",
+        "Subcontinent": "east asia",
+        "StartDateTime": "2025-12-10T00:00:00",
+        "EndDateTime": "2025-12-14T00:00:00",
+        "Tags": null,
+        "EventCode": null,
+        "Comments": null,
+        "EventDateChangeId": null,
+        "EventId": 3112,
+        "FromStartDate": null,
+        "FromEndDate": null,
+        "ToStartDate": null,
+        "ToEndDate": null,
+        "ShowInCalendar": null,
+        "Type": null,
+        "Event_Tier_Name": "WTT Series"
     }
 ]

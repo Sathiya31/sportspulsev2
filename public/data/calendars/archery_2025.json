@@ -71,6 +71,15 @@
     "start_date": "2025-10-17",
     "end_date": "2025-10-19"
   },
+   {
+    "id": 29400,
+    "name": "Dhaka 2025 Asian Archery Championships",
+    "level": "Continental Championships",
+    "sublevel": "Asian Outdoor Championships",
+    "location": "Dhaka, Bangladesh",
+    "start_date": "2025-11-08",
+    "end_date": "2025-11-14"
+  },
   {
     "id": 29308,
     "name": "Swiss Open Lausanne 2025",
