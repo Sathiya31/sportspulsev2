@@ -71,7 +71,7 @@ const About = () => {
         {/* Contact CTA */}
         <section style={{ textAlign: "center", marginTop: "3rem" }}>
           <h3 style={{ fontSize: "1.25rem", fontWeight: 600, color: "var(--accent)" }}>
-            Let`&apos;`s Connect
+            Let&apos;s Connect
           </h3>
           <p style={{ color: "var(--muted-2)", marginBottom: "1.5rem" }}>
             Have a story to share, a collaboration idea, or just want to talk
