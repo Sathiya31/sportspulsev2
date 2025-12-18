@@ -172,7 +172,7 @@ const CompetitionResults = ({ EventId, EventName }: { EventId: string, EventName
 
         {/* Competitors */}
         <div className="px-3 pb-3 space-y-2">
-          {match.competitors.map((competitor, idx) => (
+          {match.competitors.map((competitor) => (
             <div 
               key={competitor.code}
               className="flex items-center justify-between gap-2 p-2 transition-all"

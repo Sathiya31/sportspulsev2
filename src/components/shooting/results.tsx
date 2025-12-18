@@ -204,13 +204,6 @@ const ShootingResults = ({ selectedCompetition }: { selectedCompetition: Shootin
     }
   };
 
-  const getMedalStyle = (rank: number) => {
-    if (rank === 1) return { background: "#FFD700", color: "#854D0E" }; // Gold
-    if (rank === 2) return { background: "#C0C0C0", color: "#1F2937" }; // Silver
-    if (rank === 3) return { background: "#CD7F32", color: "#1C1917" }; // Bronze
-    return { background: "var(--muted)", color: "var(--surface)" };
-  };
-
   const toggleTeam = (teamId: string) => {
     setExpandedTeams(prev => {
       const newSet = new Set(prev);
