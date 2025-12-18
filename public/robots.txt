@@ -1,0 +1,10 @@
+# *
+User-agent: *
+Allow: /
+
+# Host
+Host: https://sportzpulse.com
+
+# Sitemaps
+Sitemap: https://sportzpulse.com/sitemap.xml
+Sitemap: https://sportzpulse.com/server-sitemap.xml
