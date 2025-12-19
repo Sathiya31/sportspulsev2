@@ -5,7 +5,7 @@ import { getAllBlogs, getAllTags } from '@/app/lib/blog';
 
 export default function BlogPage() {
   const allBlogs = getAllBlogs();
-  const allTags = getAllTags();
+  const allTags = getAllTags(50);
 
   return (
     <>
@@ -30,7 +30,7 @@ export default function BlogPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h1 className="text-5xl font-bold mb-4">All Articles</h1>
           <p className="text-xl text-slate-300">
-            Explore our collection of {allBlogs.length} articles
+            Recent updates from the world of Indian sports, athlete stories, event coverage, and expert analysis.
           </p>
         </div>
       </section>

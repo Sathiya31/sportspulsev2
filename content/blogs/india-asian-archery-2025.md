@@ -2,7 +2,7 @@
 title: "Asian Archery Championship 2025: India’s Historic Performance and Medal Winners in Dhaka"
 author: "AI Sports Analyst"
 date: 2025-12-17
-tags: [Asian Archery Championship 2025, Dhaka 2025, Dhiraj Bommadevera, Ankita Bhakat, ]
+tags: [Asian Archery Championship 2025, Dhaka 2025, Dhiraj Bommadevera, Ankita Bhakat, Deepshikha, Prithika Pradeep, Abhishek Verma, Sahil Jadhav, Prathamesh Fuge]
 coverImage: "/images/blogs/asianarchery2025.png"
 summary: "A comprehensive analysis of **Indian Team performance** at the **Asian Archery Championship 2025** in Dhaka, featuring medal winners, key statistics, and tactical insights from a historic continental campaign."
 ---
@@ -23,7 +23,7 @@ India’s performance at the **Asian Archery Championship 2025** was defined by 
 
 - **Total Medals:** **10** (6 Gold, 3 Silver, 1 Bronze) 
 - **Historic Firsts:**
-  - **First-ever double gold in recurve individual events** for India at the Asian Championships. :contentReference[oaicite:3]{index=3}
+  - **First-ever double gold in recurve individual events** for India at the Asian Championships. 
   - **Jyothi Surekha Vennam** became the **first archer to claim three individual titles** at the Asian Championships. 
 
 India’s medal haul reflected depth across gender and bow categories, with podium finishes in individual, team, and mixed formats.

@@ -88,15 +88,22 @@ export async function getBlogBySlug(slug: string): Promise<BlogPost | null> {
 }
 
 // Get all unique tags
-export function getAllTags(): string[] {
+// Get all unique tags or top N most occurred tags
+export function getAllTags(count?: number): string[] {
   const allBlogs = getAllBlogs();
-  const tagsSet = new Set<string>();
-  
+  const tagCounts: Record<string, number> = {};
   allBlogs.forEach((blog) => {
-    blog.tags.forEach((tag) => tagsSet.add(tag));
+    blog.tags.forEach((tag) => {
+      tagCounts[tag] = (tagCounts[tag] || 0) + 1;
+    });
   });
-
-  return Array.from(tagsSet).sort();
+  const sortedTags = Object.entries(tagCounts)
+    .sort((a, b) => b[1] - a[1])
+    .map(([tag]) => tag);
+  if (count && count > 0) {
+    return sortedTags.slice(0, count);
+  }
+  return sortedTags;
 }
 
 // Get blogs by tag

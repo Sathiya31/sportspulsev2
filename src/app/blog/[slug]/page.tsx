@@ -93,6 +93,15 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
               <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-8 md:p-12">
                 <BlogContent content={contentWithIds} />
               </div>
+
+              {/* Add Tags at the bottom */}
+              <div className="mt-8 flex flex-wrap gap-2">
+                {blog.tags.map((tag) => (
+                  <Badge key={tag} variant="primary">
+                    {tag}
+                  </Badge>
+                ))}
+              </div>
             </div>
 
             {/* Sidebar with TOC */}

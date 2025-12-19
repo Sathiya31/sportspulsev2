@@ -29,8 +29,8 @@ export default function BlogPageClient({ initialBlogs, allTags }: BlogPageClient
       filtered = filtered.filter(
         (blog) =>
           blog.title.toLowerCase().includes(query) ||
-          blog.excerpt.toLowerCase().includes(query) ||
-          blog.tags.some((tag) => tag.toLowerCase().includes(query))
+          blog.excerpt?.toLowerCase().includes(query) ||
+          blog.tags?.some((tag) => tag.toLowerCase().includes(query))
       );
     }
 
