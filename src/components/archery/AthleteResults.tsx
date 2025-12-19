@@ -64,7 +64,7 @@ const CompactMatchCard = ({ match, playerAthleteIds }: { match: MatchData, playe
             }}>
             {getPhaseName(match.Phase)}
           </span>
-          <span className="text-xs" style={{ color: "var(--muted)" }}>
+          <span className="text-xs" style={{ color: "var(--foreground)" }}>
             {getCategoryLabel(match.CategoryCode)}
           </span>
         </div>
@@ -82,10 +82,10 @@ const CompactMatchCard = ({ match, playerAthleteIds }: { match: MatchData, playe
       {/* Score Line - Compact */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2 flex-1">
-          <span className="text-sm font-medium" style={{ color: "var(--foreground)" }}>
+          <span className="text-xs md:text-sm font-medium" style={{ color: "var(--foreground)" }}>
             {playerComp.NOC  || playerComp.Athlete?.NOC}
           </span>
-          <span className="text-xs" style={{ color: "var(--muted)" }}>
+          <span className="text-sm md:text-base" style={{ color: "var(--muted)" }}>
             {getCompetitorName(playerComp)}
           </span>
         </div>
@@ -101,10 +101,10 @@ const CompactMatchCard = ({ match, playerAthleteIds }: { match: MatchData, playe
           </span>
         </div>
         <div className="flex items-center gap-2 flex-1 justify-end">
-          <span className="text-xs" style={{ color: "var(--muted)" }}>
+          <span className="text-sm md:text-base" style={{ color: "var(--muted)" }}>
             {playerComp.Bye ? "Bye" : getCompetitorName(opponentComp)}
           </span>
-          <span className="text-sm font-medium" style={{ color: "var(--foreground)" }}>
+          <span className="text-xs md:text-sm font-medium" style={{ color: "var(--foreground)" }}>
             {opponentComp.NOC || opponentComp.Athlete?.NOC}
           </span>
           {/* {playerWon ? (
@@ -117,7 +117,7 @@ const CompactMatchCard = ({ match, playerAthleteIds }: { match: MatchData, playe
 
       {/* Team Members (if team event) */}
       {isTeam && playerComp.Members && (
-        <div className="mt-2 text-xs" style={{ color: "var(--muted)" }}>
+        <div className="mt-2 text-xs md:text-sm" style={{ color: "var(--muted)" }}>
           Team: {playerComp.Members.map(m => `${m.GName.split(' ')[0]} ${m.FName.charAt(0)}.`).join(', ')}
         </div>
       )}
@@ -267,7 +267,7 @@ const ArcheryPlayerResults = ({
                   {stats.gold}
                 </span>
               </div>
-              <p className="text-xs" style={{ color: "var(--muted)" }}>Gold</p>
+              <p className="text-sm" style={{ color: "var(--muted)" }}>Gold</p>
             </div>
             <div className="text-center">
               <div className="flex items-center justify-center gap-1 mb-1">
@@ -276,7 +276,7 @@ const ArcheryPlayerResults = ({
                   {stats.silver}
                 </span>
               </div>
-              <p className="text-xs" style={{ color: "var(--muted)" }}>Silver</p>
+              <p className="text-sm" style={{ color: "var(--muted)" }}>Silver</p>
             </div>
             <div className="text-center">
               <div className="flex items-center justify-center gap-1 mb-1">
@@ -285,7 +285,7 @@ const ArcheryPlayerResults = ({
                   {stats.bronze}
                 </span>
               </div>
-              <p className="text-xs" style={{ color: "var(--muted)" }}>Bronze</p>
+              <p className="text-sm" style={{ color: "var(--muted)" }}>Bronze</p>
             </div>
             <div className="text-center">
               <div className="flex items-center justify-center gap-1 mb-1">
@@ -294,7 +294,7 @@ const ArcheryPlayerResults = ({
                   {stats.totalCompetitions}
                 </span>
               </div>
-              <p className="text-xs" style={{ color: "var(--muted)" }}>Events</p>
+              <p className="text-sm" style={{ color: "var(--muted)" }}>Events</p>
             </div>
             <div className="text-center">
               <div className="flex items-center justify-center gap-1 mb-1">
@@ -302,7 +302,7 @@ const ArcheryPlayerResults = ({
                   {stats.totalMatches}
                 </span>
               </div>
-              <p className="text-xs" style={{ color: "var(--muted)" }}>Matches</p>
+              <p className="text-sm" style={{ color: "var(--muted)" }}>Matches</p>
             </div>
           </div>
         </div>
