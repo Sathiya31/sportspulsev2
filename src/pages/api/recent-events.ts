@@ -45,8 +45,8 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
 
     // Sort by end date descending (most recent first)
     events.sort((a, b) => {
-      const dateA = new Date(a.endDate);
-      const dateB = new Date(b.endDate);
+      const dateA = new Date(a.endDate || a.date);
+      const dateB = new Date(b.endDate || b.date);
       return dateB.getTime() - dateA.getTime();
     });
 

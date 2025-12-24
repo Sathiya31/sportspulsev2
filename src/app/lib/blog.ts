@@ -56,7 +56,7 @@ export function getAllBlogs(): BlogPost[] {
 // Get latest N blog posts
 export function getLatestBlogs(count: number): BlogPost[] {
   const allBlogs = getAllBlogs();
-  return allBlogs.slice(0, count);
+  return allBlogs.sort((a, b) => (a.date > b.date ? -1 : 1)).slice(0, count);
 }
 
 // Get a single blog by slug

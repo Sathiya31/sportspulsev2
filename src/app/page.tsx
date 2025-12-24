@@ -9,11 +9,11 @@ import { Event } from "@/types/home";
 
 const carouselSlides = [
   {
-    src: "/images/tokyo2025.jpg",
-    alt: "Tokyo Icon",
-    title: "Tokyo Athletics Championship",
-    desc: "See the latest updates from the Tokyo event!",
-    date: "2025-09-13T00:00:00Z",
+    src: "/images/aichinagoya26.jpg",
+    alt: "20th Asian Games Aichi-Nagoya 2026",
+    title: "20th Asian Games Aichi-Nagoya 2026",
+    desc: "Will India surpass their historic 2022 medal tally!",
+    date: "2026-09-19T00:00:00Z",
   },
   {
     src: "/images/dakar.jpg",
@@ -89,7 +89,8 @@ export default function Home() {
     fetchBlogs();
   }, []);
 
-  const formatDate = (dateStr: string) => {
+  const formatDate = (dateStr: string | undefined) => {
+    if (!dateStr) return "N/A";
     const date = new Date(dateStr);
     return date.toLocaleDateString('en-US', { 
       month: 'short', 
@@ -245,7 +246,7 @@ export default function Home() {
         <div className="flex-1 space-y-6">
           {/* Carousel */}
           <section>
-            <div className="relative w-full h-48 sm:h-56 md:h-64 rounded-xl overflow-hidden shadow-lg" 
+            <div className="relative w-full h-56 sm:h-64 md:h-72 lg:h-80 rounded-xl overflow-hidden shadow-lg" 
               style={{ boxShadow: "var(--card-shadow)" }}>
               <Image
                 src={carouselSlides[active].src}
@@ -254,26 +255,30 @@ export default function Home() {
                 className="object-cover"
                 priority
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex flex-col justify-end p-4 md:p-6">
-                <h2 className="text-xl md:text-2xl lg:text-3xl font-bold mb-1.5" 
-                  style={{ color: "var(--foreground)" }}>
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent flex flex-col justify-end p-4 md:p-6">
+                <h2 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold mb-2 leading-tight" 
+                  style={{ color: "white", textShadow: "0 2px 4px rgba(0,0,0,0.8)" }}>
                   {carouselSlides[active].title}
                 </h2>
-                <p className="text-sm md:text-base mb-2" style={{ color: "var(--foreground)" }}>
+                <p className="text-xs sm:text-sm md:text-base mb-3 leading-snug max-w-2xl" 
+                  style={{ color: "white", textShadow: "0 1px 2px rgba(0,0,0,0.8)" }}>
                   {carouselSlides[active].desc}
                 </p>
                 <CountdownTimer target={carouselSlides[active].date} />
               </div>
             </div>
             {/* Carousel indicators */}
-            <div className="flex justify-center mt-3 gap-2">
+            <div className="flex justify-center mt-4 gap-2">
               {carouselSlides.map((_, idx) => (
                 <button
                   key={idx}
-                  className={`w-2.5 h-2.5 rounded-full transition-all duration-300 ${
-                    active === idx ? 'w-6' : ''
+                  className={`h-2 rounded-full transition-all duration-300 ${
+                    active === idx ? 'w-8 sm:w-10' : 'w-2'
                   }`}
-                  style={{ background: active === idx ? "var(--primary)" : "var(--muted-2)" }}
+                  style={{ 
+                    background: active === idx ? "var(--primary)" : "var(--muted-2)",
+                    minWidth: active === idx ? '32px' : '8px'
+                  }}
                   onClick={() => setActive(idx)}
                   aria-label={`Go to slide ${idx + 1}`}
                 />
