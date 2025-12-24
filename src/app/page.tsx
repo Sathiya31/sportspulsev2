@@ -4,7 +4,8 @@ import { useEffect, useRef, useState } from "react";
 import CountdownTimer from "@/components/CountdownTimer";
 import Button from '@/components/ui/Button';
 import BlogGrid from "@/components/blog/BlogGrid";
-import { Mail, Instagram, Twitter } from "lucide-react";
+import { Mail, Instagram, Twitter, Clock, MapPin, Calendar } from "lucide-react";
+import { Event } from "@/types/home";
 
 const carouselSlides = [
   {
@@ -30,15 +31,10 @@ const carouselSlides = [
   },
 ];
 
-interface Event {
-  time: string;
-  event: string;
-  location: string;
-}
-
 export default function Home() {
   const [active, setActive] = useState(0);
   const [currentEvents, setCurrentEvents] = useState<Event[]>([]);
+  const [recentEvents, setRecentEvents] = useState<Event[]>([]);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
   const [blogs, setBlogs] = useState<any[]>([]);
 
@@ -67,6 +63,23 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
+    const fetchRecentEvents = async () => {
+      try {
+        const response = await fetch("/api/recent-events");
+        const events: Event[] = await response.json();
+        // Get top 5 most recent
+        setRecentEvents(events.slice(0, 5));
+      } catch (error) {
+        console.error("Failed to fetch recent events:", error);
+        // Fallback to empty array
+        setRecentEvents([]);
+      }
+    };
+
+    fetchRecentEvents();
+  }, []);
+
+  useEffect(() => {
     async function fetchBlogs() {
       const res = await fetch("/api/blogs");
       const data = await res.json();
@@ -76,32 +89,152 @@ export default function Home() {
     fetchBlogs();
   }, []);
 
+  const formatDate = (dateStr: string) => {
+    const date = new Date(dateStr);
+    return date.toLocaleDateString('en-US', { 
+      month: 'short', 
+      day: 'numeric',
+      year: 'numeric'
+    });
+  };
+
+  const getTimeAgo = (dateStr: string) => {
+    const date = new Date(dateStr);
+    const now = new Date();
+    const diffInMs = now.getTime() - date.getTime();
+    const diffInDays = Math.floor(diffInMs / (1000 * 60 * 60 * 24));
+    
+    if (diffInDays === 0) return 'Today';
+    if (diffInDays === 1) return 'Yesterday';
+    if (diffInDays < 7) return `${diffInDays} days ago`;
+    if (diffInDays < 30) return `${Math.floor(diffInDays / 7)} weeks ago`;
+    return formatDate(dateStr);
+  };
+
   const CurrentEventsSection = () => (
     <section className="rounded-xl shadow-md p-4" 
       style={{ background: "var(--surface)", boxShadow: "var(--card-shadow)" }}>
-      <h2 className="text-lg font-bold mb-3" style={{ color: "var(--primary)" }}>
-        <span className="text-green-500 animate-pulse">●</span> Live
-      </h2>
-      <div className="space-y-2">
+      <div className="flex items-center gap-2 mb-3">
+        <span className="text-green-500 animate-pulse text-lg">●</span>
+        <h2 className="text-lg font-bold" style={{ color: "var(--primary)" }}>
+          Live Events
+        </h2>
+      </div>
+      <div className="space-y-3">
         {currentEvents.length > 0 ? (
-          currentEvents.map((event, idx) => (
-            <div key={idx} 
-              className="border-l-2 pl-3 py-1.5 hover:opacity-80 transition-opacity cursor-pointer" 
-              style={{ borderColor: "var(--foreground)" }}>
-              <h5 className="text-sm font-semibold" style={{ color: "var(--foreground)" }}>
-                {event.event}
-              </h5>
-              <p className="text-xs" style={{ color: "var(--muted)" }}>
-                {event.location}
-              </p>
+          currentEvents.map((event) => (
+            <div 
+              key={event.id} 
+              className="p-3 rounded-lg border hover:shadow-md transition-all cursor-pointer"
+              style={{ 
+                background: "var(--glass)",
+                borderColor: "var(--border)",
+                borderLeft: "3px solid var(--success)"
+              }}
+            >
+              <div className="flex items-start justify-between gap-2 mb-2">
+                <h5 className="text-sm font-semibold leading-tight" style={{ color: "var(--foreground)" }}>
+                  {event.name}
+                </h5>
+                <span 
+                  className="text-[10px] px-2 py-0.5 rounded-full font-semibold shrink-0"
+                  style={{ 
+                    background: "var(--success-bg)",
+                    color: "var(--success)"
+                  }}
+                >
+                  {event.sport}
+                </span>
+              </div>
+              
+              <div className="flex items-center gap-1 mb-1">
+                <MapPin size={12} style={{ color: "var(--muted)" }} />
+                <p className="text-xs" style={{ color: "var(--muted)" }}>
+                  {event.location}
+                </p>
+              </div>
+              
+              <div className="flex items-center gap-1">
+                <Calendar size={12} style={{ color: "var(--muted-2)" }} />
+                <p className="text-xs" style={{ color: "var(--muted-2)" }}>
+                  {formatDate(event.date)} - {formatDate(event.endDate)}
+                </p>
+              </div>
             </div>
           ))
         ) : (
-          <p className="text-sm" style={{ color: "var(--muted-2)" }}>
-            No current events available.
+          <p className="text-sm text-center py-4" style={{ color: "var(--muted-2)" }}>
+            No live events at the moment.
           </p>
         )}
       </div>
+    </section>
+  );
+
+  const RecentEventsSection = () => (
+    <section className="rounded-xl shadow-md p-4" 
+      style={{ background: "var(--surface)", boxShadow: "var(--card-shadow)" }}>
+      <div className="flex items-center gap-2 mb-3">
+        <Clock size={18} style={{ color: "var(--primary)" }} />
+        <h2 className="text-lg font-bold" style={{ color: "var(--primary)" }}>
+          Recent Events
+        </h2>
+      </div>
+      <div className="space-y-3">
+        {recentEvents.length > 0 ? (
+          recentEvents.map((event) => (
+            <div 
+              key={event.id} 
+              className="p-3 rounded-lg border hover:shadow-md transition-all cursor-pointer"
+              style={{ 
+                background: "var(--glass)",
+                borderColor: "var(--border)"
+              }}
+            >
+              <div className="flex items-start justify-between gap-2 mb-2">
+                <h5 className="text-sm font-semibold leading-tight" style={{ color: "var(--foreground)" }}>
+                  {event.name}
+                </h5>
+                <span 
+                  className="text-[10px] px-2 py-0.5 rounded-full font-semibold shrink-0"
+                  style={{ 
+                    background: "var(--primary-20)",
+                    color: "var(--primary)"
+                  }}
+                >
+                  {event.sport}
+                </span>
+              </div>
+              
+              <div className="flex items-center gap-1 mb-1">
+                <MapPin size={12} style={{ color: "var(--muted)" }} />
+                <p className="text-xs" style={{ color: "var(--muted)" }}>
+                  {event.location}
+                </p>
+              </div>
+              
+              <div className="flex items-center gap-1">
+                <Calendar size={12} style={{ color: "var(--muted-2)" }} />
+                <p className="text-xs" style={{ color: "var(--muted-2)" }}>
+                  {getTimeAgo(event.endDate || event.date)}
+                </p>
+              </div>
+            </div>
+          ))
+        ) : (
+          <p className="text-sm text-center py-4" style={{ color: "var(--muted-2)" }}>
+            No recent events to display.
+          </p>
+        )}
+      </div>
+      
+      {/* {recentEvents.length > 0 && (
+        <div className="mt-4 text-center">
+          <Button href="/events" variant="secondary" className="text-xs w-full">
+            View All Events →
+          </Button>
+        </div>
+      )} */}
     </section>
   );
 
@@ -148,9 +281,10 @@ export default function Home() {
             </div>
           </section>
 
-          {/* Mobile Current Events - Show only on mobile/tablet */}
-          <div className="lg:hidden">
+          {/* Mobile Current Events & Recent Events - Show only on mobile/tablet */}
+          <div className="lg:hidden space-y-4">
             <CurrentEventsSection />
+            <RecentEventsSection />
           </div>
 
           {/* Blog Section */}
@@ -177,6 +311,7 @@ export default function Home() {
         {/* Desktop Sidebar - Hidden on mobile/tablet */}
         <aside className="hidden lg:block w-80 space-y-4 flex-shrink-0">
           <CurrentEventsSection />
+          <RecentEventsSection />
         </aside>
       </div>
 
