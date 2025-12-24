@@ -38,7 +38,15 @@ export const metadata: Metadata = {
     title: "SportsPulse - Indian Sports News, Results, Schedules & Data",
     description: "Get the latest Indian sports news, live results, tournament schedules, athlete stats, and in-depth data for Badminton, Table Tennis, Archery, Shooting, and more.",
     images: ["https://sportzpulse.com/og-image.png"]
-  }
+  },
+  icons: {
+    icon: [
+      {
+        url: 'https://sportzpulse.com/icon.png',
+        href: 'https://sportzpulse.com/icon.png',
+      },
+    ],
+  },
 };
 
 export default function RootLayout({

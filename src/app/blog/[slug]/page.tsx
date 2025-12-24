@@ -47,13 +47,13 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
 
         {/* Article Header */}
         <header className="max-w-4xl mx-auto mb-12">
-          <div className="flex flex-wrap gap-2 mb-6">
+          {/* <div className="flex flex-wrap gap-2 mb-6">
             {blog.tags.map((tag) => (
               <Badge key={tag} variant="primary">
                 {tag}
               </Badge>
             ))}
-          </div>
+          </div> */}
 
           <h1 className="text-5xl font-bold text-slate-900 mb-6 leading-tight">
             {blog.title}
