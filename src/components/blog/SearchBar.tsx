@@ -22,7 +22,7 @@ export default function SearchBar({
   }, [query, onSearch]);
 
   return (
-    <div className="relative">
+    <div className="relative hidden md:block">
       <input
         type="text"
         value={query}

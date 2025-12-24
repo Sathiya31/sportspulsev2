@@ -5,7 +5,7 @@ import { getAllBlogs, getAllTags } from '@/app/lib/blog';
 
 export default function BlogPage() {
   const allBlogs = getAllBlogs();
-  const allTags = getAllTags(50);
+  const allTags = getAllTags(25);
 
   return (
     <>

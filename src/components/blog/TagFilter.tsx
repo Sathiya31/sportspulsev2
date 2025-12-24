@@ -25,7 +25,7 @@ export default function TagFilter({ tags, selectedTag, onSelectTag }: TagFilterP
         <button
           key={tag}
           onClick={() => onSelectTag(tag)}
-          className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
+          className={`px-4 py-1 rounded-full text-sm font-medium transition-all ${
             selectedTag === tag
               ? 'bg-amber-600 text-white shadow-md'
               : 'bg-white text-slate-700 border border-slate-300 hover:border-amber-600 hover:text-amber-600'
