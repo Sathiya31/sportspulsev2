@@ -19,26 +19,30 @@ const jetbrainsMono = JetBrains_Mono({
 
 
 export const metadata: Metadata = {
-  title: "SportsPulse - Indian Sports News, Results, Schedules & Data",
-  description: "Get the latest Indian sports news, live results, schedules, athlete stats, and in-depth data for Badminton, Table Tennis, Archery, Shooting, and more.",
+  title: {
+    default: "SportsPulse - Indian Sports News, Results, Schedules & Data",
+    template: "%s | SportzPulse",
+  },
+  description:
+    "Get the latest Indian sports news, live results, schedules, athlete stats, and in-depth data for Badminton, Table Tennis, Archery, Shooting, and more.",
+
   openGraph: {
-    title: "SportsPulse - Indian Sports News, Results, Schedules & Data",
-    description: "Get the latest Indian sports news, live results, schedules, athlete stats, and in-depth data for Badminton, Table Tennis, Archery, Shooting, and more.",
+    type: "website",
+    siteName: "SportzPulse",
     images: [
       {
         url: "https://sportzpulse.com/og-image.png",
         width: 1200,
         height: 630,
-        alt: "SportsPulse Open Graph Image"
-      }
-    ]
+      },
+    ],
   },
+
   twitter: {
     card: "summary_large_image",
-    title: "SportsPulse - Indian Sports News, Results, Schedules & Data",
-    description: "Get the latest Indian sports news, live results, tournament schedules, athlete stats, and in-depth data for Badminton, Table Tennis, Archery, Shooting, and more.",
-    images: ["https://sportzpulse.com/og-image.png"]
+    images: ["https://sportzpulse.com/og-image.png"],
   },
+
   icons: {
     icon: [
       {

@@ -11,6 +11,41 @@ import Button from '@/components/ui/Button';
 import fs from 'fs';
 import path from 'path';
 import matter from 'gray-matter';
+import { Metadata } from "next";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: { slug: string };
+}): Promise<Metadata> {
+  const blog = await getBlogBySlug(params.slug);
+
+  // 🔁 If blog data is missing → use global default
+  if (!blog) return {};
+
+  return {
+    title: blog.title,
+    description: blog.excerpt,
+    openGraph: {
+      type: "article",
+      title: blog.title,
+      description: blog.excerpt,
+      images: [
+        {
+          url: `https://www.sportzpulse.com/${blog.coverImage}`, // must be absolute URL
+          width: 1200,
+          height: 630,
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: blog.title,
+      description: blog.excerpt,
+      images: [`https://www.sportzpulse.com/${blog.coverImage}`],
+    },
+  };
+}
 
 // Generate static params for all blog posts
 export async function generateStaticParams() {

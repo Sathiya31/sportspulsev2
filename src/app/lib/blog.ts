@@ -74,7 +74,7 @@ export async function getBlogBySlug(slug: string): Promise<BlogPost | null> {
       slug,
       title: data.title,
       date: data.date,
-      excerpt: data.excerpt,
+      excerpt: data.excerpt || data.summary || '',
       author: data.author,
       coverImage: data.coverImage,
       tags: data.tags || [],
