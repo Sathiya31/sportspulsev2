@@ -1,6 +1,6 @@
 ---
 title: "Asian Archery Championship 2025: India’s Historic Performance and Medal Winners in Dhaka"
-author: "AI Sports Analyst"
+author: "SportzPulse"
 date: 2025-12-17
 tags: [Asian Archery Championship 2025, Dhaka 2025, Dhiraj Bommadevera, Ankita Bhakat, Deepshikha, Prithika Pradeep, Abhishek Verma, Sahil Jadhav, Prathamesh Fuge]
 coverImage: "/images/blogs/asianarchery2025.png"

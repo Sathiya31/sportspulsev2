@@ -1,6 +1,6 @@
 ---
 title: "The New Era of Indian Boxing: A Detailed Breakdown of the Historic **Four Medals** at the **World Boxing Championship 2025**"
-author: "AI Sports Analyst"
+author: "SportzPulse"
 date: 2025-09-20
 tags: [Boxing, India, World Boxing, Jaismine Lamboria, Minakshi Hooda, Liverpool 2025]
 coverImage: "/images/blogs/boxingchampionship2025.png"

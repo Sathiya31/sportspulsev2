@@ -1,6 +1,6 @@
 ---
 title: "India Shine at the ISSF World Cup Final 2025 in Doha: Record Six-Medal Performance"
-author: "AI Sports Analyst"
+author: "SportzPulse"
 date: 2025-12-10
 tags: [
   "ISSF World Cup Final 2025",

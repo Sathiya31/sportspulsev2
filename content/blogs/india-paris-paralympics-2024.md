@@ -1,6 +1,6 @@
 ---
 title: "India’s Golden Decade: Detailed Analysis of the Historic 29-Medal Haul at the Paris 2024 Paralympics"
-author: "AI Sports Analyst"
+author: "SportzPulse"
 date: 2024-09-15
 tags: [Paralympics, Sumit Antil, Avani Lekhara, "Paris 2024"]
 coverImage: "/images/blogs/paralympics2024.png"

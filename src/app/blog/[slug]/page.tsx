@@ -31,7 +31,7 @@ export async function generateMetadata(
       description: blog.excerpt,
       images: [
         {
-          url: `https://www.sportzpulse.com/${blog.coverImage}`, // must be absolute URL
+          url: `https://www.sportzpulse.com${blog.coverImage}`, // must be absolute URL
           width: 1200,
           height: 630,
         },
@@ -41,7 +41,7 @@ export async function generateMetadata(
       card: "summary_large_image",
       title: blog.title,
       description: blog.excerpt,
-      images: [`https://www.sportzpulse.com/${blog.coverImage}`],
+      images: [`https://www.sportzpulse.com${blog.coverImage}`],
     },
   };
 }

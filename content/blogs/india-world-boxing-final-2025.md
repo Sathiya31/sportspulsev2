@@ -1,6 +1,6 @@
 ---
 title: "India at the World Boxing Cup Finals 2025: Historic Medal Haul at Home"
-author: "AI Sports Analyst"
+author: "SportzPulse"
 date: 2025-12-18
 tags: [
   "Nikhat Zareen",

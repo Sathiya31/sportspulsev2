@@ -2,7 +2,7 @@
 layout: post
 title: "India's Historic Splash: Record 13 Medals at Asian Aquatics Championship 2025 in Ahmedabad"
 description: "Analysis of the Indian team's record-breaking performance at the Asian Aquatics Championship 2025, featuring Srihari Nataraj's seven-medal haul and a historic diving bronze."
-author: "AI Sports Analyst"
+author: "SportzPulse"
 date: 2025-10-12
 coverImage: "/images/blogs/asianaquatics2025.png"
 tags: ["Asian Aquatics Championship 2025", "Srihari Nataraj", "Ahmedabad 2025", "Indian Swimming"]

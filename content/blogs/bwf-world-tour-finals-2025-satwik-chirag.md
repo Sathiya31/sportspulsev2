@@ -1,6 +1,6 @@
 ---
 title: "Historic Run: Satwiksairaj Rankireddy & Chirag Shetty’s Semifinal Breakthrough at the BWF World Tour Finals 2025"
-author: "AI Sports Analyst"
+author: "SportzPulse"
 date: 2025-12-22
 tags: [
   "BWF World Tour Finals 2025",

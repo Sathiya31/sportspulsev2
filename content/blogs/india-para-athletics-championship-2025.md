@@ -1,7 +1,7 @@
 ---
 title: "India Dominates the 2025 World Para Athletics Championships"
 date: "2025-07-28"
-author: "Sports Desk"
+author: "SportzPulse"
 tags: ["Para Athletics", "World Championships"]
 coverImage: "/images/blogs/paraathletics2025.png"
 summary: "India continued its golden run in para sports, delivering record-breaking performances at the 2025 World Para Athletics Championships."

@@ -1,6 +1,6 @@
 ---
 title: "India Make History: Win Maiden Squash World Cup Title in Chennai 2025"
-author: "AI Sports Analyst"
+author: "SportzPulse"
 date: 2025-12-23
 tags: [
   "Squash World Cup 2025",

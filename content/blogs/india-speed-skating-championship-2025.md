@@ -1,7 +1,7 @@
 ---
 title: "India Shines at World Speed Skating Championship 2025 in Beidaihe — Record 5 Medals Including 3 Gold"
 description: "Team India makes history at the World Speed Skating Championship 2025 in Beidaihe, China — earning five medals, including three golds, led by Anandkumar Velkumar’s double-gold and bronze haul. A detailed breakdown of performances, records, and analysis."
-author: "Sports Analytics AI"
+author: "SportzPulse"
 date: "2025-09-21"
 tags: ["World Speed Skating Championship 2025", "Beidaihe", "Anandkumar Velkumar", "Krish Sharma"]
 keywords: "World Speed Skating Championship 2025 Beidaihe, Indian Team performance, Anandkumar Velkumar gold, Krish Sharma junior gold, India skating records, speed skating world championship results, India 5 medals 2025"

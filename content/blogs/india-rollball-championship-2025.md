@@ -1,6 +1,6 @@
 ---
 title: "India Clinches Historic Double at the 7th Roll Ball World Cup 2025: Men’s & Women’s Teams Crowned World Champions"
-author: "AI Sports Analyst"
+author: "SportzPulse"
 date: 2025-12-22
 tags: [
   "Roll Ball World Cup 2025"

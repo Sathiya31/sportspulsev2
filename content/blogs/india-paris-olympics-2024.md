@@ -1,7 +1,7 @@
 ---
 title: "India's Historic Performance at the Paris Olympics 2024"
 date: "2024-08-12"
-author: "Sports Desk"
+author: "SportzPulse"
 tags: ["Olympics", "Paris 2024"]
 coverImage: "/images/blogs/paris2024.png"
 summary: "India delivered its best-ever performance at the Paris 2024 Olympics, making history with a record medal tally and unforgettable moments."

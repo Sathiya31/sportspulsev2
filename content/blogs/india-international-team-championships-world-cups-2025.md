@@ -1,5 +1,5 @@
 ---
-title: "India’s International Team Championships & World Cup Wins in 2025"
+title: "India’s World Championships & World Cup Wins in 2025"
 date: "2025-12-25"
 author: "SportzPulse"
 tags:
@@ -11,7 +11,7 @@ tags:
   - Sports Rewind 2025
 coverImage: "/images/blogs/recap2025/india_team_achievements.png"
 slug: "india-international-team-championships-world-cups-2025"
-summary: "A comprehensive rewind of India’s international team championships and World Cup triumphs in 2025, including cricket, blind cricket, kho kho, kabaddi, squash, rollball and archery."
+summary: "A rewind of India’s World Championships and World Cup triumphs in 2025, including cricket, blind cricket, kho kho, kabaddi, squash, rollball and archery."
 ---
 
 # 🇮🇳 India’s International Team Championships & World Cup Wins – 2025
