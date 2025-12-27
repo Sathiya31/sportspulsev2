@@ -1,7 +1,7 @@
 ---
 title: "Year-End Review 2025: Indian Athletics’ Season of Drama, Records and New Heroes"
 author: "Sports Arena"
-date: 2025-12-31
+date: 2025-12-26
 tags: [
   "Indian Athletics 2025",
   "Neeraj Chopra",

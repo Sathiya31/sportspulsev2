@@ -1,6 +1,6 @@
 ---
 title: "India’s World Championships & World Cup Wins in 2025"
-date: "2025-12-25"
+date: 2025-12-25
 author: "SportzPulse"
 tags:
   - India Sports 2025
