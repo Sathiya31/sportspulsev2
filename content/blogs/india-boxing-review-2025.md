@@ -1,7 +1,7 @@
 ---
 title: "Year-End Review 2025: Indian Boxing’s New Era Under World Boxing"
 author: "Sports Arena"
-date: 2025-12-27
+date: 2025-12-28
 tags: [
   "Indian Boxing 2025",
   "World Boxing Cup 2025",
@@ -45,7 +45,7 @@ Both boxers displayed composure and tactical clarity to top their respective wei
 - **Nupur Sheoran (+80kg)** – Silver 
 
 ### 🥉 Bronze Medals
-- **Puja Rani (80kg)** – Bronze   
+- **Pooja Rani (80kg)** – Bronze   
 
 While the women’s team stood tall, the championships were also marked by:
 - Heartbreaks  
@@ -114,6 +114,6 @@ Here’s to **sharper jabs, relentless spirit, and the tricolour flying high** o
 **Original Analysis & Coverage:** *[Sports Arena](https://x.com/SportsArena1234/)*   
 **Original Post:** Year-End Review – Boxing (2025)
 
-*Adapted and formatted for SEO and digital publishing.*
+*Adapted and formatted for digital publishing.*
 
 ---

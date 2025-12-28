@@ -1,7 +1,7 @@
 ---
 title: "Year-End Review 2025: Indian Field Hockey | Sports Arena Special"
 author: "Sports Arena"
-date: 2025-12-31
+date: 2025-12-28
 tags: [
   "Indian Hockey 2025",
   "Field Hockey India",
@@ -60,6 +60,6 @@ The **Hockey World Cup** and the **Asian Games** await next year, with the **Asi
 **Original Analysis & Coverage:** *[Sports Arena](https://x.com/SportsArena1234/)*   
 **Original Post:** Year-End Review – Field Hockey (2025)  
 
-*Adapted and formatted for SEO and digital publishing.*
+*Adapted and formatted for digital publishing.*
 
 ---
