@@ -13,7 +13,7 @@ tags: [
   "Pooja Rani"
 ]
 coverImage: "/images/blogs/2025-review-boxing.png"
-summary: "A comprehensive year-end review of Indian boxing in 2025 as the nation transitions into the World Boxing era, highlighting global medals, standout athletes, and historic performances at home and abroad."
+summary: "A year-end review of Indian boxing in 2025 as the nation transitions into the World Boxing era, highlighting global medals, standout athletes, and historic performances at home and abroad."
 ---
 
 # 🥊 Year-End Review 2025: Indian Boxing’s New Era Under World Boxing
