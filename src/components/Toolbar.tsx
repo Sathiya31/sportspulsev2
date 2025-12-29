@@ -11,6 +11,7 @@ const navItems = [
     { name: "Archery", href: "/archery" },
     { name: "Shooting", href: "/shooting" },
     { name: "Athletics", href: "/athletics" },
+    { name: "Articles", href: "/blog" },
     { name: "About", href: "/about" },
 ];
 
@@ -19,7 +20,7 @@ export default function Toolbar() {
     const [menuOpen, setMenuOpen] = useState(false);
 
     return (
-    <nav className="w-full sticky top-0 z-50 shadow-md transition-colors duration-500" style={{ background: "var(--toolbar-bg)", color: "var(--foreground)", minHeight: "72px" }}>
+    <nav className="w-full sticky top-0 z-60 shadow-md transition-colors duration-500" style={{ background: "var(--toolbar-bg)", color: "var(--foreground)", minHeight: "72px" }}>
             <div className="max-w-7xl mx-auto flex items-center justify-between px-4" style={{ minHeight: "72px" }}>
                 <Link href="/" className="flex items-center gap-3 select-none group" style={{ color: "var(--foreground)" }}>
                     {/* Sports Pulse Font */}

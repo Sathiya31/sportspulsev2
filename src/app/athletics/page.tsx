@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
+import { Menu, X } from "lucide-react";
 import { collection, query, where, getDocs } from "firebase/firestore";
 import { db } from "@/config/firebase";
 import EventCard from "@/components/ui/EventCard";
@@ -7,56 +8,107 @@ import Button from "@/components/ui/Button";
 import VerticalTabs from "@/components/ui/VerticalTabs";
 import ResultsTable from "@/components/ui/ResultsTable";
 import { AthleticsEvent } from "@/types/athletics";
+import { useSession } from 'next-auth/react';
+import { isAdmin } from "@/config/auth";
+import {
+  getCalendarEvents,
+  getAvailableYears,
+  getUniqueMonths,
+  filterEventsByMonth,
+  isEventLive,
+  formatEventDate,
+  type CalendarEvent
+} from "@/services/calendarService";
 
-// Helper to check if an event is live
-function isLive(start: string, end: string) {
-  const now = new Date();
-  const startDate = new Date(start);
-  const endDate = new Date(end);
-  return now >= startDate && now <= endDate;
+// Athletics specific event interface
+interface AthleticsCalendarEvent extends CalendarEvent {
+  title?: string;
+  month?: string;
 }
 
-// Use AthleticsEvent and AthleticsResult interfaces from types/athletics.ts
-
 export default function AthleticsPage() {
-  const [calendar, setCalendar] = useState<any[]>([]);
+  // Calendar state
+  const [allEvents, setAllEvents] = useState<AthleticsCalendarEvent[]>([]);
+  const [filteredEvents, setFilteredEvents] = useState<AthleticsCalendarEvent[]>([]);
+  const [selectedYear, setSelectedYear] = useState<string>("");
+  const [availableYears, setAvailableYears] = useState<string[]>([]);
   const [month, setMonth] = useState<string>("All");
   const [months, setMonths] = useState<string[]>([]);
-  const [selectedEvent, setSelectedEvent] = useState<any>(null);
+  const [selectedEvent, setSelectedEvent] = useState<AthleticsCalendarEvent | null>(null);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  
+  // PDF extraction state
   const [file, setFile] = useState<File | null>(null);
   const [result, setResult] = useState<string>("");
   const [error, setError] = useState("");
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   
-  // New states for results
+  // Results state
   const [groupedResults, setGroupedResults] = useState<Record<string, AthleticsEvent[]>>({});
   const [eventNames, setEventNames] = useState<string[]>([]);
   const [activeEventTab, setActiveEventTab] = useState<string>("");
   const [loadingResults, setLoadingResults] = useState(false);
   const [resultsError, setResultsError] = useState("");
 
+  const { data: session } = useSession();
+  const userIsAdmin = isAdmin(session?.user?.email);
+
+  // Initialize: Load available years
   useEffect(() => {
-    async function fetchCalendar() {
-      const res = await fetch("/data/calendars/athletics_2025.json");
-      const data = await res.json();
-  setCalendar(data as AthleticsEvent[]);
-      setMonths([
-        "All",
-        ...Array.from(
-          new Set((data ?? []).map((m: any) => m.month))
-        ) as string[],
-      ]);
+    async function initializeYears() {
+      try {
+        const years = await getAvailableYears('athletics');
+        setAvailableYears(years);
+        
+        // Default to current year if available, otherwise first year
+        const currentYear = new Date().getFullYear().toString();
+        const defaultYear = years.includes(currentYear) ? currentYear : years[0];
+        setSelectedYear(defaultYear);
+      } catch (error) {
+        console.error('Error loading available years:', error);
+      }
     }
-    fetchCalendar();
+    
+    initializeYears();
   }, []);
+
+  // Load events when year changes
+  useEffect(() => {
+    if (!selectedYear) return;
+
+    async function loadEventsForYear() {
+      try {
+        const events = await getCalendarEvents('athletics', selectedYear);
+        setAllEvents(events as AthleticsCalendarEvent[]);
+        
+        // Extract unique months
+        const uniqueMonths = getUniqueMonths(events);
+        setMonths(uniqueMonths);
+        
+        // Reset month filter
+        setMonth("All");
+        
+        // Clear selection when year changes
+        setSelectedEvent(null);
+      } catch (error) {
+        console.error('Error loading events:', error);
+      }
+    }
+    
+    loadEventsForYear();
+  }, [selectedYear]);
+
+  // Filter events by month
+  useEffect(() => {
+    const filtered = filterEventsByMonth(allEvents, month) as AthleticsCalendarEvent[];
+    setFilteredEvents(filtered);
+  }, [allEvents, month]);
 
   // Fetch results from Firebase when event is selected
   useEffect(() => {
-    
-    console.log("Fetching results for event:", selectedEvent);
     async function fetchResults() {
       if (!selectedEvent?.id) return;
 
+      console.log("Fetching results for event:", selectedEvent);
       setLoadingResults(true);
       setResultsError("");
       setGroupedResults({});
@@ -92,8 +144,8 @@ export default function AthleticsPage() {
         });
 
         setGroupedResults(grouped);
-
         console.log("Grouped Results:", grouped);
+        
         const names = Object.keys(grouped).sort();
         setEventNames(names);
 
@@ -112,17 +164,13 @@ export default function AthleticsPage() {
     fetchResults();
   }, [selectedEvent]);
 
-  // Filter by month
-  const filtered = month === "All"
-    ? calendar
-    : calendar.filter((t: any) => t.month === month);
-
-  // When event is selected
-  function handleSelectEvent(event: any) {
+  // Event selection handler
+  function handleSelectEvent(event: AthleticsCalendarEvent) {
     setSelectedEvent(event);
     setIsMobileMenuOpen(false);
   }
 
+  // PDF extraction handlers
   async function handleExtract() {
     if (!file) return;
     try {
@@ -156,30 +204,53 @@ export default function AthleticsPage() {
     }
   }
 
+  const liveEvents = filteredEvents.filter(event => 
+    isEventLive(event.start_date, event.end_date)
+  );
+
   return (
     <div className="flex flex-col md:flex-row min-h-screen" style={{ background: "var(--background)", color: "var(--foreground)" }}>
       {/* Mobile Overlay */}
       {isMobileMenuOpen && (
         <div
-          className="md:hidden fixed inset-0 bg-black bg-opacity-50 z-30"
+          className="md:hidden fixed inset-0 bg-black bg-opacity-50 z-50"
           onClick={() => setIsMobileMenuOpen(false)}
         />
       )}
 
-      {/* Left panel calendar */}
+      {/* Consistent Calendar Sidebar */}
       <aside className={`
-        fixed md:static inset-y-0 left-0 z-40
+        fixed md:static inset-y-0 left-0 z-50
         w-80 md:w-96
         transform transition-transform duration-300 ease-in-out
         ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}
-        bg-[var(--surface)] p-4 overflow-y-auto
+        bg-[var(--surface)] border-r border-[var(--border)] p-4 overflow-y-auto
       `}>
-        {/* Filter by Month */}
+        {/* Year Filter */}
         <div className="mb-4">
-          <label className="block text-sm font-semibold mb-1" style={{ color: "var(--muted)" }}>Filter by Month</label>
+          <label className="block text-sm font-semibold mb-2" style={{ color: "var(--muted)" }}>
+            Filter by Year
+          </label>
           <select
-            className="w-full p-2 rounded border"
-            style={{ borderColor: "var(--muted-2)" }}
+            className="w-full p-2 rounded-lg bg-[var(--background)] border border-[var(--border)] focus:outline-none focus:ring-2 focus:ring-[var(--primary)]"
+            style={{ color: "var(--foreground)" }}
+            value={selectedYear}
+            onChange={e => setSelectedYear(e.target.value)}
+          >
+            {availableYears.map(year => (
+              <option key={year} value={year}>{year}</option>
+            ))}
+          </select>
+        </div>
+
+        {/* Month Filter */}
+        <div className="mb-4">
+          <label className="block text-sm font-semibold mb-2" style={{ color: "var(--muted)" }}>
+            Filter by Month
+          </label>
+          <select
+            className="w-full p-2 rounded-lg bg-[var(--background)] border border-[var(--border)] focus:outline-none focus:ring-2 focus:ring-[var(--primary)]"
+            style={{ color: "var(--foreground)" }}
             value={month}
             onChange={e => setMonth(e.target.value)}
           >
@@ -188,58 +259,96 @@ export default function AthleticsPage() {
             ))}
           </select>
         </div>
-        <div className="space-y-4">
-          {filtered.map((event: any) => (
-            <EventCard
-              key={event.title + event.start_date}
-              id={event.id}
-              name={event.title}
-              location={event.location}
-              startDate={event.start_date}
-              endDate={event.end_date}
-              accentColor={selectedEvent?.id === event.id ? "var(--primary)" : "var(--muted-2)"}
-              isLive={isLive(event.start_date, event.end_date)}
-              onClick={() => handleSelectEvent(event)}
-              className={selectedEvent?.title === event.title ? "ring-2" : ""}
-            />
-          ))}
+
+        {/* Events List */}
+        <div className="space-y-3">
+          {filteredEvents.length === 0 ? (
+            <p className="text-center py-8 text-sm" style={{ color: "var(--muted-2)" }}>
+              No events found for {selectedYear}
+            </p>
+          ) : (
+            filteredEvents.map((event, idx) => (
+              <EventCard
+                key={event.id || `${event.title}_${idx}`}
+                id={event.id || idx}
+                name={event.title || event.name}
+                location={event.location}
+                startDate={formatEventDate(event.start_date)}
+                endDate={formatEventDate(event.end_date)}
+                accentColor={selectedEvent?.id === event.id ? "var(--primary)" : "var(--muted-2)"}
+                isLive={isEventLive(event.start_date, event.end_date)}
+                onClick={() => handleSelectEvent(event)}
+                className={selectedEvent?.id === event.id ? "ring-2" : ""}
+              />
+            ))
+          )}
         </div>
       </aside>
 
-      {/* Right panel: event details */}
-      <main className="flex-1 p-4 md:p-8 overflow-y-auto" style={{ background: "var(--background)" }}>
-        {/* Mobile menu button */}
-        <button
-          className="md:hidden fixed top-15 right-4 z-50 p-2 rounded-lg shadow-lg"
-          style={{ background: "var(--surface)", color: "var(--foreground)" }}
-          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-        >
-          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            {isMobileMenuOpen ? (
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-            ) : (
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-            )}
-          </svg>
-        </button>
+      {/* Main Content */}
+      <main className="flex-1 p-4 md:p-8" style={{ background: "var(--background)" }}>
+        <div className="mb-4">
+          <div className="flex items-center justify-between">
+            <h1 className="text-xl font-bold" style={{ color: "var(--foreground)" }}>
+              Athletics
+            </h1>
+            <button
+              className="md:hidden p-2 rounded-lg shadow-lg"
+              style={{ background: "var(--surface)", color: "var(--foreground)" }}
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              aria-label="Open calendar menu"
+            >
+              {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+            </button>
+          </div>
+        </div>
 
-        <h1 className="text-xl font-bold mb-4 md:ml-0" style={{ color: "var(--foreground)" }}>Athletics</h1>
-        
+        {/* Compact Live Events Badges */}
+        {liveEvents.length > 0 && (
+          <div className="mb-4">
+            <div className="flex items-center gap-2 flex-wrap">
+              <span className="inline-block w-2 h-2 rounded-full animate-pulse" style={{ background: "var(--warning)" }}></span>
+              <span className="font-semibold text-sm" style={{ color: "var(--warning)" }}>Live : </span>
+              {liveEvents.map((event, idx) => (
+                <button
+                  key={event.id || idx}
+                  onClick={() => handleSelectEvent(event)}
+                  className="px-3 py-1.5 rounded-full text-xs hover:opacity-80 transition-opacity"
+                  style={{ 
+                    background: "var(--glass)",
+                    color: "var(--foreground)",
+                    border: `1px solid var(--muted-2)`
+                  }}
+                >
+                  {event.title || event.name}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Event Details and Results */}
         {selectedEvent ? (
           <div>
-            <div className="mb-2 text-xl font-bold" style={{ color: "var(--primary)" }}>{selectedEvent.title}</div>
-            <div className="mb-2 text-sm" style={{ color: "var(--muted)" }}>{selectedEvent.location}, {selectedEvent.start_date} to {selectedEvent.end_date}</div>
-            
+            <div className="mb-6">
+              <h2 className="text-xl font-bold mb-2" style={{ color: "var(--primary)" }}>
+                {selectedEvent.title || selectedEvent.name}
+              </h2>
+              <p className="text-sm" style={{ color: "var(--muted)" }}>
+                {selectedEvent.location} • {formatEventDate(selectedEvent.start_date)} - {formatEventDate(selectedEvent.end_date)}
+              </p>
+            </div>
             
             {/* Results Section */}
-            <div className="mb-8 b-r" style={{ background: "var(--surface)", borderColor: "var(--border)" }}>
-              {/* <h3 className="text-md font-semibold p-2" style={{ color: "var(--muted)" }}>
-                Tournament Results</h3> */}
-              
+            <div className="mb-8 rounded-lg" style={{ background: "var(--surface)" }}>
               {loadingResults ? (
-                <div>Fetching tournament results...</div>
+                <div className="p-8 text-center" style={{ color: "var(--muted)" }}>
+                  Fetching tournament results...
+                </div>
               ) : resultsError ? (
-                <div>{resultsError}</div>
+                <div className="p-8 text-center" style={{ color: "var(--danger)" }}>
+                  {resultsError}
+                </div>
               ) : eventNames.length > 0 ? (
                 <div className="flex flex-col md:flex-row">
                   {/* Vertical Tabs */}
@@ -251,8 +360,7 @@ export default function AthleticsPage() {
                   
                   {/* Results Table */}
                   <div className="flex-1 overflow-x-auto">
-                    {/* iterate through grouped results */}
-                    {groupedResults[activeEventTab].map((group, index) => (
+                    {groupedResults[activeEventTab]?.map((group, index) => (
                       <ResultsTable
                         key={index}
                         results={group.results || []}
@@ -262,76 +370,96 @@ export default function AthleticsPage() {
                   </div>
                 </div>
               ) : (
-                <div>No results available for this tournament yet.</div>
+                <div className="p-8 text-center" style={{ color: "var(--muted-2)" }}>
+                  No results available for this tournament yet.
+                </div>
               )}
             </div>
 
-            {/* PDF Upload and Extract Section */}
-            <div className="mt-8 p-4 border rounded-lg" style={{ background: "var(--glass)", borderColor: "var(--primary)" }}>
-              <h3 className="text-lg font-semibold mb-4" style={{ color: "var(--primary)" }}>Extract Results from PDF</h3>
-              <div className="space-y-4">
-                {/* Custom File Upload Button */}
-                <div>
-                  <label 
-                    htmlFor="pdf-upload" 
-                    className="inline-block px-4 py-2 rounded cursor-pointer text-sm font-medium transition-colors"
-                    style={{ 
-                      background: file ? "var(--muted)" : "var(--primary)", 
-                      color: "var(--surface)" 
-                    }}
-                  >
-                    {file ? `Selected: ${file.name}` : "Choose PDF File"}
-                  </label>
-                  <input
-                    id="pdf-upload"
-                    type="file"
-                    accept=".pdf"
-                    onChange={(e) => setFile(e.target.files?.[0] || null)}
-                    className="hidden"
-                  />
-                </div>
+            {/* PDF Upload and Extract Section - Only for Admins */}
+            {userIsAdmin && (
+              <div className="mt-8 p-6 border rounded-lg" style={{ background: "var(--glass)", borderColor: "var(--border)" }}>
+                <h3 className="text-lg font-semibold mb-4" style={{ color: "var(--primary)" }}>
+                  Extract Results from PDF
+                </h3>
+                <div className="space-y-4">
+                  {/* Custom File Upload Button */}
+                  <div>
+                    <label 
+                      htmlFor="pdf-upload" 
+                      className="inline-block px-4 py-2 rounded cursor-pointer text-sm font-medium transition-colors"
+                      style={{ 
+                        background: file ? "var(--muted)" : "var(--primary)", 
+                        color: "var(--surface)" 
+                      }}
+                    >
+                      {file ? `Selected: ${file.name}` : "Choose PDF File"}
+                    </label>
+                    <input
+                      id="pdf-upload"
+                      type="file"
+                      accept=".pdf"
+                      onChange={(e) => setFile(e.target.files?.[0] || null)}
+                      className="hidden"
+                    />
+                  </div>
 
-                <Button
-                  onClick={handleExtract}
-                  disabled={!file}
-                  variant={file ? "primary" : "secondary"}
-                  className={!file ? "opacity-50 cursor-not-allowed" : ""}
-                >
-                  Extract Text
-                </Button>
-                
-                {error && (
-                  <div className="text-sm p-2 rounded" style={{ color: "var(--danger)", background: "rgba(239, 68, 68, 0.1)" }}>
-                    {error}
-                  </div>
-                )}
-                
-                {result && (
-                  <div className="mt-4">
-                    <div className="flex justify-between items-center mb-2">
-                      <h4 className="font-semibold" style={{ color: "var(--primary)" }}>Extracted Text:</h4>
-                      <button
-                        onClick={handleCopy}
-                        className="text-sm px-3 py-1 rounded transition-colors hover:opacity-80"
-                        style={{ 
-                          background: "var(--primary)", 
-                          color: "var(--surface)" 
-                        }}
-                      >
-                        Copy
-                      </button>
+                  <Button
+                    onClick={handleExtract}
+                    disabled={!file}
+                    variant={file ? "primary" : "secondary"}
+                    className={!file ? "opacity-50 cursor-not-allowed" : ""}
+                  >
+                    Extract Text
+                  </Button>
+                  
+                  {error && (
+                    <div className="text-sm p-3 rounded" style={{ color: "var(--danger)", background: "rgba(239, 68, 68, 0.1)" }}>
+                      {error}
                     </div>
-                    <pre className="p-4 rounded border text-sm overflow-auto max-h-48 md:max-h-96 whitespace-pre-wrap break-words" style={{ background: "var(--surface)", color: "var(--muted)" }}>
-                      {result}
-                    </pre>
-                  </div>
-                )}
+                  )}
+                  
+                  {result && (
+                    <div className="mt-4">
+                      <div className="flex justify-between items-center mb-2">
+                        <h4 className="font-semibold" style={{ color: "var(--primary)" }}>Extracted Text:</h4>
+                        <button
+                          onClick={handleCopy}
+                          className="text-sm px-3 py-1 rounded transition-colors hover:opacity-80"
+                          style={{ 
+                            background: "var(--primary)", 
+                            color: "var(--surface)" 
+                          }}
+                        >
+                          Copy
+                        </button>
+                      </div>
+                      <pre className="p-4 rounded border text-sm overflow-auto max-h-48 md:max-h-96 whitespace-pre-wrap break-words" style={{ background: "var(--surface)", color: "var(--muted)", borderColor: "var(--border)" }}>
+                        {result}
+                      </pre>
+                    </div>
+                  )}
+                </div>
               </div>
-            </div>
+            )}
           </div>
         ) : (
-          <div className="text-center text-sm mt-20" style={{ color: "var(--muted)" }}>
-            Select a tournament from the calendar to see details and results.
+          <div className="shadow-sm rounded-lg" style={{ background: "var(--surface)" }}>
+            <div className="p-12 text-center">
+              <h2 className="text-xl font-semibold mb-2" style={{ color: "var(--primary)" }}>
+                Select an Event
+              </h2>
+              <p style={{ color: "var(--muted-2)" }}>
+                Choose an event from the calendar to view athletics results
+              </p>
+              <button
+                onClick={() => setIsMobileMenuOpen(true)}
+                className="md:hidden mt-6 px-6 py-3 rounded-lg font-medium transition-opacity hover:opacity-90"
+                style={{ background: "var(--primary)", color: "white" }}
+              >
+                Open Calendar
+              </button>
+            </div>
           </div>
         )}
       </main>

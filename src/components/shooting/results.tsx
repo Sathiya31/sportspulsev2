@@ -240,7 +240,7 @@ const ShootingResults = ({ selectedCompetition }: { selectedCompetition: Shootin
           <div className="flex items-center gap-3">
             <div className="flex items-center justify-center w-8 h-8 rounded-full font-bold text-xs"
               style={getMedalStyle(result.athlete_result.rank)}>
-              {result.athlete_result.rank}
+              {(!isQualification && getMedalIcon(result.athlete_result.rank)) || result.athlete_result.rank}
             </div>
             <div>
               <h3 className="font-bold text-sm md:text-base" style={{ color: "var(--foreground)" }}>

@@ -1,7 +1,8 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
-import { Menu, X, ChevronDown, ChevronUp } from 'lucide-react';
+import { useState, useEffect } from "react";
+import { Menu, X } from 'lucide-react';
+import Head from "next/head";
 import EventCard from "@/components/ui/EventCard";
 import ShootingResults from "../../components/shooting/results";
 import ShootingExtractor from '../../components/shooting/ShootingExtractor';
@@ -11,251 +12,105 @@ import { ShootingEvent } from "@/shootingCalendar";
 import PlayerSearchBar from "@/components/badminton/PlayerSearchBar";
 import { getShootingAthleteResults } from "@/services/athleteService";
 import AthleteResultsDisplay from "@/components/shooting/AthleteResults";
-import Head from "next/head";
+import {
+  getCalendarEvents,
+  getAvailableYears,
+  getUniqueMonths,
+  filterEventsByMonth,
+  isEventLive,
+  formatEventDate,
+  type CalendarEvent
+} from "@/services/calendarService";
 
-// Utility to check if an event is live
-
-function isLive(startDate: string, endDate: string) {
-  const now = new Date();
-  const start = new Date(startDate);
-  const end = new Date(endDate);
-  return now >= start && now <= end;
+// Shooting specific event interface
+interface ShootingCalendarEvent extends CalendarEvent {
+  competition_code?: string;
+  event_name?: string;
 }
 
-// Mobile Calendar Overlay Component
-const MobileCalendarOverlay = ({ 
-  isOpen, 
-  onClose, 
-  events, 
-  selectedCompetition, 
-  onEventSelect,
-  filter,
-  setFilter
-}: {
-  isOpen: boolean;
-  onClose: () => void;
-  events: ShootingEvent[];
-  selectedCompetition: ShootingEvent | null;
-  onEventSelect: (event: ShootingEvent) => void;
-  filter: string;
-  setFilter: (filter: string) => void;
-}) => {
-  useEffect(() => {
-    if (isOpen) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = 'unset';
-    }
-    return () => {
-      document.body.style.overflow = 'unset';
-    };
-  }, [isOpen]);
-
-  if (!isOpen) return null;
-
-  const filteredEvents = events.filter((item: ShootingEvent) =>
-    item.event_name.toLowerCase().includes(filter.toLowerCase()) ||
-    item.location.toLowerCase().includes(filter.toLowerCase()) ||
-    item.start_date.includes(filter) ||
-    item.end_date.includes(filter)
-  );
-
-  return (
-    <>
-      {/* Backdrop */}
-      <div 
-        className="fixed inset-0 bg-black/50 z-40 lg:hidden"
-        onClick={onClose}
-      />
-      
-      {/* Overlay Panel */}
-      <div 
-        className="fixed inset-0 z-50 lg:hidden"
-        style={{ background: "var(--surface)" }}
-      >
-        {/* Header */}
-        <div className="flex items-center justify-between p-4 border-b" style={{ borderColor: "var(--border)" }}>
-          <h2 className="text-xl font-semibold" style={{ color: "var(--primary)" }}>
-            2025 Calendar
-          </h2>
-          <button
-            onClick={onClose}
-            className="p-2 hover:opacity-70 transition-opacity"
-            style={{ color: "var(--foreground)" }}
-            aria-label="Close calendar"
-          >
-            <X size={24} />
-          </button>
-        </div>
-
-        {/* Search/Filter */}
-        <div className="p-4 border-b" style={{ borderColor: "var(--border)" }}>
-          <div className="relative">
-            <input
-              type="text"
-              className="w-full p-3 pl-10 rounded-xl border transition-all duration-300"
-              style={{ background: "var(--glass)", borderColor: "var(--border)", color: "var(--foreground)" }}
-              placeholder="Filter events..."
-              value={filter}
-              onChange={e => setFilter(e.target.value)}
-            />
-            <svg className="absolute left-3 top-3.5 w-5 h-5" style={{ color: "var(--muted)" }} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-            </svg>
-          </div>
-        </div>
-
-        {/* Events List */}
-        <div className="overflow-y-auto p-4" style={{ height: 'calc(100vh - 145px)' }}>
-          {filteredEvents.length === 0 ? (
-            <p className="text-center py-8" style={{ color: "var(--muted-2)" }}>No events found</p>
-          ) : (
-            <div className="space-y-2">
-              {filteredEvents.map((item: ShootingEvent, idx: number) => (
-                <EventCard
-                  key={item.competition_code || idx}
-                  id={item.competition_code || idx}
-                  name={item.event_name}
-                  location={item.location}
-                  startDate={item.start_date}
-                  endDate={item.end_date}
-                  accentColor={selectedCompetition?.competition_code === item.competition_code ? "var(--primary)" : "var(--muted-2)"}
-                  isLive={isLive(item.start_date, item.end_date)}
-                  onClick={() => {
-                    onEventSelect(item);
-                    onClose(); // Auto-close after selection
-                  }}
-                  className={selectedCompetition?.competition_code === item.competition_code ? "ring-2" : ""}
-                />
-              ))}
-            </div>
-          )}
-        </div>
-      </div>
-    </>
-  );
-};
-
-// Mobile Live Events Dropdown Component
-const MobileLiveEventsDropdown = ({ 
-  liveEvents,
-  onEventSelect
-}: {
-  liveEvents: ShootingEvent[];
-  onEventSelect: (event: ShootingEvent) => void;
-}) => {
-  const [isOpen, setIsOpen] = useState(false);
-  const dropdownRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-        setIsOpen(false);
-      }
-    };
-
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
-
-  if (liveEvents.length === 0) return null;
-
-  return (
-    <div className="relative lg:hidden mb-4" ref={dropdownRef}>
-      <button
-        onClick={() => setIsOpen(!isOpen)}
-        className="w-full px-4 py-3 rounded-lg flex items-center justify-between transition-colors"
-        style={{
-          background: "var(--surface)",
-          border: "1px solid var(--border)",
-          color: "var(--accent)"
-        }}
-      >
-        <div className="flex items-center gap-2">
-          <span className="w-2 h-2 rounded-full animate-pulse" style={{ background: "var(--accent)" }}></span>
-          <span className="font-medium">Live Events ({liveEvents.length})</span>
-        </div>
-        {isOpen ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
-      </button>
-
-      {isOpen && (
-        <div 
-          className="absolute top-full left-0 right-0 mt-2 rounded-lg shadow-lg z-30 max-h-80 overflow-y-auto"
-          style={{ background: "var(--surface)", border: "1px solid var(--border)" }}
-        >
-          {liveEvents.map((event, idx) => (
-            <button
-              key={event.competition_code || idx}
-              onClick={() => {
-                onEventSelect(event);
-                setIsOpen(false);
-              }}
-              className="w-full px-4 py-3 text-left hover:opacity-80 transition-opacity border-b last:border-b-0"
-              style={{
-                color: "var(--foreground)",
-                borderColor: "var(--border)"
-              }}
-            >
-              <div className="flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full" style={{ background: "var(--accent)" }}></span>
-                <div>
-                  <div className="font-medium">{event.event_name}</div>
-                  <div className="text-xs" style={{ color: "var(--muted)" }}>{event.location}</div>
-                </div>
-              </div>
-            </button>
-          ))}
-        </div>
-      )}
-    </div>
-  );
-};
-
 export default function ShootingPage() {
-  const [filter, setFilter] = useState("");
-  const [events, setEvents] = useState<ShootingEvent[]>([]);
-  const [selectedCompetition, setSelectedCompetition] = useState<ShootingEvent | null>(null);
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  // Player search state
   const [selectedPlayer, setSelectedPlayer] = useState<any>(null);
   const [playerResults, setPlayerResults] = useState<any[]>([]);
+  
+  // Calendar state
+  const [allEvents, setAllEvents] = useState<ShootingEvent[]>([]);
+  const [filteredEvents, setFilteredEvents] = useState<ShootingEvent[]>([]);
+  const [selectedYear, setSelectedYear] = useState<string>("");
+  const [availableYears, setAvailableYears] = useState<string[]>([]);
+  const [month, setMonth] = useState<string>("All");
+  const [months, setMonths] = useState<string[]>([]);
+  
+  // Event state
+  const [selectedCompetition, setSelectedCompetition] = useState<ShootingEvent | null>(null);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const { data: session } = useSession(); 
   const userIsAdmin = isAdmin(session?.user?.email);
 
+  // Initialize: Load available years
   useEffect(() => {
-    fetch("/data/calendars/shooting_2025.json")
-      .then((res) => res.json())
-      .then((data) => setEvents(data))
-      .catch(() => setEvents([]));
+    async function initializeYears() {
+      try {
+        const years = await getAvailableYears('shooting');
+        setAvailableYears(years);
+        
+        // Default to current year if available, otherwise first year
+        const currentYear = new Date().getFullYear().toString();
+        const defaultYear = years.includes(currentYear) ? currentYear : years[0];
+        setSelectedYear(defaultYear);
+      } catch (error) {
+        console.error('Error loading available years:', error);
+      }
+    }
+    
+    initializeYears();
   }, []);
 
-  function handleCardClick(item: ShootingEvent) {
-    console.log("Selected competition:", item);
-    setSelectedCompetition(item || null);
-  }
+  // Load events when year changes
+  useEffect(() => {
+    if (!selectedYear) return;
 
-  // Find live events
-  const liveEvents = events.filter(event => isLive(event.start_date, event.end_date));
+    async function loadEventsForYear() {
+      try {
+        const events = await getCalendarEvents('shooting', selectedYear);
+        setAllEvents(events as Shooting[]);
+        
+        // Extract unique months
+        const uniqueMonths = getUniqueMonths(events);
+        setMonths(uniqueMonths);
+        
+        // Reset month filter
+        setMonth("All");
+        
+        // Clear selection when year changes
+        setSelectedCompetition(null);
+      } catch (error) {
+        console.error('Error loading events:', error);
+      }
+    }
+    
+    loadEventsForYear();
+  }, [selectedYear]);
 
-  // Filtered events for sidebar
-  const filteredEvents = events.filter((item: ShootingEvent) =>
-    item.event_name.toLowerCase().includes(filter.toLowerCase()) ||
-    item.location.toLowerCase().includes(filter.toLowerCase()) ||
-    item.start_date.includes(filter) ||
-    item.end_date.includes(filter)
-  );
+  // Filter events by month
+  useEffect(() => {
+    const filtered = filterEventsByMonth(allEvents, month) as ShootingEvent[];
+    setFilteredEvents(filtered);
+  }, [allEvents, month]);
 
+  // Player select handler
   async function handlePlayerSelect(player: any) {
     console.log("Selected player:", player);
     setSelectedPlayer(player);
     setSelectedCompetition(null);
     try {
-      const playerId = player.playerId
+      const playerId = player.playerId;
       const results = await getShootingAthleteResults(playerId);
       console.log("Fetched player results:", playerId, results);
       setPlayerResults(results);
     } catch (err: any) {
-      console.error(err)
+      console.error(err);
       setPlayerResults([]);
     }
   }
@@ -265,6 +120,19 @@ export default function ShootingPage() {
     setSelectedPlayer(null);
     setPlayerResults([]);
   }
+
+  // Event selection handler
+  function handleCardClick(item: ShootingEvent) {
+    console.log("Selected competition:", item);
+    setSelectedCompetition(item);
+    setSelectedPlayer(null);
+    setPlayerResults([]);
+    setIsMobileMenuOpen(false);
+  }
+
+  const liveEvents = filteredEvents.filter(event => 
+    isEventLive(event.start_date, event.end_date)
+  );
 
   return (
     <>
@@ -283,78 +151,101 @@ export default function ShootingPage() {
           `}
         </script>
       </Head>
-    <div className="min-h-screen" style={{ background: "var(--background)", color: "var(--foreground)" }}>
-      <div className="grid grid-cols-1 lg:grid-cols-3">
-        {/* Desktop Calendar - Left Side */}
-        <div className="hidden lg:block lg:col-span-1 bg-[var(--surface)]">
-          <div className="shadow-sm p-4 overflow-y-auto">
-            <h2 className="text-xl font-bold my-3" style={{ color: "var(--primary)" }}>
-              2025 Calendar
-            </h2>
-            <div className="mb-2">
-              <div className="relative">
-                <input
-                  type="text"
-                  className="w-full p-3 pl-10 rounded-xl border transition-all duration-300"
-                  style={{ background: "var(--glass)", borderColor: "var(--border)", color: "var(--foreground)" }}
-                  placeholder="Filter events..."
-                  value={filter}
-                  onChange={e => setFilter(e.target.value)}
-                />
-                <svg className="absolute left-3 top-3.5 w-5 h-5" style={{ color: "var(--muted)" }} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                </svg>
-              </div>
-            </div>
-            <div className="grid gap-1">
-              {filteredEvents.map((item: ShootingEvent, idx: number) => (
+
+      <div className="flex flex-col md:flex-row min-h-screen" style={{ background: "var(--background)", color: "var(--foreground)" }}>
+        {/* Mobile Overlay */}
+        {isMobileMenuOpen && (
+          <div
+            className="md:hidden fixed inset-0 bg-black bg-opacity-50 z-50"
+            onClick={() => setIsMobileMenuOpen(false)}
+          />
+        )}
+
+        {/* Consistent Calendar Sidebar */}
+        <aside className={`
+          fixed md:static inset-y-0 left-0 z-50
+          w-80 md:w-96
+          transform transition-transform duration-300 ease-in-out
+          ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}
+          bg-[var(--surface)] border-r border-[var(--border)] p-4 overflow-y-auto
+        `}>
+          {/* Year Filter */}
+          <div className="mb-4">
+            <label className="block text-sm font-semibold mb-2" style={{ color: "var(--muted)" }}>
+              Filter by Year
+            </label>
+            <select
+              className="w-full p-2 rounded-lg bg-[var(--background)] border border-[var(--border)] focus:outline-none focus:ring-2 focus:ring-[var(--primary)]"
+              style={{ color: "var(--foreground)" }}
+              value={selectedYear}
+              onChange={e => setSelectedYear(e.target.value)}
+            >
+              {availableYears.map(year => (
+                <option key={year} value={year}>{year}</option>
+              ))}
+            </select>
+          </div>
+
+          {/* Month Filter */}
+          <div className="mb-4">
+            <label className="block text-sm font-semibold mb-2" style={{ color: "var(--muted)" }}>
+              Filter by Month
+            </label>
+            <select
+              className="w-full p-2 rounded-lg bg-[var(--background)] border border-[var(--border)] focus:outline-none focus:ring-2 focus:ring-[var(--primary)]"
+              style={{ color: "var(--foreground)" }}
+              value={month}
+              onChange={e => setMonth(e.target.value)}
+            >
+              {months.map(m => (
+                <option key={m} value={m}>{m}</option>
+              ))}
+            </select>
+          </div>
+
+          {/* Events List */}
+          <div className="space-y-3">
+            {filteredEvents.length === 0 ? (
+              <p className="text-center py-8 text-sm" style={{ color: "var(--muted-2)" }}>
+                No events found for {selectedYear}
+              </p>
+            ) : (
+              filteredEvents.map((item, idx) => (
                 <EventCard
                   key={item.competition_code || idx}
                   id={item.competition_code || idx}
                   name={item.event_name}
                   location={item.location}
-                  startDate={item.start_date}
-                  endDate={item.end_date}
+                  startDate={formatEventDate(item.start_date)}
+                  endDate={formatEventDate(item.end_date)}
                   accentColor={selectedCompetition?.competition_code === item.competition_code ? "var(--primary)" : "var(--muted-2)"}
-                  isLive={isLive(item.start_date, item.end_date)}
+                  isLive={isEventLive(item.start_date, item.end_date)}
                   onClick={() => handleCardClick(item)}
                   className={selectedCompetition?.competition_code === item.competition_code ? "ring-2" : ""}
                 />
-              ))}
-            </div>
+              ))
+            )}
           </div>
-        </div>
-
-        {/* Mobile Calendar Overlay */}
-        <MobileCalendarOverlay
-          isOpen={isMobileMenuOpen}
-          onClose={() => setIsMobileMenuOpen(false)}
-          events={events}
-          selectedCompetition={selectedCompetition}
-          onEventSelect={handleCardClick}
-          filter={filter}
-          setFilter={setFilter}
-        />
+        </aside>
 
         {/* Main Content */}
-        <div className="p-4 md:p-8 lg:col-span-2">
-          {/* Header with Mobile Menu Toggle */}
+        <main className="flex-1 p-4 md:p-8" style={{ background: "var(--background)" }}>
           <div className="mb-4">
-            <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between mb-3">
-              <div className="flex items-center justify-between gap-2">
-                <h1 className="text-xl md:text-2xl font-bold" style={{ color: "var(--foreground)" }}>
+            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3 md:gap-4">
+              <div className="flex items-center justify-between w-full md:w-auto">
+                <h1 className="text-xl font-bold" style={{ color: "var(--foreground)" }}>
                   Shooting
                 </h1>
                 <button
-                  onClick={() => setIsMobileMenuOpen(true)}
-                  className="lg:hidden p-2 hover:opacity-70 transition-opacity"
-                  style={{ color: "var(--primary)" }}
+                  className="md:hidden ml-2 p-2 rounded-lg shadow-lg"
+                  style={{ background: "var(--surface)", color: "var(--foreground)" }}
+                  onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                   aria-label="Open calendar menu"
                 >
-                  <Menu size={28} />
+                  {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
                 </button>
               </div>
-              <div className="w-full max-w-xs mt-2 md:mt-0">
+              <div className="w-full md:w-auto md:max-w-xs mt-2 md:mt-0">
                 <PlayerSearchBar
                   sport="Shooting"
                   onSelect={handlePlayerSelect}
@@ -363,27 +254,23 @@ export default function ShootingPage() {
               </div>
             </div>
           </div>
-          
-          {/* Mobile Live Events Dropdown */}
-          <MobileLiveEventsDropdown
-            liveEvents={liveEvents}
-            onEventSelect={handleCardClick}
-          />
 
-          {/* Desktop Live Events Chips */}
+          {/* Compact Live Events Badges */}
           {liveEvents.length > 0 && (
-            <div className="hidden lg:block mb-4">
-              <div className="flex items-center gap-2 mb-2">
-                <span className="w-2 h-2 rounded-full animate-pulse" style={{ background: "var(--accent)" }}></span>
-                <span className="font-semibold text-lg" style={{ color: "var(--accent)" }}>Live Events</span>
-              </div>
-              <div className="flex flex-wrap gap-2">
+            <div className="mb-4">
+              <div className="flex items-center gap-2 flex-wrap">
+                <span className="inline-block w-2 h-2 rounded-full animate-pulse" style={{ background: "var(--warning)" }}></span>
+                <span className="font-semibold text-sm" style={{ color: "var(--warning)" }}>Live : </span>
                 {liveEvents.map((event, idx) => (
                   <button
                     key={event.competition_code || idx}
                     onClick={() => handleCardClick(event)}
-                    className="px-3 py-1 rounded-full text-sm transition-opacity hover:opacity-80"
-                    style={{ background: "var(--accent)", color: "white" }}
+                    className="px-3 py-1.5 rounded-full text-xs hover:opacity-80 transition-opacity"
+                    style={{ 
+                      background: "var(--glass)",
+                      color: "var(--foreground)",
+                      border: `1px solid var(--muted-2)`
+                    }}
                   >
                     {event.event_name}
                   </button>
@@ -392,49 +279,49 @@ export default function ShootingPage() {
             </div>
           )}
 
-          {/* Results Section */}
-          <div>
-            {selectedCompetition ? (
-              <ShootingResults selectedCompetition={selectedCompetition} />
-            ) : 
-              (selectedPlayer && playerResults) ? (
-                <div>
-                  <AthleteResultsDisplay
-                    athlete={selectedPlayer}
-                    results={playerResults}
-                    onBack={() => handlePlayerClear()} />
-                </div>
-              ) :
-            (
-              <div className="shadow-sm" style={{ background: "var(--surface)" }}>
-                <div className="p-12 text-center">
-                  <h2 className="text-xl font-semibold mb-2" style={{ color: "var(--primary)" }}>
-                    Select an Event
-                  </h2>
-                  <p style={{ color: "var(--muted-2)" }}>
-                    Choose an event from the calendar to view results
-                  </p>
-                  <button
-                    onClick={() => setIsMobileMenuOpen(true)}
-                    className="lg:hidden mt-6 px-6 py-3 rounded-lg font-medium transition-opacity hover:opacity-90"
-                    style={{ background: "var(--primary)", color: "white" }}
-                  >
-                    Open Calendar
-                  </button>
-                </div>
-              </div>
-            )}
-          </div>
+          {/* Player Results */}
+          {selectedPlayer && playerResults && (
+            <AthleteResultsDisplay
+              athlete={selectedPlayer}
+              results={playerResults}
+              onBack={handlePlayerClear}
+            />
+          )}
 
-          {/* Extractor for admins only */}
-          {userIsAdmin && (
-            <div className="mt-8 pt-8 border-t" style={{ borderColor: "var(--muted-2)" }}>
-              <ShootingExtractor selectedCompetition={selectedCompetition?.competition_code}/>
+          {/* Event Results */}
+          {selectedCompetition && !selectedPlayer && (
+            <ShootingResults selectedCompetition={selectedCompetition} />
+          )}
+
+          {/* Empty State */}
+          {!selectedCompetition && !selectedPlayer && (
+            <div className="shadow-sm rounded-lg" style={{ background: "var(--surface)" }}>
+              <div className="p-12 text-center">
+                <h2 className="text-xl font-semibold mb-2" style={{ color: "var(--primary)" }}>
+                  Select an Event
+                </h2>
+                <p style={{ color: "var(--muted-2)" }}>
+                  Choose an event from the calendar or search for a player to view shooting results
+                </p>
+                <button
+                  onClick={() => setIsMobileMenuOpen(true)}
+                  className="md:hidden mt-6 px-6 py-3 rounded-lg font-medium transition-opacity hover:opacity-90"
+                  style={{ background: "var(--primary)", color: "white" }}
+                >
+                  Open Calendar
+                </button>
+              </div>
             </div>
           )}
-        </div>
+
+          {/* Admin Controls - Extractor */}
+          {userIsAdmin && selectedCompetition && (
+            <div className="mt-8 pt-8 border-t" style={{ borderColor: "var(--border)" }}>
+              <ShootingExtractor selectedCompetition={selectedCompetition.competition_code} />
+            </div>
+          )}
+        </main>
       </div>
-    </div>
     </>
   );
 }
