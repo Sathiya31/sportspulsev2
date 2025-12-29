@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { ChevronDown, ChevronUp, ArrowLeft, Trophy, Target } from 'lucide-react';
 import { toCapitalizedCase } from '@/utils/common';
-import { MatchData, Competitor } from '@/app/archery/page';
+import { MatchData, Competitor } from '@/types/archery';
 import { getCategoryLabel, getPhaseName } from '@/utils/archeryUtils';
 
 

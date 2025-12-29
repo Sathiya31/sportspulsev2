@@ -47,8 +47,8 @@ export default function TableTennisPage() {
   const [availableYears, setAvailableYears] = useState<string[]>([]);
   const [month, setMonth] = useState<string>("All");
   const [months, setMonths] = useState<string[]>([]);
-  const [category, setCategory] = useState<string>("All");
-  const [categories, setCategories] = useState<string[]>([]);
+  // const [category, setCategory] = useState<string>("All");
+  // const [categories, setCategories] = useState<string[]>([]);
   
   // Event state
   const [selectedEvent, setSelectedEvent] = useState<TableTennisEvent | null>(null);
@@ -102,11 +102,11 @@ export default function TableTennisPage() {
         sortedEvents.forEach((ev) => {
           if (ev.Event_Tier_Name) catSet.add(ev.Event_Tier_Name);
         });
-        setCategories(["All", ...Array.from(catSet)]);
+        // setCategories(["All", ...Array.from(catSet)]);
         
         // Reset filters
         setMonth("All");
-        setCategory("All");
+        // setCategory("All");
         
         // Clear selection when year changes
         setSelectedEvent(null);
@@ -128,12 +128,12 @@ export default function TableTennisPage() {
     }
     
     // Filter by category
-    if (category !== "All") {
-      filtered = filtered.filter(ev => ev.Event_Tier_Name === category);
-    }
+    // if (category !== "All") {
+    //   filtered = filtered.filter(ev => ev.Event_Tier_Name === category);
+    // }
     
     setFilteredEvents(filtered);
-  }, [allEvents, month, category]);
+  }, [allEvents, month]);
 
   // Player select handler
   async function handlePlayerSelect(player: any) {

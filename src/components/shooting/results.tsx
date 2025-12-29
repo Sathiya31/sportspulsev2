@@ -5,7 +5,7 @@ import { ChevronDown, ChevronUp } from 'lucide-react';
 import { collection, query, where, getDocs } from 'firebase/firestore';
 import { db } from '@/config/firebase';
 import Button from '@/components/ui/Button';
-import { ShootingEvent } from '@/shootingCalendar';
+import { ShootingEvent } from '@/app/shooting/page';
 import {getMedalIcon, getMedalStyle} from '@/utils/common';
 
 export interface SeriesScores {

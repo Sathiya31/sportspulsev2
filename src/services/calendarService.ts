@@ -41,8 +41,9 @@ export async function getAvailableYears(sport: Sport): Promise<string[]> {
       if (response.ok) {
         years.push(year.toString());
       }
-    } catch (error) {
+    } catch {
       // File doesn't exist, skip
+      console.log(`No calendar file for ${sport} ${year}`);
       continue;
     }
   }

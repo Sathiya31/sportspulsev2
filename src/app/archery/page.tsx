@@ -10,17 +10,16 @@ import { isAdmin } from "@/config/auth";
 import PlayerSearchBar from '@/components/badminton/PlayerSearchBar';
 import { getArcheryAthleteResults } from '@/services/athleteService';
 import ArcheryPlayerResults from '@/components/archery/AthleteResults';
-import { getCategoryLabel, getPhaseName } from '@/utils/archeryUtils';
+import { getCategoryLabel } from '@/utils/archeryUtils';
 import {
   getCalendarEvents,
   getAvailableYears,
   getUniqueMonths,
   filterEventsByMonth,
   isEventLive,
-  formatEventDate,
-  type CalendarEvent
+  formatEventDate
 } from "@/services/calendarService";
-import type { Event, MatchData, Competitor } from '@/types/archery';
+import type { Event, MatchData } from '@/types/archery';
 import { PhaseAccordion } from '@/components/archery/PhaseAccordion';
 
 // Helper functions

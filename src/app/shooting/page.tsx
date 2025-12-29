@@ -8,7 +8,6 @@ import ShootingResults from "../../components/shooting/results";
 import ShootingExtractor from '../../components/shooting/ShootingExtractor';
 import { useSession } from 'next-auth/react';
 import { isAdmin } from "@/config/auth";
-import { ShootingEvent } from "@/shootingCalendar";
 import PlayerSearchBar from "@/components/badminton/PlayerSearchBar";
 import { getShootingAthleteResults } from "@/services/athleteService";
 import AthleteResultsDisplay from "@/components/shooting/AthleteResults";
@@ -23,9 +22,9 @@ import {
 } from "@/services/calendarService";
 
 // Shooting specific event interface
-interface ShootingCalendarEvent extends CalendarEvent {
+export interface ShootingEvent extends CalendarEvent {
   competition_code?: string;
-  event_name?: string;
+  event_name: string;
 }
 
 export default function ShootingPage() {
@@ -74,7 +73,7 @@ export default function ShootingPage() {
     async function loadEventsForYear() {
       try {
         const events = await getCalendarEvents('shooting', selectedYear);
-        setAllEvents(events as Shooting[]);
+        setAllEvents(events as ShootingEvent[]);
         
         // Extract unique months
         const uniqueMonths = getUniqueMonths(events);
