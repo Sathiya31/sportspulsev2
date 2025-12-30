@@ -71,15 +71,6 @@
     "start_date": "2025-10-17",
     "end_date": "2025-10-19"
   },
-   {
-    "id": 29400,
-    "name": "Dhaka 2025 Asian Archery Championships",
-    "level": "Continental Championships",
-    "sublevel": "Asian Outdoor Championships",
-    "location": "Dhaka, Bangladesh",
-    "start_date": "2025-11-08",
-    "end_date": "2025-11-14"
-  },
   {
     "id": 29308,
     "name": "Swiss Open Lausanne 2025",
@@ -88,6 +79,15 @@
     "location": "Lausanne, Switzerland",
     "start_date": "2025-10-31",
     "end_date": "2025-11-02"
+  },
+   {
+    "id": 29400,
+    "name": "Dhaka 2025 Asian Archery Championships",
+    "level": "Continental Championships",
+    "sublevel": "Asian Outdoor Championships",
+    "location": "Dhaka, Bangladesh",
+    "start_date": "2025-11-08",
+    "end_date": "2025-11-14"
   },
   {
     "id": 29728,
@@ -107,13 +107,13 @@
     "start_date": "2025-12-05",
     "end_date": "2025-12-07"
   },
-  {
-    "id": 29963,
-    "name": "Rio de Janeiro - IWS 250",
-    "level": "World Cup",
-    "sublevel": "Indoor World Series",
-    "location": "Rio de Janeiro, Brazil",
-    "start_date": "2025-12-12",
+   {
+    "id": 30024,
+    "name": "Dubai 2025 Asian Youth Para Games",
+    "level": "Multisport Continental Event",
+    "sublevel": "Asian Youth Para Games",
+    "location": "Dubai, United Arab Emirates",
+    "start_date": "2025-12-07",
     "end_date": "2025-12-14"
   }
 ]
