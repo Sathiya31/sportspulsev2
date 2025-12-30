@@ -161,7 +161,7 @@ const BadmintonPlayerResults = ({
       return tournamentList.sort((a, b) => 
         new Date(b.date).getTime() - new Date(a.date).getTime()
       );
-    }, [matches, player.playerId]);
+    }, [matches]);
 
   // Calculate statistics
   const stats = useMemo(() => {
