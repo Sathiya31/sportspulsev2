@@ -1,0 +1,322 @@
+[
+  {
+    "id": 30125,
+    "name": "Sandefjord Bueskyttere",
+    "level": "Other International Event",
+    "sublevel": null,
+    "location": "Sandefjord, Norway",
+    "start_date": "2026-01-03",
+    "end_date": "2026-01-03",
+    "logo": ""
+  },
+  {
+    "id": 30126,
+    "name": "Sandefjord Bueskyttere",
+    "level": "Other International Event",
+    "sublevel": null,
+    "location": "Sandefjord, Norway",
+    "start_date": "2026-01-03",
+    "end_date": "2026-01-03",
+    "logo": ""
+  },
+  {
+    "id": 30166,
+    "name": "Lowlands Archery Series Indoor - stage 6",
+    "level": "Other International Event",
+    "sublevel": null,
+    "location": "Ysselsteyn, Netherlands",
+    "start_date": "2026-01-04",
+    "end_date": "2026-01-04",
+    "logo": ""
+  },
+  {
+    "id": 29730,
+    "name": "Nimes Archery Tournament",
+    "level": "World Cup",
+    "sublevel": "Indoor World Series",
+    "location": "Nimes, France",
+    "start_date": "2026-01-16",
+    "end_date": "2026-01-18",
+    "logo": ""
+  },
+  {
+    "id": 30165,
+    "name": "Lowlands Archery Series Field - stage 1",
+    "level": "Other International Event",
+    "sublevel": null,
+    "location": "Haaksbergen, Netherlands",
+    "start_date": "2026-01-17",
+    "end_date": "2026-01-17",
+    "logo": ""
+  },
+  {
+    "id": 30167,
+    "name": "Lowlands Archery Series Indoor - stage 7",
+    "level": "Other International Event",
+    "sublevel": null,
+    "location": "Almere, Netherlands",
+    "start_date": "2026-01-18",
+    "end_date": "2026-01-18",
+    "logo": ""
+  },
+  {
+    "id": 30376,
+    "name": "Lowlands Archery Series Field - stage 2",
+    "level": "Other International Event",
+    "sublevel": null,
+    "location": "Haaksbergen, Netherlands",
+    "start_date": "2026-01-18",
+    "end_date": "2026-01-18",
+    "logo": ""
+  },
+  {
+    "id": 29964,
+    "name": "Merida - IWS 500",
+    "level": "World Cup",
+    "sublevel": "Indoor World Series",
+    "location": "Merida, Mexico",
+    "start_date": "2026-02-13",
+    "end_date": "2026-02-15",
+    "logo": ""
+  },
+  {
+    "id": 30365,
+    "name": "Lowlands Archery Series Indoor - stage 8",
+    "level": "Other International Event",
+    "sublevel": null,
+    "location": "Delft, Netherlands",
+    "start_date": "2026-02-15",
+    "end_date": "2026-02-15",
+    "logo": ""
+  },
+  {
+    "id": 30587,
+    "name": "Indoor 18m Round",
+    "level": "Other International Event",
+    "sublevel": null,
+    "location": "Amersfoort, Netherlands",
+    "start_date": "2026-02-15",
+    "end_date": "2026-02-15",
+    "logo": ""
+  },
+  {
+    "id": 30775,
+    "name": "2026 Asia Cup-World Ranking Tournament, Stage I ",
+    "level": "Other International Event",
+    "sublevel": null,
+    "location": "Archery Field: Hua Mak at The Sports Authority of , Thailand",
+    "start_date": "2026-03-21",
+    "end_date": "2026-03-28",
+    "logo": ""
+  },
+  {
+    "id": 29965,
+    "name": "The Vegas Shoot",
+    "level": "World Cup",
+    "sublevel": "Indoor World Series",
+    "location": "Las Vegas, United States of America",
+    "start_date": "2026-03-27",
+    "end_date": "2026-03-29",
+    "logo": ""
+  },
+  {
+    "id": 30776,
+    "name": "Bangkok 2026 World Para Series ",
+    "level": "Other International Event",
+    "sublevel": null,
+    "location": "Bangkok, Thailand, Thailand",
+    "start_date": "2026-03-31",
+    "end_date": "2026-04-04",
+    "logo": ""
+  },
+  {
+    "id": 26297,
+    "name": "Puebla 2026 Hyundai Archery World Cup stage 1",
+    "level": "World Cup",
+    "sublevel": "World Cup Stage",
+    "location": "Puebla, Mexico",
+    "start_date": "2026-04-07",
+    "end_date": "2026-04-12",
+    "logo": ""
+  },
+  {
+    "id": 30507,
+    "name": "San Salvador 2026 Americas Grand Prix",
+    "level": "Other International Event",
+    "sublevel": null,
+    "location": "San Salvador, El Salvador",
+    "start_date": "2026-04-15",
+    "end_date": "2026-04-19",
+    "logo": ""
+  },
+  {
+    "id": 30512,
+    "name": "Grand Prix of the Americas Stage I,  Second Qualifier for the Central American and Caribbean Games ",
+    "level": "Other International Event",
+    "sublevel": null,
+    "location": "campo de tiro con arco \"Jorge Jimenez\", El Salvador",
+    "start_date": "2026-04-15",
+    "end_date": "2026-04-19",
+    "logo": ""
+  },
+  {
+    "id": 30351,
+    "name": "European Grand Prix 1st Leg 2026 (WRE)",
+    "level": "Other International Event",
+    "sublevel": null,
+    "location": "Antalya, Türkiye, Türkiye",
+    "start_date": "2026-04-20",
+    "end_date": "2026-04-26",
+    "logo": ""
+  },
+  {
+    "id": 30542,
+    "name": "European Grand Prix Spring Arrows",
+    "level": "Other International Event",
+    "sublevel": null,
+    "location": "Antalya, Türkiye",
+    "start_date": "2026-04-20",
+    "end_date": "2026-04-26",
+    "logo": ""
+  },
+  {
+    "id": 26298,
+    "name": "Shanghai 2026 Hyundai Archery World Cup stage 2",
+    "level": "World Cup",
+    "sublevel": "World Cup Stage",
+    "location": "Shanghai, People's Republic of China",
+    "start_date": "2026-05-05",
+    "end_date": "2026-05-10",
+    "logo": ""
+  },
+  {
+    "id": 30637,
+    "name": "2026 Gyeyang Open",
+    "level": "Other International Event",
+    "sublevel": null,
+    "location": "Incheon, Republic of Korea",
+    "start_date": "2026-05-13",
+    "end_date": "2026-05-17",
+    "logo": ""
+  },
+  {
+    "id": 30758,
+    "name": "CÔTE D'IVOIRE INTERNATIONAL ARCHERY OPEN ",
+    "level": "Other International Event",
+    "sublevel": null,
+    "location": "Stade Robert Champroux de Marcory, Cote d Ivoire",
+    "start_date": "2026-05-21",
+    "end_date": "2026-05-25",
+    "logo": ""
+  },
+  {
+    "id": 30642,
+    "name": "Pan American Youth and Masters Championships",
+    "level": "Other International Event",
+    "sublevel": null,
+    "location": "Medellin, Colombia",
+    "start_date": "2026-05-24",
+    "end_date": "2026-05-28",
+    "logo": ""
+  },
+  {
+    "id": 30149,
+    "name": "2026 Veronica's Cup",
+    "level": "Other International Event",
+    "sublevel": null,
+    "location": "Kamnik, Slovenia",
+    "start_date": "2026-05-28",
+    "end_date": "2026-05-31",
+    "logo": ""
+  },
+  {
+    "id": 30581,
+    "name": "14th Conquest Cup",
+    "level": "Other International Event",
+    "sublevel": null,
+    "location": "Istanbul Okcular Vakfı, Türkiye",
+    "start_date": "2026-06-03",
+    "end_date": "2026-06-07",
+    "logo": ""
+  },
+  {
+    "id": 26299,
+    "name": "Antalya 2026 Hyundai Archery World Cup stage 3",
+    "level": "World Cup",
+    "sublevel": "World Cup Stage",
+    "location": "Antalya, Türkiye",
+    "start_date": "2026-06-09",
+    "end_date": "2026-06-14",
+    "logo": ""
+  },
+  {
+    "id": 30540,
+    "name": "Open Dutch Para Archery Championships",
+    "level": "Other International Event",
+    "sublevel": null,
+    "location": "Eindhoven, Netherlands",
+    "start_date": "2026-06-14",
+    "end_date": "2026-06-14",
+    "logo": ""
+  },
+  {
+    "id": 26300,
+    "name": "Madrid 2026 Hyundai Archery World Cup stage 4",
+    "level": "World Cup",
+    "sublevel": "World Cup Stage",
+    "location": "Madrid, Spain",
+    "start_date": "2026-07-07",
+    "end_date": "2026-07-12",
+    "logo": ""
+  },
+  {
+    "id": 30764,
+    "name": "2026 Korea Archery Challenge",
+    "level": "Other International Event",
+    "sublevel": null,
+    "location": "Incheon, Republic of Korea",
+    "start_date": "2026-08-17",
+    "end_date": "2026-08-22",
+    "logo": ""
+  },
+  {
+    "id": 29775,
+    "name": "Yankton 2026 World Archery Field and 3D Championships (3D)",
+    "level": "World Championships",
+    "sublevel": "World Archery 3D Championships",
+    "location": "Yankton, United States of America",
+    "start_date": "2026-09-24",
+    "end_date": "2026-10-04",
+    "logo": ""
+  },
+  {
+    "id": 29776,
+    "name": "Yankton 2026 World Archery Field and 3D Championships (Field)",
+    "level": "World Championships",
+    "sublevel": "World Archery Field Championships",
+    "location": "Yankton, United States of America",
+    "start_date": "2026-09-24",
+    "end_date": "2026-10-04",
+    "logo": ""
+  },
+  {
+    "id": 30375,
+    "name": "National Championships Field Archery",
+    "level": "Other International Event",
+    "sublevel": null,
+    "location": "Hapert, Netherlands",
+    "start_date": "2026-09-26",
+    "end_date": "2026-09-27",
+    "logo": ""
+  },
+  {
+    "id": 21983,
+    "name": "Dakar 2026 Youth Olympic Games",
+    "level": "Olympic Games",
+    "sublevel": "Youth Olympic Games",
+    "location": "Dakar, Senegal",
+    "start_date": "2026-10-31",
+    "end_date": "2026-11-13",
+    "logo": ""
+  }
+]

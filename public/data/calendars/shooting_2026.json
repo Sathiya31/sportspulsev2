@@ -1,0 +1,138 @@
+[
+  {
+    "event_name": "Asian Championship Shotgun",
+    "start_date": "2026-01-11",
+    "end_date": "2026-01-22",
+    "location": "Doha, Qatar",
+    "hyperlink": "/competitions/3375",
+    "competition_code": "3375"
+  },
+  {
+    "event_name": "ISSF Grand Prix 10m",
+    "start_date": "2026-01-14",
+    "end_date": "2026-01-19",
+    "location": "Ruse, Slovenia",
+    "hyperlink": "/competitions/3277",
+    "competition_code": "3277"
+  },
+  {
+    "event_name": "Asian Championship Rifle / Pistol",
+    "start_date": "2026-02-02",
+    "end_date": "2026-02-14",
+    "location": "New Delhi, India",
+    "hyperlink": "/competitions/3376",
+    "competition_code": "3376"
+  },
+  {
+    "event_name": "ISSF World Cup  Shotgun",
+    "start_date": "2026-03-25",
+    "end_date": "2026-04-03",
+    "location": "Tangier, Morocco",
+    "hyperlink": "/competitions/3279",
+    "competition_code": "3279"
+  },
+  {
+    "event_name": "ISSF World Cup Rifle / Pistol",
+    "start_date": "2026-04-05",
+    "end_date": "2026-04-13",
+    "location": "Granada, Spain",
+    "hyperlink": "/competitions/3280",
+    "competition_code": "3280"
+  },
+  {
+    "event_name": "ISSF Junior World Cup Rifle / Pistol / Shotgun",
+    "start_date": "2026-04-19",
+    "end_date": "2026-04-27",
+    "location": "Cairo, Egypt",
+    "hyperlink": "/competitions/3394",
+    "competition_code": "3394"
+  },
+  {
+    "event_name": "ISSF World Cup Shotgun",
+    "start_date": "2026-05-02",
+    "end_date": "2026-05-11",
+    "location": "Almaty, Kazakhstan",
+    "hyperlink": "/competitions/3281",
+    "competition_code": "3281"
+  },
+  {
+    "event_name": "ISSF World Cup  Rifle / Pistol",
+    "start_date": "2026-05-24",
+    "end_date": "2026-05-31",
+    "location": "Munich, Germany",
+    "hyperlink": "/competitions/3284",
+    "competition_code": "3284"
+  },
+  {
+    "event_name": "ISSF Junior World Championship Rifle / Pistol / Shotgun",
+    "start_date": "2026-06-16",
+    "end_date": "2026-06-26",
+    "location": "Suhl, Germany",
+    "hyperlink": "/competitions/3283",
+    "competition_code": "3283"
+  },
+  {
+    "event_name": "ISSF World Cup  Shotgun",
+    "start_date": "2026-07-03",
+    "end_date": "2026-07-13",
+    "location": "Lonato, Italy",
+    "hyperlink": "/competitions/3285",
+    "competition_code": "3285"
+  },
+  {
+    "event_name": "ISSF World Cup  Rifle / Pistol / Shotgun",
+    "start_date": "2026-07-20",
+    "end_date": "2026-07-29",
+    "location": "Hangzhou, People's Republic of China",
+    "hyperlink": "/competitions/3288",
+    "competition_code": "3288"
+  },
+  {
+    "event_name": "ISSF World Championship Moving Target",
+    "start_date": "2026-07-20",
+    "end_date": "2026-07-26",
+    "location": "Tallinn, Estonia",
+    "hyperlink": "/competitions/3499",
+    "competition_code": "3499"
+  },
+  {
+    "event_name": "Mediterranean Games",
+    "start_date": "2026-08-21",
+    "end_date": "2026-09-03",
+    "location": "Taranto, Italy",
+    "hyperlink": "/competitions/3287",
+    "competition_code": "3287"
+  },
+  {
+    "event_name": "ISSF Junior World Cup  Shotgun",
+    "start_date": "2026-09-12",
+    "end_date": "2026-09-20",
+    "location": "Porpetto, Italy",
+    "hyperlink": "/competitions/3286",
+    "competition_code": "3286"
+  },
+  {
+    "event_name": "20th Asian Games ",
+    "start_date": "2026-09-20",
+    "end_date": "2026-10-02",
+    "location": "Aichi-Nagoya, Japan",
+    "hyperlink": "/competitions/3314",
+    "competition_code": "3314"
+  },
+  {
+    "event_name": "ISSF World Cup Rifle / Pistol",
+    "start_date": "2026-10-08",
+    "end_date": "2026-10-16",
+    "location": "Cairo, Egypt",
+    "hyperlink": "/competitions/3289",
+    "competition_code": "3289"
+  },
+  {
+    "event_name": "ISSF World Championship Rifle / Pistol / Shotgun",
+    "start_date": "2026-11-01",
+    "end_date": "2026-11-15",
+    "location": "Doha, Qatar",
+    "hyperlink": "/competitions/3421",
+    "competition_code": "3421"
+  }
+]
