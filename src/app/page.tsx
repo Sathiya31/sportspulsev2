@@ -20,7 +20,7 @@ const carouselSlides = [
     alt: "Dakar Icon",
     title: "Dakar Youth Olympics",
     desc: "Experience the thrill of the Dakar Youth Olympics.",
-    date: "2026-01-03T00:00:00Z",
+    date: "2026-10-31T00:00:00Z",
   },
   {
     src: "/images/la28.jpg",
