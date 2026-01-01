@@ -1,5 +1,6 @@
 import { Match } from '@/types/badminton';
 import { format } from 'date-fns';
+import CountryFlag from '../CountryFlag';
 
 interface MatchCardProps {
   match: Match;
@@ -43,12 +44,13 @@ export default function MatchCard({ match }: MatchCardProps) {
           
           <div className="flex items-center gap-2 flex-1 min-w-0">
             {/* Smaller Flag */}
-            <img
+            {/* <img
               src={match?.team1?.countryFlagUrl || fallbackFlag}
               alt={match?.team1?.countryCode || 'Country'}
               className="w-4 h-4 rounded-full object-cover flex-shrink-0"
               onError={(e: any) => { e.target.src = fallbackFlag; }}
-            />
+            /> */}
+            <CountryFlag countryCode={match?.team1?.countryCode} className="w-6 h-4" />
             
             {/* Players - Inline on one line */}
             <div className="text-sm xl:text-base truncate">
@@ -100,12 +102,13 @@ export default function MatchCard({ match }: MatchCardProps) {
         }`} style={{ color: winner === 2 ? "var(--foreground)" : "var(--muted)" }}>
           
           <div className="flex items-center gap-2 flex-1 min-w-0">
-            <img
+            {/* <img
               src={match?.team2?.countryFlagUrl || fallbackFlag}
               alt={match?.team2?.countryCode || 'Country'}
               className="w-4 h-4 rounded-full object-cover flex-shrink-0"
               onError={(e: any) => { e.target.src = fallbackFlag; }}
-            />
+            /> */}
+            <CountryFlag countryCode={match?.team2?.countryCode} className="w-6 h-4" />
             
             <div className="text-sm xl:text-base truncate">
               {match?.team2?.players?.length > 0 ? (
