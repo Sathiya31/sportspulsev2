@@ -72,12 +72,5 @@ coverImage: "/images/blogs/2026_calendar.png"
 
 ---
 
-## 🚩 Events with Tentative / Unconfirmed Details
-
-The following events have elements such as dates, venues, formats, or qualification status awaiting final confirmation from international federations:
-
-- Asian Weightlifting Championships (Ahmedabad, India)
-
----
-
+*This calendar is curated with focus on Indian sporting events.*
 *This calendar will be updated as official confirmations are released.*
