@@ -213,14 +213,14 @@ export default function AthleticsPage() {
       {/* Mobile Overlay */}
       {isMobileMenuOpen && (
         <div
-          className="md:hidden fixed inset-0 bg-black bg-opacity-50 z-50"
+          className="md:hidden fixed bg-black bg-opacity-50 z-50"
           onClick={() => setIsMobileMenuOpen(false)}
         />
       )}
 
       {/* Consistent Calendar Sidebar */}
       <aside className={`
-        fixed md:static inset-y-0 left-0 z-50
+        fixed md:static left-0 z-50
         w-80 md:w-96
         transform transition-transform duration-300 ease-in-out
         ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}

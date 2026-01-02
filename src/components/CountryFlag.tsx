@@ -17,7 +17,7 @@ const CountryFlag: FC<CountryFlagProps> = ({ countryCode, className = '' }) => {
     if (alpha2Code) {
         return (
             <span
-                className={`fi fi-${alpha2Code.toLowerCase()} ${className}`}
+                className={`shrink-0 fi fi-${alpha2Code.toLowerCase()} ${className}`}
                 aria-label={countryCode}
             />
         );

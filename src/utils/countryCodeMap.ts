@@ -10,6 +10,7 @@ const alpha3ToAlpha2: Record<string, string> = {
   // Sports Aliases (requested)
   INA: 'ID', // Indonesia (IOC/FIFA)
   MAS: 'MY', // Malaysia (IOC/FIFA)
+  IRI: 'IR', // Iran (IOC/FIFA)
 
   // --- AMERICAS ---
   USA: 'US', CAN: 'CA', MEX: 'MX', ARG: 'AR', BRA: 'BR', BOL: 'BO', CHL: 'CL', COL: 'CO', 
@@ -23,7 +24,11 @@ const alpha3ToAlpha2: Record<string, string> = {
   ISL: 'IS', IRL: 'IE', ITA: 'IT', LVA: 'LV', LIE: 'LI', LTU: 'LT', LUX: 'LU', MLT: 'MT',
   MDA: 'MD', MCO: 'MC', MNE: 'ME', NLD: 'NL', MKD: 'MK', NOR: 'NO', POL: 'PL', PRT: 'PT',
   ROU: 'RO', RUS: 'RU', SRB: 'RS', SVK: 'SK', SVN: 'SI', ESP: 'ES', SWE: 'SE', CHE: 'CH',
-  UKR: 'UA', GBR: 'GB', VAT: 'VA', SMR: 'SM',
+  UKR: 'UA', GBR: 'GB', VAT: 'VA', SMR: 'SM', eng: 'GB-ENG', // England (FIFA)
+  SCO: 'GB-SCT', // Scotland (FIFA)
+  WLS: 'GB-WLS', // Wales (FIFA)
+  NIR: 'GB-NIR', // Northern Ireland (FIFA)
+  WAL: 'GB-WLS', // Wales (IOC)
 
   // --- AFRICA ---
   DZA: 'DZ', AGO: 'AO', BEN: 'BJ', BWA: 'BW', BFA: 'BF', BDI: 'BI', CMR: 'CM', CPV: 'CV',
