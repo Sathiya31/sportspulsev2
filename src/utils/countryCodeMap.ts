@@ -1,53 +1,91 @@
-const alpha3ToAlpha2: Record<string, string> = {
-  // --- ASIA ---
-  AFG: 'AF', ARM: 'AM', AZE: 'AZ', BHR: 'BH', BGD: 'BD', BTN: 'BT', BRN: 'BN', KHM: 'KH',
-  CHN: 'CN', CYP: 'CY', GEO: 'GE', HKG: 'HK', IND: 'IN', IDN: 'ID', IRN: 'IR', IRQ: 'IQ',
-  ISR: 'IL', JPN: 'JP', JOR: 'JO', KAZ: 'KZ', KWT: 'KW', KGZ: 'KG', LAO: 'LA', LBN: 'LB',
-  MAC: 'MO', MYS: 'MY', MDV: 'MV', MNG: 'MN', MMR: 'MM', NPL: 'NP', PRK: 'KP', OMN: 'OM',
-  PAK: 'PK', PSE: 'PS', PHL: 'PH', QAT: 'QA', SAU: 'SA', SGP: 'SG', KOR: 'KR', LKA: 'LK',
-  SYR: 'SY', TWN: 'TW', TJK: 'TJ', THA: 'TH', TLS: 'TL', TUR: 'TR', TKM: 'TM', UZB: 'UZ',
-  VNM: 'VN', YEM: 'YE',
-  // Sports Aliases (requested)
-  INA: 'ID', // Indonesia (IOC/FIFA)
-  MAS: 'MY', // Malaysia (IOC/FIFA)
-  IRI: 'IR', // Iran (IOC/FIFA)
+const iocToAlpha2: Record<string, string> = {
+  // --- UK CONSTITUENT NATIONS (FIFA/Commonwealth) ---
+  ENG: 'GB-ENG', // England - Note: Many flag libraries use 'GB-ENG' or just 'GB'
+  SCO: 'GB-SCT', // Scotland
+  WAL: 'GB-WLS', // Wales
+  NIR: 'GB-NIR', // Northern Ireland
 
-  // --- AMERICAS ---
-  USA: 'US', CAN: 'CA', MEX: 'MX', ARG: 'AR', BRA: 'BR', BOL: 'BO', CHL: 'CL', COL: 'CO', 
-  CRI: 'CR', CUB: 'CU', DOM: 'DO', ECU: 'EC', SLV: 'SV', GTM: 'GT', HND: 'HN', JAM: 'JM', 
-  NIC: 'NI', PAN: 'PA', PRY: 'PY', PER: 'PE', PRI: 'PR', URY: 'UY', VEN: 'VE', HTI: 'HT',
-  BHS: 'BS', BRB: 'BB', BLZ: 'BZ', GUY: 'GY', SUR: 'SR', TTO: 'TT',
-
-  // --- EUROPE ---
-  ALB: 'AL', AND: 'AD', AUT: 'AT', BLR: 'BY', BEL: 'BE', BIH: 'BA', BGR: 'BG', HRV: 'HR',
-  CZE: 'CZ', DNK: 'DK', EST: 'EE', FIN: 'FI', FRA: 'FR', DEU: 'DE', GRC: 'GR', HUN: 'HU',
-  ISL: 'IS', IRL: 'IE', ITA: 'IT', LVA: 'LV', LIE: 'LI', LTU: 'LT', LUX: 'LU', MLT: 'MT',
-  MDA: 'MD', MCO: 'MC', MNE: 'ME', NLD: 'NL', MKD: 'MK', NOR: 'NO', POL: 'PL', PRT: 'PT',
-  ROU: 'RO', RUS: 'RU', SRB: 'RS', SVK: 'SK', SVN: 'SI', ESP: 'ES', SWE: 'SE', CHE: 'CH',
-  UKR: 'UA', GBR: 'GB', VAT: 'VA', SMR: 'SM', eng: 'GB-ENG', // England (FIFA)
-  SCO: 'GB-SCT', // Scotland (FIFA)
-  WLS: 'GB-WLS', // Wales (FIFA)
-  NIR: 'GB-NIR', // Northern Ireland (FIFA)
-  WAL: 'GB-WLS', // Wales (IOC)
-
-  // --- AFRICA ---
-  DZA: 'DZ', AGO: 'AO', BEN: 'BJ', BWA: 'BW', BFA: 'BF', BDI: 'BI', CMR: 'CM', CPV: 'CV',
-  CAF: 'CF', TCD: 'TD', COG: 'CG', COD: 'CD', DJI: 'DJ', EGY: 'EG', GNQ: 'GQ', ERI: 'ER',
-  ETH: 'ET', GAB: 'GA', GMB: 'GM', GHA: 'GH', GIN: 'GN', GNB: 'GW', CIV: 'CI', KEN: 'KE',
-  LSO: 'LS', LBR: 'LR', LBY: 'LY', MDG: 'MG', MWI: 'MW', MLI: 'ML', MRT: 'MR', MUS: 'MU',
-  MAR: 'MA', MOZ: 'MZ', NAM: 'NA', NER: 'NE', NGA: 'NG', RWA: 'RW', SEN: 'SN', SYC: 'SC',
-  SLE: 'SL', SOM: 'SO', ZAF: 'ZA', SSD: 'SS', SDN: 'SD', TZA: 'TZ', TGO: 'TG', TUN: 'TN',
-  UGA: 'UG', ZMB: 'ZM', ZWE: 'ZW',
-
-  // --- OCEANIA ---
-  AUS: 'AU', FJI: 'FJ', KIR: 'KI', MHL: 'MH', FSM: 'FM', NRU: 'NR', NZL: 'NZ', PLW: 'PW',
-  PNG: 'PG', SAM: 'WS', SLB: 'SB', TON: 'TO', TUV: 'TV', VUT: 'VU',
+  // --- A ---
+  AFG: 'AF', ALB: 'AL', ALG: 'DZ', AND: 'AD', ANG: 'AO', ANT: 'AG', ARG: 'AR', ARM: 'AM', 
+  ARU: 'AW', ASA: 'AS', AUS: 'AU', AUT: 'AT', AZE: 'AZ',
+  
+  // --- B ---
+  BAH: 'BS', BAN: 'BD', BAR: 'BB', BDI: 'BI', BEL: 'BE', BEN: 'BJ', BER: 'BM', BHU: 'BT', 
+  BIH: 'BA', BIZ: 'BZ', BLR: 'BY', BOL: 'BO', BOT: 'BW', BRA: 'BR', BRN: 'BH', BRU: 'BN', 
+  BUL: 'BG', BUR: 'BF',
+  
+  // --- C ---
+  CAF: 'CF', CAM: 'KH', CAN: 'CA', CAY: 'KY', CGO: 'CG', CHA: 'TD', CHI: 'CL', CHN: 'CN', 
+  CIV: 'CI', CMR: 'CM', COD: 'CD', COK: 'CK', COL: 'CO', COM: 'KM', CPV: 'CV', CRC: 'CR', 
+  CRO: 'HR', CUB: 'CU', CYP: 'CY', CZE: 'CZ',
+  
+  // --- D ---
+  DEN: 'DK', DJI: 'DJ', DMA: 'DM', DOM: 'DO',
+  
+  // --- E ---
+  ECU: 'EC', EGY: 'EG', ERI: 'ER', ESA: 'SV', ESP: 'ES', EST: 'EE', ETH: 'ET',
+  
+  // --- F ---
+  FIJ: 'FJ', FIN: 'FI', FRA: 'FR', FSM: 'FM',
+  
+  // --- G ---
+  GAB: 'GA', GAM: 'GM', GBR: 'GB', GBS: 'GW', GEO: 'GE', GEQ: 'GQ', GER: 'DE', GHA: 'GH', 
+  GRE: 'GR', GRN: 'GD', GUA: 'GT', GUM: 'GU', GUY: 'GY',
+  
+  // --- H ---
+  HAI: 'HT', HKG: 'HK', HON: 'HN', HUN: 'HU',
+  
+  // --- I ---
+  INA: 'ID', IND: 'IN', IRI: 'IR', IRL: 'IE', IRQ: 'IQ', ISL: 'IS', ISR: 'IL', 
+  ISV: 'VI', ITA: 'IT', IVB: 'VG',
+  
+  // --- J ---
+  JAM: 'JM', JOR: 'JO', JPN: 'JP', KAZ: 'KZ', KEN: 'KE', KGZ: 'KG', KIR: 'KI', 
+  KOR: 'KR', KSA: 'SA', KWT: 'KW',
+  
+  // --- L ---
+  LAO: 'LA', LAT: 'LV', LBA: 'LY', LBN: 'LB', LBR: 'LR', LCA: 'LC', LIE: 'LI', 
+  LKA: 'LK', LSO: 'LS', LTU: 'LT', LUX: 'LU',
+  
+  // --- M ---
+  MAD: 'MG', MAR: 'MA', MAS: 'MY', MAW: 'MW', MDA: 'MD', MDV: 'MV', MEX: 'MX', 
+  MGL: 'MN', MHL: 'MH', MKD: 'MK', MLI: 'ML', MLT: 'MT', MNE: 'ME', MON: 'MC', 
+  MOZ: 'MZ', MRI: 'MU', MTN: 'MR', MYA: 'MM',
+  
+  // --- N ---
+  NAM: 'NA', NCA: 'NI', NED: 'NL', NEP: 'NP', NGR: 'NG', NIG: 'NE', NOR: 'NO', 
+  NZL: 'NZ', OMN: 'OM',
+  
+  // --- P ---
+  PAK: 'PK', PAN: 'PA', PAR: 'PY', PER: 'PE', PHI: 'PH', PLE: 'PS', PLW: 'PW', 
+  PNG: 'PG', POL: 'PL', POR: 'PT', PRK: 'KP', PUR: 'PR',
+  
+  // --- Q ---
+  QAT: 'QA', ROU: 'RO', RSA: 'ZA', RUS: 'RU', ROC: 'RU', RWA: 'RW',
+  
+  // --- S ---
+  SAM: 'WS', SEN: 'SN', SEY: 'SC', SGP: 'SG', SKN: 'KN', SLE: 'SL', SLO: 'SI', 
+  SMR: 'SM', SOL: 'SB', SOM: 'SO', SRB: 'RS', SRI: 'LK', SSD: 'SS', STP: 'ST', 
+  SUD: 'SD', SUI: 'CH', SUR: 'SR', SVK: 'SK', SWE: 'SE', SWZ: 'SZ', SYR: 'SY',
+  
+  // --- T ---
+  TAN: 'TZ', TGA: 'TO', THA: 'TH', TJK: 'TJ', TKM: 'TM', TLS: 'TL', TOG: 'TG', 
+  TPE: 'TW', TTO: 'TT', TUN: 'TN', TUR: 'TR', TUV: 'TV',
+  
+  // --- U ---
+  UAE: 'AE', UGA: 'UG', UKR: 'UA', URU: 'UY', USA: 'US', UZB: 'UZ',
+  
+  // --- V ---
+  VAN: 'VU', VAT: 'VA', VEN: 'VE', VIE: 'VN', VIN: 'VC',
+  
+  // --- Y/Z ---
+  YEM: 'YE', ZAM: 'ZM', ZIM: 'ZW'
 };
 
 export const getAlpha2Code = (alpha3Code: string | null | undefined): string | null => {
   if (!alpha3Code) return null;
   const sanitized = alpha3Code.trim().toUpperCase();
-  return alpha3ToAlpha2[sanitized] || null;
+  return iocToAlpha2[sanitized] || null;
 };
 
 const customFlags: Record<string, string> = {
