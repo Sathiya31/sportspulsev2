@@ -15,7 +15,7 @@ meta_description: "A comprehensive India-focused 2026 sports calendar covering t
 coverImage: "/images/blogs/2026_calendar.png"
 ---
 
-# Major India-Relevant Sports Events Calendar — 2026
+# Sports Calendar 2026
 
 ---
 
