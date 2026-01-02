@@ -1,35 +1,5 @@
 [
   {
-    "id": 30125,
-    "name": "Sandefjord Bueskyttere",
-    "level": "Other International Event",
-    "sublevel": null,
-    "location": "Sandefjord, Norway",
-    "start_date": "2026-01-03",
-    "end_date": "2026-01-03",
-    "logo": ""
-  },
-  {
-    "id": 30126,
-    "name": "Sandefjord Bueskyttere",
-    "level": "Other International Event",
-    "sublevel": null,
-    "location": "Sandefjord, Norway",
-    "start_date": "2026-01-03",
-    "end_date": "2026-01-03",
-    "logo": ""
-  },
-  {
-    "id": 30166,
-    "name": "Lowlands Archery Series Indoor - stage 6",
-    "level": "Other International Event",
-    "sublevel": null,
-    "location": "Ysselsteyn, Netherlands",
-    "start_date": "2026-01-04",
-    "end_date": "2026-01-04",
-    "logo": ""
-  },
-  {
     "id": 29730,
     "name": "Nimes Archery Tournament",
     "level": "World Cup",
@@ -40,52 +10,12 @@
     "logo": ""
   },
   {
-    "id": 30165,
-    "name": "Lowlands Archery Series Field - stage 1",
-    "level": "Other International Event",
-    "sublevel": null,
-    "location": "Haaksbergen, Netherlands",
-    "start_date": "2026-01-17",
-    "end_date": "2026-01-17",
-    "logo": ""
-  },
-  {
-    "id": 30167,
-    "name": "Lowlands Archery Series Indoor - stage 7",
-    "level": "Other International Event",
-    "sublevel": null,
-    "location": "Almere, Netherlands",
-    "start_date": "2026-01-18",
-    "end_date": "2026-01-18",
-    "logo": ""
-  },
-  {
-    "id": 30376,
-    "name": "Lowlands Archery Series Field - stage 2",
-    "level": "Other International Event",
-    "sublevel": null,
-    "location": "Haaksbergen, Netherlands",
-    "start_date": "2026-01-18",
-    "end_date": "2026-01-18",
-    "logo": ""
-  },
-  {
     "id": 29964,
     "name": "Merida - IWS 500",
     "level": "World Cup",
     "sublevel": "Indoor World Series",
     "location": "Merida, Mexico",
     "start_date": "2026-02-13",
-    "end_date": "2026-02-15",
-    "logo": ""
-  },
-  {
-    "id": 30365,
-    "name": "Lowlands Archery Series Indoor - stage 8",
-    "level": "Other International Event",
-    "sublevel": null,
-    "location": "Delft, Netherlands",
-    "start_date": "2026-02-15",
     "end_date": "2026-02-15",
     "logo": ""
   },
@@ -150,36 +80,6 @@
     "logo": ""
   },
   {
-    "id": 30512,
-    "name": "Grand Prix of the Americas Stage I,  Second Qualifier for the Central American and Caribbean Games ",
-    "level": "Other International Event",
-    "sublevel": null,
-    "location": "campo de tiro con arco \"Jorge Jimenez\", El Salvador",
-    "start_date": "2026-04-15",
-    "end_date": "2026-04-19",
-    "logo": ""
-  },
-  {
-    "id": 30351,
-    "name": "European Grand Prix 1st Leg 2026 (WRE)",
-    "level": "Other International Event",
-    "sublevel": null,
-    "location": "Antalya, Türkiye, Türkiye",
-    "start_date": "2026-04-20",
-    "end_date": "2026-04-26",
-    "logo": ""
-  },
-  {
-    "id": 30542,
-    "name": "European Grand Prix Spring Arrows",
-    "level": "Other International Event",
-    "sublevel": null,
-    "location": "Antalya, Türkiye",
-    "start_date": "2026-04-20",
-    "end_date": "2026-04-26",
-    "logo": ""
-  },
-  {
     "id": 26298,
     "name": "Shanghai 2026 Hyundai Archery World Cup stage 2",
     "level": "World Cup",
@@ -207,16 +107,6 @@
     "location": "Stade Robert Champroux de Marcory, Cote d Ivoire",
     "start_date": "2026-05-21",
     "end_date": "2026-05-25",
-    "logo": ""
-  },
-  {
-    "id": 30642,
-    "name": "Pan American Youth and Masters Championships",
-    "level": "Other International Event",
-    "sublevel": null,
-    "location": "Medellin, Colombia",
-    "start_date": "2026-05-24",
-    "end_date": "2026-05-28",
     "logo": ""
   },
   {
