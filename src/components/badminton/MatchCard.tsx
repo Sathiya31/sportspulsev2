@@ -22,7 +22,7 @@ export default function MatchCard({ match }: MatchCardProps) {
   })();
 
   // Fallback flag URL for missing country flags
-  const fallbackFlag = '/default-flag.png';
+  // const fallbackFlag = '/default-flag.png';
 
   return (
     <div className="shadow-sm overflow-hidden hover:shadow-md transition-shadow rounded-lg"

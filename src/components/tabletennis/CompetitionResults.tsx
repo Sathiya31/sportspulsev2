@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ChevronDown, ChevronUp, Search, AlertTriangle, TrendingUp, Calendar, Divide } from 'lucide-react';
+import { ChevronDown, ChevronUp, Search, AlertTriangle, TrendingUp, Calendar } from 'lucide-react';
 import { collection, query, where, getDocs } from 'firebase/firestore';
 import { db } from '@/config/firebase';
 import CountryFlag from '../CountryFlag';
